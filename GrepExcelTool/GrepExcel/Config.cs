@@ -110,9 +110,5 @@ namespace GrepExcel
                 ShowDebug.Msg(F.FLMD(), "Error writing app settings");
             }
         }
-
-
-
-
     }
 }
