@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using GrepExcel;
 
 namespace GrepExcel
 {
@@ -36,10 +35,14 @@ namespace GrepExcel
 
         public Config()
         {
+
+        }
+
+        public void Load()
+        {
             _defaultDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             ConfigTables = new List<ConfigTable>();
             ReadAllSettings();
-
         }
 
         public static void ReadAllSettings()
