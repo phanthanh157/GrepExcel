@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -14,13 +11,13 @@ namespace GrepExcel.ViewModel
     {
         private static MainViewModel _instance = null;
         private ICommand _commandClose;
-        private ObservableCollection<TabControl> Tabs { get; set; }
+        public ObservableCollection<TabControl> Tabs { get; set; }
 
         public MainViewModel()
         {
             InitClass();
-       
-        
+
+
         }
 
         public void InitClass()
@@ -69,25 +66,14 @@ namespace GrepExcel.ViewModel
         }
 
 
-        public void AddTabControl(string name, UserControl userControl)
+        public void AddTabControl(TabControl tabControl)
         {
-            if(string.IsNullOrEmpty(name))
+            if (tabControl == null)
             {
-                ShowDebug.Msg(F.FLMD(), "name is null");
+                ShowDebug.Msg(F.FLMD(), "tabcontrol is null");
                 return;
             }
-
-            if (userControl == null)
-            {
-                ShowDebug.Msg(F.FLMD(), "usercontrol is null");
-                return;
-            }
-
-            TabControl tabControl = new TabControl()
-            {
-                TabName = name,
-                Control = userControl
-            };
+            ShowDebug.Msg(F.FLMD(), "add new tabcontrol : {0}", tabControl.TabName);
 
             this.Tabs.Add(tabControl);
 
@@ -106,9 +92,9 @@ namespace GrepExcel.ViewModel
 
         public void RemoveTabControl(int tabIndex)
         {
-            if(Tabs.Count >0 && Tabs.Count > tabIndex)
+            if (Tabs.Count > 0 && Tabs.Count > tabIndex)
             {
-                ShowDebug.Msg(F.FLMD(), "remove tabcontrol from list {0}",tabIndex);
+                ShowDebug.Msg(F.FLMD(), "remove tabcontrol from list {0}", tabIndex);
                 Tabs.RemoveAt(tabIndex);
             }
         }

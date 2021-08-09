@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using GrepExcel.Excel;
+using GrepExcel.ViewModel;
 
 namespace GrepExcel.View
 {
@@ -30,5 +32,23 @@ namespace GrepExcel.View
         {
 
         }
+
+        private void btnSearch_Click(object sender, RoutedEventArgs e)
+        {
+            var searchInputVm = new SearchInputVm();
+
+            var inputInfo = new SearchInfomation()
+            {
+                Search = "keyword",
+                Folder = "D:/acb",
+                Method = TypeMethod.Folder,
+                Target = TypeTarget.Value,
+                IsLowerOrUper = true,
+                IsMatchCase = false
+            };
+
+            searchInputVm.CommandSearch.Execute(inputInfo);
+        }
+    
     }
 }

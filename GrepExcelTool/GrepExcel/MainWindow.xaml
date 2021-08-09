@@ -23,11 +23,6 @@
         <!--menu-->
         <Menu IsMainMenu="True" Grid.Row="0">
             <MenuItem Header="_File">
-                <MenuItem Header="New">
-                    <MenuItem Header="New Project"
-                              Command="{Binding CommandNewProject}"
-                              Icon="{materialDesign:PackIcon Kind=Package}"/>
-                </MenuItem>
                 <MenuItem Header="Save"
                          Icon="{materialDesign:PackIcon Kind=ContentSave}"></MenuItem>
                 <MenuItem Header="Save As.." />

@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace GrepExcel.ViewModel
 {
-    class SearchResultVm
+    public class SearchResultVm : TabControl
     {
+        public SearchResultVm()
+        {
+
+        }
     }
 }

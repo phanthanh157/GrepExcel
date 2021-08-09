@@ -7,6 +7,21 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-            
+        <TabControl x:Name="tabAction" SelectionChanged="tabAction_SelectionChanged">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Height="21" Width="Auto">
+                        <TextBlock Width="Auto" Text="{Binding Path=TabName}"/>
+                        <Image Source="../Image/close.png" Margin="5" Width="10" Height="10" MouseDown="Image_MouseDown"/>
+                    </StackPanel>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <UserControl Height="Auto" Width="Auto" Content="{Binding  Path=Control}" Margin="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
     </Grid>
 </UserControl>
