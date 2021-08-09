@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
+using GrepExcel.ViewModel;
 
 namespace GrepExcel
 {
@@ -14,9 +16,16 @@ namespace GrepExcel
             MainWindow window = new MainWindow();
             //load config.
             Config config = new Config();
+            config.Load();
 
+            var mainVm = MainViewModel.Instance;
+            window.DataContext = mainVm;
 
-
+            mainVm.Close += (object cl, EventArgs ev) =>
+            {
+                window.Close();
+            };
+           
 
             window.Show();
         }

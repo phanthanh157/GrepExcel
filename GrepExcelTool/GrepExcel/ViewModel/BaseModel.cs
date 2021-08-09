@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace TaskMangerTool.ViewModel
+namespace GrepExcel.View
 {
     public class BaseModel : INotifyPropertyChanged
     {
@@ -22,11 +22,7 @@ namespace TaskMangerTool.ViewModel
 
         protected virtual void OnClose(EventArgs e)
         {
-            EventHandler handler = Close;
-            if (handler != null)
-            {
-                handler(this,e);
-            }
+            Close?.Invoke(this, e);
         }
      
     }

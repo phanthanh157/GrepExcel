@@ -4,9 +4,175 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GrepExcel.View"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+    <UserControl.Resources>
+        <Style x:Key="ItemSearch" TargetType="StackPanel">
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="MinHeight" Value="25" />
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <!--<Setter Property="Background" Value="LightBlue"/>-->
+        </Style>
+
+    </UserControl.Resources>
+    <Grid Margin="15,5,5,5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid  Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="SEARCH" FontWeight="Medium"/>
+        </Grid>
+        
+        <!--Search-->
+        <Grid Grid.Row="1" Margin="0,0,0,15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="txtSearch">
+                <TextBox.Style>
+                    <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                        <Style.Resources>
+                            <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                <VisualBrush.Visual>
+                                    <Label Content="Search" Foreground="Gray" />
+                                </VisualBrush.Visual>
+                            </VisualBrush>
+                        </Style.Resources>
+                        <Setter Property="MinHeight" Value="25" />
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        <Style.Triggers>
+                            <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                            </Trigger>
+                            <Trigger Property="Text" Value="{x:Null}">
+                                <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter Property="Background" Value="White" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBox.Style>
+            </TextBox>
+            <Button Grid.Column="1"
+                    x:Name="btnSearch"
+                    Width="20" 
+                    Height="20" 
+                    Margin="-30,0,0,0" 
+                    Background="Transparent"
+                    BorderThickness="0">
+                <materialDesign:PackIcon Width="20" Height="20" Kind="Search"/>
+            </Button>
+
+            <Button Grid.Column="1"
+                    x:Name="btnOptionLowAndUper"
+                    Width="20" 
+                    Height="20" 
+                    Margin="-80,0,0,0" 
+                    Background="Transparent"
+                    BorderThickness="0">
+                <materialDesign:PackIcon Width="20" Height="20" Kind="FormatLetterCaseUpper"/>
+            </Button>
+            <Button Grid.Column="1"
+                    x:Name="btnOptionMatchCase"
+                    Width="20" 
+                    Height="20" 
+                    Margin="-130,0,0,0" 
+                    Background="Transparent"
+                    BorderThickness="0">
+                <materialDesign:PackIcon Width="20" Height="20" Kind="FormatLetterCase"/>
+            </Button>
+        </Grid>
+
+        <!--Folder-->
+        <Grid Grid.Row="2" Margin="0,0,0,2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="txtFolder">
+                <TextBox.Style>
+                    <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                        <Style.Resources>
+                            <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                <VisualBrush.Visual>
+                                    <Label Content="Folder" Foreground="Gray" />
+                                </VisualBrush.Visual>
+                            </VisualBrush>
+                        </Style.Resources>
+                        <Setter Property="MinHeight" Value="25" />
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        <Style.Triggers>
+                            <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                            </Trigger>
+                            <Trigger Property="Text" Value="{x:Null}">
+                                <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter Property="Background" Value="White" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBox.Style>
+            </TextBox>
+            <Button Grid.Column="1"
+                    x:Name="btnOpenFolder"
+                    Click="btnOpenFolder_click"
+                    Width="20"
+                    Height="20" 
+                    Margin="-30,0,0,0" 
+                    Background="Transparent"
+                    BorderThickness="0"
+                    >
+                <materialDesign:PackIcon Width="20" Height="20" Kind="FolderAdd"/>
+            </Button>
+        </Grid>
+        
+        <!--Method this folder/ subfolder-->
+        <Grid Grid.Row="3" Margin="0,0,0,2">
+            <StackPanel>
+                <Label Content="method" FontSize="10" Foreground="Gray"/>
+                <ComboBox Name="cobMethod">
+                    <ComboBoxItem Content="Folder"/>
+                    <ComboBoxItem Content="Subfolder"/>
+                </ComboBox>
+            </StackPanel>
+        </Grid>
+
+        <!--Target Value/Comment/Fomular-->
+        <Grid Grid.Row="4" Margin="0,0,0,2">
+            <StackPanel>
+                <Label Content="target" FontSize="10" Foreground="Gray"/>
+                <ComboBox Name="cobTarget">
+                    <ComboBoxItem Content="Value"/>
+                    <ComboBoxItem Content="Comment"/>
+                    <ComboBoxItem Content="Fomular"/>
+                </ComboBox>
+            </StackPanel>
+        </Grid>
+
+
+
+
     </Grid>
 </UserControl>

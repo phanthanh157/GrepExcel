@@ -23,6 +23,12 @@ namespace GrepExcel.View
         public SearchInputUc()
         {
             InitializeComponent();
+ 
+        }
+
+        private void btnOpenFolder_click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GrepExcel"
+        xmlns:view="clr-namespace:GrepExcel.View"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.FontWeight="Regular"
@@ -13,6 +14,104 @@
         Title="Grep Excel" 
         WindowState="Maximized">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <!--menu-->
+        <Menu IsMainMenu="True" Grid.Row="0">
+            <MenuItem Header="_File">
+                <MenuItem Header="New">
+                    <MenuItem Header="New Project"
+                              Command="{Binding CommandNewProject}"
+                              Icon="{materialDesign:PackIcon Kind=Package}"/>
+                </MenuItem>
+                <MenuItem Header="Save"
+                         Icon="{materialDesign:PackIcon Kind=ContentSave}"></MenuItem>
+                <MenuItem Header="Save As.." />
+
+                <MenuItem Header="Exit"
+                          Command="{Binding CommandClose}"
+                          InputGestureText="Ctrl+E"
+                          Icon="{materialDesign:PackIcon Kind=ExitToApp}" />
+
+            </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Header="_Cut"
+                          Command="Cut"
+                          Icon="{materialDesign:PackIcon Kind=ContentCut}" />
+                <MenuItem Header="_Copy"
+                          Command="Copy"
+                          Icon="{materialDesign:PackIcon Kind=ContentCopy}" />
+                <MenuItem Header="_Paste"
+                          Command="Paste"
+                          Icon="{materialDesign:PackIcon Kind=ContentPaste}" />
+            </MenuItem>
+            <MenuItem Header="_View">
+                <MenuItem Header="_Message OpenAPI" />
+
+            </MenuItem>
+            <MenuItem Header="_Settings">
+                <MenuItem Header="_Specification" />
+
+
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_About AnalysLogOpenAPI"/>
+            </MenuItem>
+        </Menu>
+
+        <!--main-->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="5*"/>
+            </Grid.ColumnDefinitions>
+
+      
+            <view:SearchInputUc HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>    
+ 
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch"/>
+    
+            <view:TabResult Grid.Column="2"/>
+         
+
+        </Grid>
+
+        <!--status bar-->
+        <DockPanel Grid.Row="2">
+            <StatusBar DockPanel.Dock="Bottom">
+                <StatusBar.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="100" />
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+                    </ItemsPanelTemplate>
+                </StatusBar.ItemsPanel>
+                <StatusBarItem>
+                    <TextBlock Name="lblCursorPosition" />
+                </StatusBarItem>
+                <Separator Grid.Column="1" />
+                <StatusBarItem Grid.Column="2">
+                    <TextBlock x:Name="tbTotal" Text="Total: 0" />
+                </StatusBarItem>
+                <Separator Grid.Column="3" />
+                <StatusBarItem Grid.Column="4">
+                    <ProgressBar x:Name="prBar" Minimum="0" Maximum="100" IsIndeterminate="False"  Width="90" Height="16" />
+                </StatusBarItem>
+            </StatusBar>
+        </DockPanel>
+
+
+
     </Grid>
 </Window>
