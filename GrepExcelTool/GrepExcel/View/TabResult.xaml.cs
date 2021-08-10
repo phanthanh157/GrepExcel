@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,25 @@ namespace GrepExcel.View
             _mainVm = MainViewModel.Instance;
 
             tabAction.ItemsSource = _mainVm.Tabs;
+            _mainVm.Tabs.CollectionChanged += TabCollectionChanged;
+            _mainVm.TabIndexActive += TabIndexActiveChanged;
+        }
+
+        private void TabIndexActiveChanged(object sender, int e)
+        {
+            if (e > -1)
+            {
+                tabAction.SelectedIndex = e;
+            }
+        }
+
+        private void TabCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                tabAction.SelectedIndex = _mainVm.Tabs.Count - 1;
+                _mainVm.TabActive = _mainVm.Tabs.Count - 1;
+            }
         }
 
         private void Image_MouseDown(object sender, MouseButtonEventArgs e)

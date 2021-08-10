@@ -10,6 +10,7 @@ namespace GrepExcel.ViewModel
 
         public UserControl Control { get => _userControl; set => _userControl = value; }
         public string TabName { get => _tabName; set => _tabName = value; }
+        public int SearchId { get; set; }
 
     }
 }

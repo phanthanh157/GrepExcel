@@ -37,7 +37,8 @@ namespace GrepExcel.Excel
                                         method INT NOT NULL,
                                         target INT NOT NULL,
                                         match_case INT NOT NULL,
-                                        lower_uper INT NOT NULL
+                                        lower_uper INT NOT NULL,
+                                        tab_active INT NOT NULL
                                         )";
                     command.ExecuteNonQuery();
 
@@ -160,14 +161,15 @@ namespace GrepExcel.Excel
                     using (var command = _sqlConnection.CreateCommand())
                     {
                         var searchInfo = data as SearchInfo;
-                        command.CommandText = "INSERT INTO pct_tblSearch (search,folder,method,target,match_case,lower_uper)" +
-                                              " VALUES($search,$folder,$method,$target,$match_case,$lower_uper)";
+                        command.CommandText = "INSERT INTO pct_tblSearch (search,folder,method,target,match_case,lower_uper,tab_active)" +
+                                              " VALUES($search,$folder,$method,$target,$match_case,$lower_uper,$tab_active)";
                         command.Parameters.AddWithValue("$search", searchInfo.Search);
                         command.Parameters.AddWithValue("$folder", searchInfo.Folder);
                         command.Parameters.AddWithValue("$method", searchInfo.Method);
                         command.Parameters.AddWithValue("$target", searchInfo.Target);
                         command.Parameters.AddWithValue("$match_case", searchInfo.IsMatchCase);
                         command.Parameters.AddWithValue("$lower_uper", searchInfo.IsLowerOrUper);
+                        command.Parameters.AddWithValue("$tab_active", searchInfo.IsTabActive);
                         command.ExecuteNonQuery();
                     }
                     transaction.Commit();
@@ -244,7 +246,8 @@ namespace GrepExcel.Excel
                                               "target = $target," +
                                               "match_case = $match_case," +
                                               "lower_uper = $lower_uper," +
-                                              "WHERE search_id = $message_id";
+                                              "tab_active = $tab_active" +
+                                              "WHERE search_id = $search_id";
                         command.Parameters.AddWithValue("$search_id", searchInfo.Search);
                         command.Parameters.AddWithValue("$search", searchInfo.Search);
                         command.Parameters.AddWithValue("$folder", searchInfo.Folder);
@@ -252,6 +255,7 @@ namespace GrepExcel.Excel
                         command.Parameters.AddWithValue("$target", searchInfo.Target);
                         command.Parameters.AddWithValue("$match_case", searchInfo.IsMatchCase);
                         command.Parameters.AddWithValue("$lower_uper", searchInfo.IsLowerOrUper);
+                        command.Parameters.AddWithValue("tab_active", searchInfo.IsTabActive);
                         command.ExecuteNonQuery();
                     }
                     transaction.Commit();
@@ -285,5 +289,57 @@ namespace GrepExcel.Excel
             base.Dispose(disposing);
 
         }
+
+        public List<SearchInfo> GetTabActive(bool isTabActive)
+        {
+
+            if (_sqlConnection == null)
+            {
+                ShowDebug.Msg(F.FLMD(), "sql connection faile = null");
+                return null;
+            }
+
+            List<SearchInfo> lst = new List<SearchInfo>();
+
+            try
+            {
+
+                // create command text.
+                using (var command = _sqlConnection.CreateCommand())
+                {
+                    var sqlString = "SELECT * FROM pct_tblResult WHERE tab_active = $tab_active";
+                    command.CommandText = sqlString;
+                    command.Parameters.AddWithValue("$tab_active", isTabActive);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            // them vao doi tuong.
+                            SearchInfo searchInfo = new SearchInfo();
+                            searchInfo.Id = reader.GetInt32(0);
+                            searchInfo.Search = reader.GetString(1);
+                            searchInfo.Folder = reader.GetString(2);
+                            searchInfo.Method = (TypeMethod) reader.GetInt32(3);
+                            searchInfo.Target = (TypeTarget) reader.GetInt32(4);
+                            searchInfo.IsMatchCase = reader.GetBoolean(5);
+                            searchInfo.IsLowerOrUper = reader.GetBoolean(5);
+                            searchInfo.IsTabActive = reader.GetBoolean(5);
+
+                            lst.Add(searchInfo);
+                        }
+                    }
+                }
+            }
+            catch (SqliteException ex)
+            {
+                ShowDebug.Msg(F.FLMD(), ex.Message);
+                throw;
+            }
+
+            return lst;
+
+        }
+
     }
 }

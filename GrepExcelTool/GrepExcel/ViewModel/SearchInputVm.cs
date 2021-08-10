@@ -77,7 +77,9 @@ namespace GrepExcel.ViewModel
 
                 //Display result
                 TabControl tabResult = new SearchResultVm();
+                tabResult.Control = new SearchResultUc();
                 tabResult.TabName = inputInfo.Search;
+                tabResult.SearchId = inputInfo.Id;
 
                 mainVm.AddTabControl(tabResult);
            

@@ -34,7 +34,7 @@ namespace GrepExcel.View
 
         public void Init()
         {
-            cobMethod.SelectedIndex = 0;
+            cobMethod.SelectedIndex = 1;
             cobTarget.SelectedIndex = 0;
             txtSearch.Text = "thanh";
             txtFolder.Text = @"D:\VBA-Excel";//test tam

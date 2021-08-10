@@ -120,5 +120,29 @@ namespace GrepExcel.Excel
             return SqlResult.DeleteFailed;
         }
 
+        public List<ResultInfo> GetResultInfoBySearchId(int searchID)
+        {
+            using (var resultInfo = new ResultStore())
+            {
+                 return   resultInfo.GetResultInfoBySearchId(searchID);
+            }
+        }
+
+        public SqlResult UpdateSearchInfo(object data)
+        {
+            using (var searchInfo = new SearchStore())
+            {
+                return searchInfo.Update(data);
+            }
+        }
+
+        public List<SearchInfo> GetTabActive(bool tabActive)
+        {
+            using (var searchInfo = new SearchStore())
+            {
+                return searchInfo.GetTabActive(tabActive);
+            }
+        }
+
     }
 }

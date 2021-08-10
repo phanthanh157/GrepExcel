@@ -12,7 +12,7 @@ namespace GrepExcel.ViewModel
         private static MainViewModel _instance = null;
         private ICommand _commandClose;
         public ObservableCollection<TabControl> Tabs { get; set; }
-
+        public event EventHandler<int> TabIndexActive;
         public MainViewModel()
         {
             InitClass();
@@ -60,6 +60,8 @@ namespace GrepExcel.ViewModel
             }
         }
 
+        public int TabActive { get; set; }
+
         private void CommandCloseHandler()
         {
             OnClose(EventArgs.Empty);
@@ -99,6 +101,16 @@ namespace GrepExcel.ViewModel
             }
         }
 
+        private void OnTabIndexActive(int index)
+        {
+            TabIndexActive?.Invoke(this, index);
+        }
 
+        public void LoadTabControl()
+        {
+
+
+            OnTabIndexActive(1);
+        }
     }
 }

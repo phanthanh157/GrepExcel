@@ -24,5 +24,20 @@ namespace GrepExcel.View
         {
             InitializeComponent();
         }
+
+        private void lvSearchResults_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void lvSearchResultsColumnHeader_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void GotoDocument_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

@@ -33,6 +33,8 @@ namespace GrepExcel.Excel
 
         public bool IsLowerOrUper { get; set; }
 
+        public bool IsTabActive { get; set; }
+
     }
 
 

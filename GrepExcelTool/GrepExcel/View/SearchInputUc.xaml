@@ -16,7 +16,7 @@
             <Setter Property="Margin" Value="0,0,0,10"/>
         </Style>
         <Style TargetType="{x:Type TextBox}">
-            <Setter Property="MinHeight" Value="25" />
+            <Setter Property="MinHeight" Value="30" />
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <!--<Setter Property="Background" Value="LightBlue"/>-->
@@ -65,7 +65,7 @@
                                             </VisualBrush.Visual>
                                         </VisualBrush>
                                     </Style.Resources>
-                                    <Setter Property="MinHeight" Value="25" />
+                                    <Setter Property="MinHeight" Value="27" />
                                     <Setter Property="HorizontalAlignment" Value="Stretch"/>
                                     <Setter Property="VerticalContentAlignment" Value="Center"/>
                                     <Style.Triggers>
@@ -85,8 +85,8 @@
                         <Button Grid.Column="1"
                     x:Name="btnSearch"
                     Click="btnSearch_Click"
-                    Width="20" 
-                    Height="20" 
+                    Width="22" 
+                    Height="22" 
                     Margin="-30,0,0,0" 
                     Background="Transparent"
                     BorderThickness="0">
@@ -96,8 +96,8 @@
                         <Button Grid.Column="1"
                     x:Name="btnOptionLowAndUper"
                     Click="btnOptionLowAndUper_Click"
-                    Width="20" 
-                    Height="20" 
+                    Width="22" 
+                    Height="22" 
                     Margin="-80,0,0,0" 
                     Background="Transparent"
                     BorderThickness="0"
@@ -107,8 +107,8 @@
                         <Button Grid.Column="1"
                     x:Name="btnOptionMatchCase"
                     Click="btnOptionMatchCase_Click"
-                    Width="20" 
-                    Height="20" 
+                    Width="22" 
+                    Height="22" 
                     Margin="-130,0,0,0" 
                     Background="Transparent"
                     BorderThickness="0"
@@ -133,7 +133,7 @@
                                             </VisualBrush.Visual>
                                         </VisualBrush>
                                     </Style.Resources>
-                                    <Setter Property="MinHeight" Value="25" />
+                                    <Setter Property="MinHeight" Value="27" />
                                     <Setter Property="HorizontalAlignment" Value="Stretch"/>
                                     <Setter Property="VerticalContentAlignment" Value="Center"/>
                                     <Style.Triggers>
@@ -153,8 +153,8 @@
                         <Button Grid.Column="1"
                     x:Name="btnOpenFolder"
                     Click="btnOpenFolder_click"
-                    Width="20"
-                    Height="20" 
+                    Width="22"
+                    Height="22" 
                     Margin="-30,0,0,0" 
                     Background="Transparent"
                     BorderThickness="0"

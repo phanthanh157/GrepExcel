@@ -282,5 +282,62 @@ namespace GrepExcel.Excel
             base.Dispose(disposing);
 
         }
+
+
+
+        public List<ResultInfo> GetResultInfoBySearchId(int searchId)
+        {
+          
+            if (_sqlConnection == null)
+            {
+                ShowDebug.Msg(F.FLMD(), "sql connection faile = null");
+                return null;
+            }
+
+            if (searchId <= 0)
+            {
+                ShowDebug.Msg(F.FLMD(), "search id < 0");
+                return null;
+            }
+            List<ResultInfo> lst = new List<ResultInfo>();
+
+            try
+            {
+               
+                // create command text.
+                using (var command = _sqlConnection.CreateCommand())
+                {
+                    var sqlString = "SELECT * FROM pct_tblResult WHERE search_id = $search_id";
+                    command.CommandText = sqlString;
+                    command.Parameters.AddWithValue("$search_id", searchId);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            // them vao doi tuong.
+                            ResultInfo resultInfo = new ResultInfo();
+                            resultInfo.ResultID = reader.GetInt32(0);
+                            resultInfo.Result = reader.GetString(1);
+                            resultInfo.FileName = reader.GetString(2);
+                            resultInfo.Sheet = reader.GetString(3);
+                            resultInfo.Cell = reader.GetString(4);
+                            resultInfo.SearchInfoID = reader.GetInt32(5);
+
+                            lst.Add(resultInfo);
+                        }
+                    }
+                }
+            }
+            catch (SqliteException ex)
+            {
+                ShowDebug.Msg(F.FLMD(), ex.Message);
+                throw;
+            }
+
+            return lst;
+
+        }
+
     }
 }
