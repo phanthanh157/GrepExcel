@@ -158,7 +158,7 @@ namespace GrepExcel.Excel
                                         cell VARCHAR(25)
                                         )";
                         var resultInfo = data as ResultInfo;
-                        command.CommandText = "INSERT INTO pct_tblResult (search_id,result,filename,sheet,cell" +
+                        command.CommandText = "INSERT INTO pct_tblResult (search_id,result,filename,sheet,cell)" +
                                               " VALUES($search_id,$result,$filename,$sheet,$cell)";
                         command.Parameters.AddWithValue("$search_id", resultInfo.SearchInfoID);
                         command.Parameters.AddWithValue("$result", resultInfo.Result);

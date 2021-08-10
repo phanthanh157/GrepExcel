@@ -68,10 +68,16 @@ namespace GrepExcel.ViewModel
             SqlResult sqlResult =  excelStore.InsertSearchInfo(inputInfo);
             if(SqlResult.InsertSucess == sqlResult)
             {
-                ShowDebug.Msg(F.FLMD(), "Insert success");
+                ShowDebug.Msg(F.FLMD(), "Insert Search info success");
+                inputInfo.Id = excelStore.LastIndexSearch();// add id 
+                //Search process
+                var grep = new Grep();
+                //grep.GrepSpeedNonTask(inputInfo);
+                grep.GrepAsync(inputInfo);
+
+                //Display result
                 TabControl tabResult = new SearchResultVm();
                 tabResult.TabName = inputInfo.Search;
-
 
                 mainVm.AddTabControl(tabResult);
            
