@@ -19,16 +19,13 @@ namespace GrepExcel
     {
         private static List<ConfigTable> _configTables = null;
 
-        private static string _defaultDirectory;
-
         private static ConfigTable[] configs = new ConfigTable[]
         {
-           new ConfigTable("PATH_SPEC_INTERNAL",Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)),
-           new ConfigTable("PATH_SPEC_EXTERNAL",Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)),
-           new ConfigTable("ENABLE_AUTOUPDATE_SPECIFICATION","True"),
-           new ConfigTable("UDP_IP","127.0.0.1"),
-           new ConfigTable("UDP_PORT","9095"),
-           new ConfigTable("MODE_VIEW_XML","Tree")
+           //new ConfigTable("PATH_SPEC_INTERNAL",Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)),
+           new ConfigTable("VERSION","2.1.0"),
+           new ConfigTable("MAX_FILE","100"),
+           new ConfigTable("MAX_FOLDER","100"),
+           new ConfigTable("MAX_SERACH","10000")
         };
 
         public List<ConfigTable> ConfigTables { get => _configTables; set => _configTables = value; }
@@ -40,7 +37,6 @@ namespace GrepExcel
 
         public void Load()
         {
-            _defaultDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             ConfigTables = new List<ConfigTable>();
             ReadAllSettings();
         }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows;
 using GrepExcel.ViewModel;
+using System.IO;
+using GrepExcel.Excel;
 
 namespace GrepExcel
 {
@@ -17,7 +19,7 @@ namespace GrepExcel
             //load config.
             Config config = new Config();
             config.Load();
-
+            //Load instance and set datacontext
             var mainVm = MainViewModel.Instance;
             window.DataContext = mainVm;
 
@@ -25,7 +27,12 @@ namespace GrepExcel
             {
                 window.Close();
             };
-           
+
+            //Create table excel store.
+            if (!File.Exists(Define.Database))
+            {
+                ExcelStoreManager.Instance.CreateTable();
+            }
 
             window.Show();
         }

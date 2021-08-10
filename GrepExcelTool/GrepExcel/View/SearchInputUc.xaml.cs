@@ -37,7 +37,7 @@ namespace GrepExcel.View
         {
             var searchInputVm = new SearchInputVm();
 
-            var inputInfo = new SearchInfomation()
+            var inputInfo = new SearchInfo()
             {
                 Search = "keyword",
                 Folder = "D:/acb",

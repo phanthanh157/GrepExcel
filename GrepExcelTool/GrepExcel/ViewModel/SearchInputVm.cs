@@ -39,11 +39,12 @@ namespace GrepExcel.ViewModel
                 ShowDebug.Msg(F.FLMD(), "Sender is null");
                 return;
             }
-            var inputInfo = sender as SearchInfomation;
+            var inputInfo = sender as SearchInfo;
 
             var mainVm = MainViewModel.Instance;
+            var excelStore = ExcelStoreManager.Instance;
 
-
+         
 
             TabControl tabResult = new SearchResultVm();
             tabResult.TabName = inputInfo.Search;

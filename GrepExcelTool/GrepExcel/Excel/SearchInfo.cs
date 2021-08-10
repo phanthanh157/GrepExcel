@@ -19,8 +19,9 @@ namespace GrepExcel.Excel
         Fomular
     }
 
-    public class SearchInfomation
+    public class SearchInfo
     {
+        public int Id { get; set; }
         public string Search { get; set; }
         public string Folder { get; set; }
 
