@@ -89,7 +89,8 @@ namespace GrepExcel.View
                 Method = (TypeMethod)cobMethod.SelectedValue,
                 Target = (TypeTarget)cobTarget.SelectedValue,
                 IsLowerOrUper = _isLowerOrUper,
-                IsMatchCase = _isMatchCase
+                IsMatchCase = _isMatchCase,
+                IsTabActive = true
             };
 
             searchInputVm.CommandSearch.Execute(inputInfo);

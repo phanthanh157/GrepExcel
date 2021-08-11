@@ -217,7 +217,7 @@ namespace GrepExcel.Excel
 
         public SqlResult Update(object data)
         {
-            SqlResult res = SqlResult.InsertFailed;
+            SqlResult res = SqlResult.UpdateFailed;
 
             if (_sqlConnection == null)
             {
@@ -247,19 +247,19 @@ namespace GrepExcel.Excel
                                               "match_case = $match_case," +
                                               "lower_uper = $lower_uper," +
                                               "tab_active = $tab_active" +
-                                              "WHERE search_id = $search_id";
-                        command.Parameters.AddWithValue("$search_id", searchInfo.Search);
+                                              " WHERE search_id = $search_id";
+                        command.Parameters.AddWithValue("$search_id", searchInfo.Id);
                         command.Parameters.AddWithValue("$search", searchInfo.Search);
                         command.Parameters.AddWithValue("$folder", searchInfo.Folder);
                         command.Parameters.AddWithValue("$method", searchInfo.Method);
                         command.Parameters.AddWithValue("$target", searchInfo.Target);
                         command.Parameters.AddWithValue("$match_case", searchInfo.IsMatchCase);
                         command.Parameters.AddWithValue("$lower_uper", searchInfo.IsLowerOrUper);
-                        command.Parameters.AddWithValue("tab_active", searchInfo.IsTabActive);
+                        command.Parameters.AddWithValue("$tab_active", searchInfo.IsTabActive);
                         command.ExecuteNonQuery();
                     }
                     transaction.Commit();
-                    res = SqlResult.InsertSucess;
+                    res = SqlResult.UpdateSuccess;
                 }
             }
             catch (SqliteException ex)
@@ -307,7 +307,7 @@ namespace GrepExcel.Excel
                 // create command text.
                 using (var command = _sqlConnection.CreateCommand())
                 {
-                    var sqlString = "SELECT * FROM pct_tblResult WHERE tab_active = $tab_active";
+                    var sqlString = "SELECT * FROM pct_tblSearch WHERE tab_active = $tab_active";
                     command.CommandText = sqlString;
                     command.Parameters.AddWithValue("$tab_active", isTabActive);
 
@@ -340,6 +340,62 @@ namespace GrepExcel.Excel
             return lst;
 
         }
+
+        public SearchInfo GetSearchInfoById(int searchId)
+        {
+
+            if (_sqlConnection == null)
+            {
+                ShowDebug.Msg(F.FLMD(), "sql connection faile = null");
+                return null;
+            }
+
+            List<SearchInfo> lst = new List<SearchInfo>();
+
+            try
+            {
+
+                // create command text.
+                using (var command = _sqlConnection.CreateCommand())
+                {
+                    var sqlString = "SELECT * FROM pct_tblSearch WHERE search_id = $search_id";
+                    command.CommandText = sqlString;
+                    command.Parameters.AddWithValue("$search_id", searchId);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            // them vao doi tuong.
+                            SearchInfo searchInfo = new SearchInfo();
+                            searchInfo.Id = reader.GetInt32(0);
+                            searchInfo.Search = reader.GetString(1);
+                            searchInfo.Folder = reader.GetString(2);
+                            searchInfo.Method = (TypeMethod)reader.GetInt32(3);
+                            searchInfo.Target = (TypeTarget)reader.GetInt32(4);
+                            searchInfo.IsMatchCase = reader.GetBoolean(5);
+                            searchInfo.IsLowerOrUper = reader.GetBoolean(5);
+                            searchInfo.IsTabActive = reader.GetBoolean(5);
+
+                            lst.Add(searchInfo);
+                        }
+                    }
+                }
+            }
+            catch (SqliteException ex)
+            {
+                ShowDebug.Msg(F.FLMD(), ex.Message);
+                throw;
+            }
+
+            if(lst.Count > 0)
+            {
+                return lst[0];
+            }
+
+            return null;
+        }
+
 
     }
 }

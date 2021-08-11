@@ -11,7 +11,7 @@ namespace GrepExcel.Excel
         private static ExcelStoreManager _instance = null;
         public ExcelStoreManager()
         {
-            // CreateTable();
+             CreateTable();
             // DropTable();
         }
 
@@ -141,6 +141,14 @@ namespace GrepExcel.Excel
             using (var searchInfo = new SearchStore())
             {
                 return searchInfo.GetTabActive(tabActive);
+            }
+        }
+
+        public SearchInfo GetSearchInfoById(int searchId)
+        {
+            using (var searchInfo = new SearchStore())
+            {
+                return searchInfo.GetSearchInfoById(searchId);
             }
         }
 

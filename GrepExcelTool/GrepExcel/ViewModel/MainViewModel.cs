@@ -4,6 +4,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using GrepExcel.Excel;
+using GrepExcel.View;
 
 namespace GrepExcel.ViewModel
 {
@@ -108,9 +110,24 @@ namespace GrepExcel.ViewModel
 
         public void LoadTabControl()
         {
+            var excelStore = ExcelStoreManager.Instance;
+            var listTabActive = excelStore.GetTabActive(true);
 
+            foreach(var tabActive in listTabActive)
+            {
+                var results = excelStore.GetResultInfoBySearchId(tabActive.Id);
 
-            OnTabIndexActive(1);
+                SearchResultVm tabControl = new SearchResultVm();
+                tabControl.Control = new SearchResultUc();
+                tabControl.TabName = tabActive.Search;
+                tabControl.SearchId = tabActive.Id;
+
+                results.ForEach(x => tabControl.ResultInfos.Add(x));
+ 
+                Tabs.Add(tabControl);
+            }
+
+            OnTabIndexActive(int.Parse(Config.ReadSetting("TAB_CURRENT_ACTIVE")));
         }
     }
 }

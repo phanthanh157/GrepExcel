@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using GrepExcel.ViewModel;
+using GrepExcel.Excel;
 
 namespace GrepExcel.View
 {
@@ -54,13 +55,30 @@ namespace GrepExcel.View
         {
             if (_mainVm.Tabs.Count != 0 && tabAction.SelectedIndex != -1)
             {
+                ShowDebug.Msg(F.FLMD(), "Close tab: index = {0}", tabAction.SelectedIndex);
+                //update tabactive
+                var resultVm = _mainVm.Tabs[tabAction.SelectedIndex];
+                var excelStore = ExcelStoreManager.Instance;
+
+                var searchInfo = excelStore.GetSearchInfoById(resultVm.SearchId);
+
+                if(searchInfo != null)
+                {
+                    searchInfo.IsTabActive = false;
+                    SqlResult sqlResult = excelStore.UpdateSearchInfo(searchInfo);
+                    if(SqlResult.UpdateSuccess == sqlResult)
+                    {
+                        ShowDebug.Msg(F.FLMD(), "Update tabIndex = false success");
+                    }
+                }
+
                 _mainVm.Tabs.RemoveAt(tabAction.SelectedIndex);
             }
         }
 
         private void tabAction_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            _mainVm.TabActive = tabAction.SelectedIndex;
         }
     }
 }

@@ -64,6 +64,8 @@
     </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.3\lib\netstandard2.0\System.Memory.dll</HintPath>
     </Reference>
@@ -87,6 +89,10 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WpfControls, Version=1.0.0.8, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\AutoComplete.Textbox\WpfControls.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -103,7 +109,15 @@
     <Compile Include="Excel\SearchInfo.cs" />
     <Compile Include="Excel\SearchStore.cs" />
     <Compile Include="Excel\SqlLiteImp.cs" />
+    <Compile Include="Properties\Resources.Designer.cs" />
+    <Compile Include="Properties\Settings.Designer.cs" />
     <Compile Include="ViewModel\BaseModel.cs" />
+    <Compile Include="ViewModel\Folder\CustomTemplateSelector.cs" />
+    <Compile Include="ViewModel\Folder\DelegateCommand.cs" />
+    <Compile Include="ViewModel\Folder\FileIconConverter.cs" />
+    <Compile Include="ViewModel\Folder\FilesystemSuggestionProvider.cs" />
+    <Compile Include="ViewModel\Folder\MainWindowViewModel.cs" />
+    <Compile Include="ViewModel\Folder\RequiredValidationRule.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\SearchInputVm.cs" />
@@ -148,16 +162,6 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -215,6 +219,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Image\refresh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModel\Search\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\folder-2-32.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\search_icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.4.1.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.1.0\build\MaterialDesignThemes.targets')" />

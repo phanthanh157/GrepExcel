@@ -22,10 +22,16 @@ namespace GrepExcel
             //Load instance and set datacontext
             var mainVm = MainViewModel.Instance;
             window.DataContext = mainVm;
+            mainVm.LoadTabControl();
 
             mainVm.Close += (object cl, EventArgs ev) =>
             {
+                Config.AddUpdateAppSettings("TAB_CURRENT_ACTIVE", mainVm.TabActive.ToString());
                 window.Close();
+            };
+
+            window.Closed += (object wcl, EventArgs ev1) => {
+                Config.AddUpdateAppSettings("TAB_CURRENT_ACTIVE", mainVm.TabActive.ToString());
             };
 
             //Create table excel store.
@@ -37,5 +43,6 @@ namespace GrepExcel
             window.Show();
         }
 
+    
     }
 }
