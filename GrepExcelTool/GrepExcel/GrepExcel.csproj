@@ -99,6 +99,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Commands\AsyncCommandBase.cs" />
+    <Compile Include="Commands\AsyncRelayCommand.cs" />
     <Compile Include="Define.cs" />
     <Compile Include="Excel\ExcelStoreManager.cs" />
     <Compile Include="Excel\FileCollection.cs" />
