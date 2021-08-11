@@ -113,15 +113,16 @@
     <Compile Include="Properties\Settings.Designer.cs" />
     <Compile Include="ViewModel\BaseModel.cs" />
     <Compile Include="ViewModel\Folder\CustomTemplateSelector.cs" />
-    <Compile Include="ViewModel\Folder\DelegateCommand.cs" />
     <Compile Include="ViewModel\Folder\FileIconConverter.cs" />
     <Compile Include="ViewModel\Folder\FilesystemSuggestionProvider.cs" />
-    <Compile Include="ViewModel\Folder\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\Folder\RequiredValidationRule.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\SearchInputVm.cs" />
     <Compile Include="ViewModel\SearchResultVm.cs" />
+    <Compile Include="ViewModel\Search\FolderSuggestionProvider.cs" />
+    <Compile Include="ViewModel\Search\SearchSuggestionProvider.cs" />
+    <Compile Include="ViewModel\Search\SearchTemplateSelector.cs" />
     <Compile Include="ViewModel\TabControl.cs" />
     <Compile Include="View\SearchInputUc.xaml.cs">
       <DependentUpon>SearchInputUc.xaml</DependentUpon>
@@ -220,9 +221,7 @@
   <ItemGroup>
     <Resource Include="Image\refresh.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModel\Search\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Resources\folder-2-32.ico" />
   </ItemGroup>

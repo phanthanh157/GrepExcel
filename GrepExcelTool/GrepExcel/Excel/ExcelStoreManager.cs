@@ -152,5 +152,22 @@ namespace GrepExcel.Excel
             }
         }
 
+
+        public List<SearchInfo> GetSearchInfoByLimit(int limit)
+        {
+            using (var searchInfo = new SearchStore())
+            {
+                return searchInfo.GetSearchInfoByLimit(limit);
+            }
+        }
+
+        public List<SearchInfo> GetSearchInfoBySearch(string filter,int option=1)
+        {
+            using (var searchInfo = new SearchStore())
+            {
+                return searchInfo.GetSearchInfoBySearch(filter,option);
+            }
+        }
+
     }
 }

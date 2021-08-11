@@ -334,7 +334,6 @@ namespace GrepExcel.Excel
             catch (SqliteException ex)
             {
                 ShowDebug.Msg(F.FLMD(), ex.Message);
-                throw;
             }
 
             return lst;
@@ -385,7 +384,6 @@ namespace GrepExcel.Excel
             catch (SqliteException ex)
             {
                 ShowDebug.Msg(F.FLMD(), ex.Message);
-                throw;
             }
 
             if(lst.Count > 0)
@@ -394,6 +392,125 @@ namespace GrepExcel.Excel
             }
 
             return null;
+        }
+
+
+        public List<SearchInfo> GetSearchInfoByLimit(int limit)
+        {
+
+            if (_sqlConnection == null)
+            {
+                ShowDebug.Msg(F.FLMD(), "sql connection faile = null");
+                return null;
+            }
+
+            List<SearchInfo> lst = new List<SearchInfo>();
+
+            try
+            {
+
+                // create command text.
+                using (var command = _sqlConnection.CreateCommand())
+                {
+                    var sqlString = "SELECT * FROM pct_tblSearch ORDER BY search_id DESC LIMIT $limit";
+                    command.CommandText = sqlString;
+                    command.Parameters.AddWithValue("$limit", limit);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            // them vao doi tuong.
+                            SearchInfo searchInfo = new SearchInfo();
+                            searchInfo.Id = reader.GetInt32(0);
+                            searchInfo.Search = reader.GetString(1);
+                            searchInfo.Folder = reader.GetString(2);
+                            searchInfo.Method = (TypeMethod)reader.GetInt32(3);
+                            searchInfo.Target = (TypeTarget)reader.GetInt32(4);
+                            searchInfo.IsMatchCase = reader.GetBoolean(5);
+                            searchInfo.IsLowerOrUper = reader.GetBoolean(5);
+                            searchInfo.IsTabActive = reader.GetBoolean(5);
+
+                            lst.Add(searchInfo);
+                        }
+                    }
+                }
+            }
+            catch (SqliteException ex)
+            {
+                ShowDebug.Msg(F.FLMD(), ex.Message);
+            }
+
+            return lst;
+        }
+
+
+
+        public List<SearchInfo> GetSearchInfoBySearch(string filter,int option = 1)
+        {
+
+            if (_sqlConnection == null)
+            {
+                ShowDebug.Msg(F.FLMD(), "sql connection faile = null");
+                return null;
+            }
+
+            List<SearchInfo> lst = new List<SearchInfo>();
+
+            try
+            {
+
+                // create command text.
+                using (var command = _sqlConnection.CreateCommand())
+                {
+                    string sqlString = string.Empty;
+                    if (option == 1) //search
+                    {
+                       sqlString += "SELECT DISTINCT search FROM pct_tblSearch WHERE search LIKE '%" + filter + "%'";
+                    }
+                    else if(option == 2)//folder
+                    {
+                    sqlString += "SELECT DISTINCT folder FROM pct_tblSearch WHERE folder LIKE '%" + filter + "%'";
+                    }
+                   
+                    command.CommandText = sqlString;
+                   // command.Parameters.AddWithValue("$search", search);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            // them vao doi tuong.
+                            SearchInfo searchInfo = new SearchInfo();
+                            if(option == 1)
+                            {
+                                searchInfo.Search = reader.GetString(0);
+                            }
+                            else if(option == 2)
+                            {
+                                searchInfo.Folder = reader.GetString(0);
+                            }
+
+                            //searchInfo.Id = reader.GetInt32(0);
+                            //searchInfo.Search = reader.GetString(1);
+                            //searchInfo.Folder = reader.GetString(2);
+                            //searchInfo.Method = (TypeMethod)reader.GetInt32(3);
+                            //searchInfo.Target = (TypeTarget)reader.GetInt32(4);
+                            //searchInfo.IsMatchCase = reader.GetBoolean(5);
+                            //searchInfo.IsLowerOrUper = reader.GetBoolean(5);
+                            //searchInfo.IsTabActive = reader.GetBoolean(5);
+
+                            lst.Add(searchInfo);
+                        }
+                    }
+                }
+            }
+            catch (SqliteException ex)
+            {
+                ShowDebug.Msg(F.FLMD(), ex.Message);
+            }
+
+            return lst;
         }
 
 
