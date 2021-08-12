@@ -15,6 +15,7 @@ namespace GrepExcel.ViewModel
         private static MainViewModel _instance = null;
         private string _notifyString;
         private bool _isOpenNotify = false;
+        private int _tabActive;
         private Queue _msgNotify;
         private ICommand _commandClose;
 
@@ -40,6 +41,13 @@ namespace GrepExcel.ViewModel
         private void OnTabIndexActive(int index)
         {
             TabIndexActive?.Invoke(this, index);
+        }
+
+        public event EventHandler<object> TabSelectionChange;
+
+        private void OnTabSelectionChange(object o)
+        {
+            TabSelectionChange?.Invoke(this, o);
         }
 
         #endregion
@@ -68,7 +76,22 @@ namespace GrepExcel.ViewModel
             }
         }
 
-        public int TabActive { get; set; }
+        public int TabActive 
+        {
+            get
+            {
+                return _tabActive;
+            }
+            set
+            {
+                if (value != _tabActive)
+                {
+                    _tabActive = value;
+                    OnPropertyChanged();
+                    OnTabSelectionChange(this);
+                }
+            }
+        }
         public string NotifyString
         {
             get

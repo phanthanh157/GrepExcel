@@ -11,11 +11,16 @@ using GrepExcel.Commands;
 
 namespace GrepExcel.ViewModel
 {
-  
+    public struct OptionFilter
+    {
+        public string Value { get; set; }
+        public string Color { get; set; }
+    }
 
     public class SearchResultVm : TabControl
     {
         public ObservableCollection<ResultInfo> ResultInfos { get; set; }
+        public ObservableCollection<OptionFilter> OptionFilters { get; set; }
    
         private ICommand _commandRefresh;
         private ICommand _searchResult;
@@ -23,6 +28,15 @@ namespace GrepExcel.ViewModel
         public SearchResultVm()
         {
             ResultInfos = new ObservableCollection<ResultInfo>();
+            OptionFilters = new ObservableCollection<OptionFilter>();
+            InitClass();
+        }
+
+        private void InitClass()
+        {
+            OptionFilters.Add(new OptionFilter { Color = "Green", Value = "Result" });
+            OptionFilters.Add(new OptionFilter { Color = "Red", Value = "FileName" });
+            OptionFilters.Add(new OptionFilter { Color = "Blue", Value = "Sheet" });
         }
 
         public int SearchId { get; set; }
