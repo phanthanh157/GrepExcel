@@ -1,34 +1,52 @@
-﻿using System;
+﻿using GrepExcel.Excel;
+using GrepExcel.View;
+using System;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using GrepExcel.Excel;
-using GrepExcel.View;
 
 namespace GrepExcel.ViewModel
 {
     public class MainViewModel : TabControl
     {
+        #region Fileds
         private static MainViewModel _instance = null;
         private string _notifyString;
         private bool _isOpenNotify = false;
+        private Queue _msgNotify;
         private ICommand _commandClose;
-        public ObservableCollection<TabControl> Tabs { get; set; }
-        public event EventHandler<int> TabIndexActive;
+
+        #endregion
+
+
         public MainViewModel()
         {
             InitClass();
-            NotifyString = "no running task";
+          
         }
 
         public void InitClass()
         {
             Tabs = new ObservableCollection<TabControl>();
-
-
+            _msgNotify = new Queue();
         }
+
+
+        #region Event
+        public event EventHandler<int> TabIndexActive;
+
+        private void OnTabIndexActive(int index)
+        {
+            TabIndexActive?.Invoke(this, index);
+        }
+
+        #endregion
+
+
+        #region Property
+        public ObservableCollection<TabControl> Tabs { get; set; }
 
         public static MainViewModel Instance
         {
@@ -50,21 +68,9 @@ namespace GrepExcel.ViewModel
             }
         }
 
-
-        public ICommand CommandClose
-        {
-            get
-            {
-                if (_commandClose == null)
-                {
-                    _commandClose = new RelayCommand(x => { CommandCloseHandler(); });
-                }
-                return _commandClose;
-            }
-        }
-
         public int TabActive { get; set; }
-        public string NotifyString {
+        public string NotifyString
+        {
             get
             {
                 return _notifyString;
@@ -78,14 +84,15 @@ namespace GrepExcel.ViewModel
                 }
             }
         }
-        public bool IsOpenNotify { 
+        public bool IsOpenNotify
+        {
             get
             {
                 return _isOpenNotify;
             }
             set
             {
-                if(value != _isOpenNotify)
+                if (value != _isOpenNotify)
                 {
                     _isOpenNotify = value;
                     OnPropertyChanged();
@@ -93,12 +100,29 @@ namespace GrepExcel.ViewModel
             }
         }
 
+        #endregion
+
+        #region Command
+        public ICommand CommandClose
+        {
+            get
+            {
+                if (_commandClose == null)
+                {
+                    _commandClose = new RelayCommand(x => { CommandCloseHandler(); });
+                }
+                return _commandClose;
+            }
+        }
         private void CommandCloseHandler()
         {
             OnClose(EventArgs.Empty);
         }
 
+        #endregion
 
+
+        #region Method
         public void AddTabControl(TabControl tabControl)
         {
             if (tabControl == null)
@@ -132,9 +156,45 @@ namespace GrepExcel.ViewModel
             }
         }
 
-        private void OnTabIndexActive(int index)
+        public void NotifyTaskRunning(string taskName, bool isAdd = true)
         {
-            TabIndexActive?.Invoke(this, index);
+      
+            if(_msgNotify.Count == 0)
+            {
+                IsOpenNotify = true;
+            }
+
+            if (isAdd)
+            {
+                _msgNotify.Enqueue(taskName);
+
+                foreach(var task in _msgNotify)
+                {
+                    NotifyString += task + "/";
+                }
+
+            }
+            else
+            {
+                if(_msgNotify.Count > 0)
+                {
+                    _msgNotify.Dequeue();
+                    NotifyString = string.Empty;
+                    foreach (var task in _msgNotify)
+                    {
+                        NotifyString += task + "/";
+                    }
+                    if (_msgNotify.Count == 0)
+                    {
+                        IsOpenNotify = false;
+                    }
+                }
+                else
+                {
+                    IsOpenNotify = false;
+                }
+            }
+
         }
 
         public void LoadTabControl()
@@ -142,7 +202,7 @@ namespace GrepExcel.ViewModel
             var excelStore = ExcelStoreManager.Instance;
             var listTabActive = excelStore.GetTabActive(true);
 
-            foreach(var tabActive in listTabActive)
+            foreach (var tabActive in listTabActive)
             {
                 var results = excelStore.GetResultInfoBySearchId(tabActive.Id);
 
@@ -152,11 +212,13 @@ namespace GrepExcel.ViewModel
                 tabControl.SearchId = tabActive.Id;
 
                 results.ForEach(x => tabControl.ResultInfos.Add(x));
- 
+
                 Tabs.Add(tabControl);
             }
 
             OnTabIndexActive(int.Parse(Config.ReadSetting("TAB_CURRENT_ACTIVE")));
         }
+
+        #endregion
     }
 }

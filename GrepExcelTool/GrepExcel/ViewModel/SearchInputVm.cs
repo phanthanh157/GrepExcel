@@ -66,7 +66,8 @@ namespace GrepExcel.ViewModel
             var mainVm = MainViewModel.Instance;
             var excelStore = ExcelStoreManager.Instance;
 
-           // await Task.Delay(1000);
+            // await Task.Delay(1000);
+            mainVm.NotifyTaskRunning(inputInfo.Search);
 
             //Insert input info to database
             SqlResult sqlResult =  excelStore.InsertSearchInfo(inputInfo);
@@ -88,16 +89,17 @@ namespace GrepExcel.ViewModel
 
                 mainVm.AddTabControl(tabResult);
 
-                mainVm.IsOpenNotify = true;
-                mainVm.NotifyString = inputInfo.Search;
-                DispatcherTimer time = new DispatcherTimer();
-                time.Interval = TimeSpan.FromSeconds(10);
-                time.Start();
-                time.Tick += delegate
-                {
-                    mainVm.IsOpenNotify = false;
-                    time.Stop();
-                };
+                //mainVm.IsOpenNotify = true;
+                //mainVm.NotifyString = inputInfo.Search;
+                //DispatcherTimer time = new DispatcherTimer();
+                //time.Interval = TimeSpan.FromSeconds(10);
+                //time.Start();
+                //time.Tick += delegate
+                //{
+                //    mainVm.IsOpenNotify = false;
+                //    time.Stop();
+                //};
+                mainVm.NotifyTaskRunning(inputInfo.Search,false);
             }
         }
 

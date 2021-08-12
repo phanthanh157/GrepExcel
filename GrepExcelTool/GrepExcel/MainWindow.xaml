@@ -98,11 +98,14 @@
                             <materialDesign:PackIcon Width="20" Height="20" Kind="DockLeft"/>
                             <Popup Name="myPopup" IsOpen="{Binding IsOpenNotify}" Placement="Top">
                                 <Border BorderThickness="0.1">
-                                    <TextBlock Name="myPopupText" 
+                                    <StackPanel>
+                                        <TextBlock Name="myPopupText" 
                                                Text="{Binding NotifyString}"
-                                               Background="Yellow" 
-                                               Foreground="Black" Padding="20"/>
-
+                                               Background="LightGray" 
+                                               Foreground="Black"
+                                               Padding="5"/>
+                                        <ProgressBar Minimum="0" Maximum="100" Height="10" IsIndeterminate="True" />
+                                    </StackPanel>
                                 </Border>
                             </Popup>
                         </StackPanel>
