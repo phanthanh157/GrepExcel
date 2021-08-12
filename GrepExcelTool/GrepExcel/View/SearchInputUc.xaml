@@ -23,6 +23,7 @@
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
+
         <!--Search Textbox-->
         <vmsearch:SearchSuggestionProvider x:Key="searchProvider"/>
         <DataTemplate x:Key="searchTemplate">
@@ -224,8 +225,8 @@
                         <StackPanel>
                             <Label Content="target" FontSize="10" Foreground="Gray"/>
                             <ComboBox Name="cobTarget"
-                          ItemsSource="{Binding Targets}"
-                          SelectedValuePath="Target">
+                                      ItemsSource="{Binding Targets}"
+                                      SelectedValuePath="Target">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">

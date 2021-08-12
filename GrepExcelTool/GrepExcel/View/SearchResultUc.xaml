@@ -11,6 +11,17 @@
     <UserControl.Resources>
         <cvter:IndexConverter x:Key="idxConverter"/>
         <cvter:HasAllTextConverter x:Key="HasAllTextConverter"/>
+
+        <!--Commbobox data-->
+        <XmlDataProvider x:Key="filteResult" XPath="Items">
+            <x:XData>
+                <Items xmlns="">
+                    <Item Color="Green" Value="Result"/>
+                    <Item Color="Red"   Value="FileName"/>
+                    <Item Color="Blue" Value="Sheet"/>
+                </Items>
+            </x:XData>
+        </XmlDataProvider>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -25,7 +36,9 @@
                     </Button>
                 </ToolBar>
                 <ToolBar>
-                    <Button Command="{Binding CommandRefresh}" ToolTip="Open selected file.">
+                    <Button Command="{Binding CommandGotoDocument}" 
+                            CommandParameter="{Binding SelectedItem, ElementName=lvSearchResults}"
+                            ToolTip="Go to document.">
                         <Image Source="../Image/excel.png" Width="20" Height="20" />
                     </Button>
                 </ToolBar>
@@ -59,6 +72,7 @@
                     </TextBox>
                     <Button Grid.Column="1"
                                 x:Name="btnDestroyFilter"
+                                Click="btnDestroyFilter_Click"
                                 Width="22" 
                                 Height="22" 
                                 Margin="-30,0,0,0" 
@@ -71,6 +85,30 @@
                         </Button.Visibility>
                         <materialDesign:PackIcon Width="20" Height="20" Kind="CloseCircle"/>
                     </Button>
+                    <ComboBox x:Name="cobOptionFilter"
+                              ItemsSource="{Binding Source={StaticResource filteResult}, XPath=*,Mode=TwoWay}"
+                              SelectedValue="{Binding Value,UpdateSourceTrigger=PropertyChanged}"
+                              SelectedValuePath="@Value"
+                              SelectedItem="{Binding SelectedModel,Mode=TwoWay}"
+                              IsReadOnly="True"
+                              SelectedIndex="0">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Width="20" Height="20"  Source="../Image/filter.png" />
+                                    <!--<TextBlock Foreground="{Binding Header}" Text="{Binding Value}"/>-->
+                                    <TextBlock>
+                                        <TextBlock.Foreground>
+                                            <Binding XPath="@Color"/>
+                                        </TextBlock.Foreground>
+                                        <TextBlock.Text>
+                                            <Binding XPath="@Value"/>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </ToolBar>
                 <ToolBar>
                     <TextBlock x:Name="tbRowLoad" 
@@ -83,6 +121,7 @@
         <Grid Grid.Row="1">
             <ListView x:Name="lvSearchResults" 
                           ItemsSource="{Binding ResultInfos}"
+                          SelectedItem="{Binding SelectedItem}"
                           SelectionChanged="lvSearchResults_SelectionChanged">
                 <ListView.View>
                     <GridView>
@@ -122,7 +161,10 @@
                 </ListView.View>
                 <ListView.ContextMenu>
                     <ContextMenu >
-                        <MenuItem Header="Go to document" Icon="{materialDesign:PackIcon Kind=Search}" Click="GotoDocument_Click"/>
+                        <MenuItem Header="Go to document" 
+                              Icon="{materialDesign:PackIcon Kind=Search}"
+                              Command="{Binding CommandGotoDocument}"
+                              CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}" />
                     </ContextMenu>
                 </ListView.ContextMenu>
             </ListView>

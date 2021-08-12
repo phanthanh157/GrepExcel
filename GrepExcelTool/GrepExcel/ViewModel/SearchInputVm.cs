@@ -48,7 +48,7 @@ namespace GrepExcel.ViewModel
             {
                 if(_commandSearch == null)
                 {
-                    _commandSearch = new AsyncRelayCommand(sender => CommandSeachHander(sender));
+                    _commandSearch = new Commands.AsyncRelayCommand(sender => CommandSeachHander(sender));
                 }
                 return _commandSearch;
             }

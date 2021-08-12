@@ -12,6 +12,56 @@ namespace GrepExcel.Excel
 
         }
 
+        public async Task OpenFileAsync(ResultInfo resultInfo)
+        {
+           await Task.Run(() => OpenFileExcel(resultInfo));
+        }
+
+        private void OpenFileExcel(ResultInfo resultInfo)
+        {
+
+            ExcelApp.Application xlApp = new ExcelApp.Application()
+            {
+                Visible = true,
+                AutomationSecurity = Microsoft.Office.Core.MsoAutomationSecurity.msoAutomationSecurityForceDisable
+            };
+            ExcelApp.Workbook xlWorkbook;
+            object misValue = System.Reflection.Missing.Value;
+            ExcelApp.Worksheet xlWorksheet;
+            ExcelApp.Range wsFind;
+
+            xlApp.ScreenUpdating = false;
+            xlApp.DisplayAlerts = false;
+
+            try
+            {
+                xlWorkbook = xlApp.Workbooks.Open(resultInfo.FileName, false, misValue, misValue, misValue, misValue, misValue, misValue, misValue, misValue, misValue, misValue, misValue, misValue, misValue);
+                xlWorksheet = (ExcelApp.Worksheet)xlWorkbook.Worksheets.get_Item(resultInfo.Sheet);
+                wsFind = (ExcelApp.Range)xlWorksheet.get_Range(resultInfo.Cell, resultInfo.Cell);
+              
+                xlWorksheet.Activate();
+                wsFind.Activate();
+                xlApp.ScreenUpdating = true;
+                xlApp.DisplayAlerts = true;
+            }
+            catch(Exception ex)
+            {
+                ShowDebug.MsgErr(F.FLMD(), ex.Message);
+            }
+            finally
+            {
+                //Release memory.
+                //xlApp.ScreenUpdating = true;
+                //xlApp.DisplayAlerts = true;
+
+                //xlApp.Application.Quit();
+                //GC.Collect();
+                //GC.WaitForPendingFinalizers();
+            }
+
+
+        }
+
         public async Task GrepAsync(SearchInfo searchInfo)
         {
             // await Task.Run(() => GrepSpeedNonTask(searchInfo));

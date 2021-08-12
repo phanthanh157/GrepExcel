@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using GrepExcel.ViewModel;
 
 namespace GrepExcel.View
 {
@@ -44,7 +45,26 @@ namespace GrepExcel.View
         {
             if(e.Key == Key.Return)
             {
-                MessageBox.Show(txtFilter.Text);
+                if (string.IsNullOrEmpty(txtFilter.Text)) return;
+                var infoSearch = new { Search = txtFilter.Text, OptionFilter = cobOptionFilter.SelectedValue };
+
+                var mainVm = MainViewModel.Instance;
+                var searchResultVm = mainVm.GetActiveSearchResultVm();
+                if(searchResultVm != null)
+                {
+                    searchResultVm.CommandSearchResult.Execute(infoSearch);
+                }
+            }
+        }
+
+        private void btnDestroyFilter_Click(object sender, RoutedEventArgs e)
+        {
+            var mainVm = MainViewModel.Instance;
+            var searchResultVm = mainVm.GetActiveSearchResultVm();
+            if (searchResultVm != null)
+            {
+                txtFilter.Text = string.Empty;
+                searchResultVm.CommandRefresh.Execute(this);
             }
         }
     }

@@ -7,6 +7,35 @@
              xmlns:local="clr-namespace:GrepExcel.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ControlTemplate x:Key="btnHoverFilter" TargetType="Button">
+            <Border Name="border" BorderThickness="0" 
+                Background="Transparent">
+                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <ImageBrush ImageSource="../Image/close.png" Stretch="UniformToFill"/>
+                            <!--<materialDesign:PackIcon Width="20" Height="20" Kind="Close" MouseDown="Image_MouseDown" />-->
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <Style x:Key="btnOne" TargetType="{x:Type Button}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Content" >
+                        <Setter.Value>
+                            <Image Source="../Image/close.png" Stretch="UniformToFill"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
     <Grid>
         <TabControl x:Name="tabAction" SelectionChanged="tabAction_SelectionChanged">
             <TabControl.ItemTemplate>
@@ -14,7 +43,70 @@
                     <StackPanel Orientation="Horizontal" Height="21" Width="Auto">
                         <TextBlock Width="Auto" Text="{Binding Path=TabName}"/>
                         <!--<Image Source="../Image/close.png" Margin="5" Width="10" Height="10" MouseDown="Image_MouseDown"/>-->
-                        <materialDesign:PackIcon Width="20" Height="20" Kind="CloseBox" MouseDown="Image_MouseDown" />
+                        <!--<Button x:Name="btnClose" Click="btnClose_Click" Style="{StaticResource btnOne}">
+                            --><!--<materialDesign:PackIcon Width="20" Height="20" Kind="CloseBox" />--><!--
+                            abc
+                        </Button>-->
+                        <Button
+                                x:Name="btnClose"
+                                Grid.Column="1"
+                                Width="20"
+                                Height="20"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                BorderBrush="{x:Null}"
+                                BorderThickness="0"
+                                Click="btnClose_Click"
+                                ClickMode="Press"
+                                Content=""
+                                Foreground="{x:Null}"
+                                UseLayoutRounding="True">
+                            <Button.Style>
+                                <Style TargetType="{x:Type Button}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border
+                                                    x:Name="border"
+                                                    BorderThickness="0">
+                                                    <Grid>
+                                                        <Image
+                                                        x:Name="buttonImage"
+                                                        Source="../Image/close.png"
+                                                        Stretch="UniformToFill" 
+                                                        Width="10"
+                                                        Height="10"
+                                                        Margin="5,0,-5,0"/>
+                                                        <ContentPresenter
+                                                            Margin="{TemplateBinding Padding}"
+                                                            HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center" />
+                                                    </Grid>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="true">
+                                                        <Setter TargetName="buttonImage" 
+                                                                Property="Source" 
+                                                                Value="../Image/close-hover.png" />
+                                                        <Setter TargetName="buttonImage"
+                                                                Property="Width"
+                                                                Value="20"/>
+                                                        <Setter TargetName="buttonImage"
+                                                                Property="Height"
+                                                                Value="20"/>
+
+                                                    </Trigger>
+                                                    <Trigger Property="IsPressed" Value="true">
+                                                        <!--<Setter TargetName="border" Property="Background" Value="blue" />
+                                                        <Setter TargetName="border" Property="BorderBrush" Value="Red" />-->
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Button.Style>
+                        </Button>
                     </StackPanel>
                 </DataTemplate>
             </TabControl.ItemTemplate>

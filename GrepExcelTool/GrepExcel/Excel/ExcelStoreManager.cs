@@ -128,6 +128,15 @@ namespace GrepExcel.Excel
             }
         }
 
+        public List<ResultInfo> GetResultInfoAll()
+        {
+            using (var resultInfo = new ResultStore())
+            {
+                return resultInfo.GetResultInfoAll();
+            }
+        }
+
+
         public SqlResult UpdateSearchInfo(object data)
         {
             using (var searchInfo = new SearchStore())

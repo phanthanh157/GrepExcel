@@ -156,6 +156,13 @@ namespace GrepExcel.ViewModel
             }
         }
 
+        public SearchResultVm GetActiveSearchResultVm()
+        {
+            if (Tabs.Count >= TabActive)
+                return (SearchResultVm) Tabs[TabActive];
+            return null;
+        }
+
         public void NotifyTaskRunning(string taskName, bool isAdd = true)
         {
       
@@ -168,10 +175,7 @@ namespace GrepExcel.ViewModel
             {
                 _msgNotify.Enqueue(taskName);
 
-                foreach(var task in _msgNotify)
-                {
-                    NotifyString += task + "/";
-                }
+                 NotifyString = "Task running (" + _msgNotify.Count + " tasks in queue)";
 
             }
             else
@@ -180,10 +184,9 @@ namespace GrepExcel.ViewModel
                 {
                     _msgNotify.Dequeue();
                     NotifyString = string.Empty;
-                    foreach (var task in _msgNotify)
-                    {
-                        NotifyString += task + "/";
-                    }
+
+                    NotifyString = "Task running (" + _msgNotify.Count + " tasks in queue)";
+
                     if (_msgNotify.Count == 0)
                     {
                         IsOpenNotify = false;
