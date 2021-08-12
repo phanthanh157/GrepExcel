@@ -39,5 +39,13 @@ namespace GrepExcel.View
         {
 
         }
+
+        private void txtFilter_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Return)
+            {
+                MessageBox.Show(txtFilter.Text);
+            }
+        }
     }
 }

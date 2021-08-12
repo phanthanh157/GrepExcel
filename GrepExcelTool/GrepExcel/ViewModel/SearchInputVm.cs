@@ -7,6 +7,8 @@ using System.Windows.Input;
 using GrepExcel.View;
 using GrepExcel.Excel;
 using System.Collections.ObjectModel;
+using GrepExcel.Commands;
+using System.Windows.Threading;
 
 namespace GrepExcel.ViewModel
 {
@@ -46,13 +48,13 @@ namespace GrepExcel.ViewModel
             {
                 if(_commandSearch == null)
                 {
-                    _commandSearch = new RelayCommand(sender => CommandSeachHander(sender));
+                    _commandSearch = new AsyncRelayCommand(sender => CommandSeachHander(sender));
                 }
                 return _commandSearch;
             }
         }
 
-        private void CommandSeachHander(object sender)
+        private async Task CommandSeachHander(object sender)
         {
             ShowDebug.Msg(F.FLMD(), "Handler");
             if(sender == null)
@@ -64,6 +66,8 @@ namespace GrepExcel.ViewModel
             var mainVm = MainViewModel.Instance;
             var excelStore = ExcelStoreManager.Instance;
 
+           // await Task.Delay(1000);
+
             //Insert input info to database
             SqlResult sqlResult =  excelStore.InsertSearchInfo(inputInfo);
             if(SqlResult.InsertSucess == sqlResult)
@@ -73,16 +77,27 @@ namespace GrepExcel.ViewModel
                 //Search process
                 var grep = new Grep();
                 //grep.GrepSpeedNonTask(inputInfo);
-                grep.GrepAsync(inputInfo);
+                await grep.GrepAsync(inputInfo);
 
                 //Display result
-                TabControl tabResult = new SearchResultVm();
+                SearchResultVm tabResult = new SearchResultVm();
                 tabResult.Control = new SearchResultUc();
                 tabResult.TabName = inputInfo.Search;
                 tabResult.SearchId = inputInfo.Id;
+                tabResult.CommandRefeshHandler(); //load du lieu tu database
 
                 mainVm.AddTabControl(tabResult);
-           
+
+                mainVm.IsOpenNotify = true;
+                mainVm.NotifyString = inputInfo.Search;
+                DispatcherTimer time = new DispatcherTimer();
+                time.Interval = TimeSpan.FromSeconds(10);
+                time.Start();
+                time.Tick += delegate
+                {
+                    mainVm.IsOpenNotify = false;
+                    time.Stop();
+                };
             }
         }
 

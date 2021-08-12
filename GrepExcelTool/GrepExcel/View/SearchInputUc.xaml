@@ -36,6 +36,10 @@
                                Grid.Row="0"
                                FontFamily="Segoe UI"
                                VerticalAlignment="Bottom"/>
+                    <!--<TextBlock Text="{Binding Path=Id, StringFormat='Id: {0}'}"
+                               FontStyle="Italic"
+                               Grid.Row="1"
+                               VerticalAlignment="Top"/>-->
                 </Grid>
             </Border>
         </DataTemplate>
@@ -98,7 +102,9 @@
                                  IconPlacement="Left"
                                  IconVisibility="Visible"
                                  Provider="{StaticResource ResourceKey=searchProvider}"
-                                 x:Name="txtSearch">
+                                 x:Name="txtSearch"
+                                 KeyDown="txtSearch_KeyDown"
+                                >
                             <wpf:AutoCompleteTextBox.SelectedItem>
                                 <Binding Path="SelectedPath" Mode="TwoWay">
                                     <Binding.ValidationRules>
@@ -239,7 +245,18 @@
                     <Image Source="../Image/store.png" Width="30" Height="30" Margin="5"/>
                 </TabItem.Header>
                 <Grid>
-              
+                    <ToggleButton x:Name="btnNotify" BorderThickness="0" Background="Transparent" Height="20" Width="20" HorizontalAlignment="Left">
+                        <StackPanel>
+                            <materialDesign:PackIcon Width="20" Height="20" Kind="DockLeft"/>
+                            <Popup Name="myPopup" IsOpen="{Binding IsChecked, ElementName=btnNotify}" Placement="Top">
+                                <Border>
+                                    <TextBlock Name="myPopupText" Background="WhiteSmoke" Foreground="Gray" Padding="30">
+                Popup Text
+                                    </TextBlock>
+                                </Border>
+                            </Popup>
+                        </StackPanel>
+                    </ToggleButton>
                 </Grid>
             </TabItem>
         </TabControl>

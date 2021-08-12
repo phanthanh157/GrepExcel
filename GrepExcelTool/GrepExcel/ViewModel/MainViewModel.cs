@@ -12,14 +12,15 @@ namespace GrepExcel.ViewModel
     public class MainViewModel : TabControl
     {
         private static MainViewModel _instance = null;
+        private string _notifyString;
+        private bool _isOpenNotify = false;
         private ICommand _commandClose;
         public ObservableCollection<TabControl> Tabs { get; set; }
         public event EventHandler<int> TabIndexActive;
         public MainViewModel()
         {
             InitClass();
-
-
+            NotifyString = "no running task";
         }
 
         public void InitClass()
@@ -63,6 +64,34 @@ namespace GrepExcel.ViewModel
         }
 
         public int TabActive { get; set; }
+        public string NotifyString {
+            get
+            {
+                return _notifyString;
+            }
+            set
+            {
+                if (value != _notifyString)
+                {
+                    _notifyString = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public bool IsOpenNotify { 
+            get
+            {
+                return _isOpenNotify;
+            }
+            set
+            {
+                if(value != _isOpenNotify)
+                {
+                    _isOpenNotify = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         private void CommandCloseHandler()
         {

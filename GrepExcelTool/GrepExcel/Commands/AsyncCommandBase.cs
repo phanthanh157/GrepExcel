@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace AsyncCommands.Commands
+namespace GrepExcel.Commands
 {
     public abstract class AsyncCommandBase : ICommand
     {
@@ -26,7 +26,7 @@ namespace AsyncCommands.Commands
 
         public event EventHandler CanExecuteChanged;
 
-        public AsyncCommandBase(Action<Exception> onException)
+        public AsyncCommandBase(Action<Exception> onException = null)
         {
             _onException = onException;
         }

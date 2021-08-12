@@ -126,6 +126,8 @@
     <Compile Include="ViewModel\Search\SearchSuggestionProvider.cs" />
     <Compile Include="ViewModel\Search\SearchTemplateSelector.cs" />
     <Compile Include="ViewModel\TabControl.cs" />
+    <Compile Include="View\Converters\HasAllTextConverter.cs" />
+    <Compile Include="View\Converters\IndexConverter.cs" />
     <Compile Include="View\SearchInputUc.xaml.cs">
       <DependentUpon>SearchInputUc.xaml</DependentUpon>
     </Compile>
@@ -223,7 +225,9 @@
   <ItemGroup>
     <Resource Include="Image\refresh.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Image\excel.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\folder-2-32.ico" />
   </ItemGroup>

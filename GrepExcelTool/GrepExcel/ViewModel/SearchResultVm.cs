@@ -34,7 +34,7 @@ namespace GrepExcel.ViewModel
             }
         }
 
-        private void CommandRefeshHandler()
+        public void CommandRefeshHandler()
         {
 
             var excelStore = ExcelStoreManager.Instance;

@@ -93,7 +93,20 @@
                     </ItemsPanelTemplate>
                 </StatusBar.ItemsPanel>
                 <StatusBarItem>
-                    <TextBlock Name="lblCursorPosition" />
+                    <ToggleButton x:Name="btnNotify" BorderThickness="0" Background="Transparent" Height="20" Width="20" HorizontalAlignment="Left">
+                        <StackPanel>
+                            <materialDesign:PackIcon Width="20" Height="20" Kind="DockLeft"/>
+                            <Popup Name="myPopup" IsOpen="{Binding IsOpenNotify}" Placement="Top">
+                                <Border BorderThickness="0.1">
+                                    <TextBlock Name="myPopupText" 
+                                               Text="{Binding NotifyString}"
+                                               Background="Yellow" 
+                                               Foreground="Black" Padding="20"/>
+
+                                </Border>
+                            </Popup>
+                        </StackPanel>
+                    </ToggleButton>
                 </StatusBarItem>
                 <Separator Grid.Column="1" />
                 <StatusBarItem Grid.Column="2">

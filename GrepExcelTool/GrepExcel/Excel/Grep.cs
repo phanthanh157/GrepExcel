@@ -12,12 +12,13 @@ namespace GrepExcel.Excel
 
         }
 
-        public void GrepAsync(SearchInfo searchInfo)
+        public async Task GrepAsync(SearchInfo searchInfo)
         {
-            Task.Run(() => GrepSpeedNonTask(searchInfo));
+            // await Task.Run(() => GrepSpeedNonTask(searchInfo));
+            await GrepSpeedNonTask(searchInfo);
         }
 
-        public void GrepSpeedNonTask(SearchInfo searchInfo)
+        public async Task GrepSpeedNonTask(SearchInfo searchInfo)
         {
             if (searchInfo == null)
             {
@@ -74,17 +75,20 @@ namespace GrepExcel.Excel
                 int _noMatches = 0;
                 int _maxSearch = int.Parse(Config.ReadSetting("MAX_SEARCH"));
                 var files = new FileCollection(searchInfo.Folder, searchInfo.Method);
+  
                 foreach (string file in files)
                 {
                    ShowDebug.Msg(F.FLMD(), "Open File:  '{0}'.", file);
-                   ItemGrep(searchInfo,
-                            file,
-                            xlApp,
-                            findExact,
-                            targetCurrent,
-                            _noMatches,
-                            _maxSearch);
+                   await Task.Run(()=>  ItemGrep(searchInfo,
+                                        file,
+                                        xlApp,
+                                        findExact,
+                                        targetCurrent,
+                                        _noMatches,
+                                        _maxSearch));
                 }
+
+
 
                 xlApp.ScreenUpdating = true;
                 xlApp.DisplayAlerts = true;

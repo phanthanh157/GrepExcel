@@ -3,6 +3,7 @@ using System.Windows;
 using GrepExcel.ViewModel;
 using System.IO;
 using GrepExcel.Excel;
+using System.Windows.Controls;
 
 namespace GrepExcel
 {
@@ -39,6 +40,8 @@ namespace GrepExcel
             {
                 ExcelStoreManager.Instance.CreateTable();
             }
+
+
 
             window.Show();
         }

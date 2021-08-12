@@ -31,7 +31,6 @@ namespace GrepExcel.View
             Init();
         }
 
-
         public void Init()
         {
             cobMethod.SelectedIndex = 1;
@@ -121,6 +120,30 @@ namespace GrepExcel.View
             else
             {
                 btnOptionMatchCase.Background = Brushes.Transparent;
+            }
+        }
+
+        private void txtSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                //TODO: Dang bi loi khong textchanged khong thay doi
+                //if (!Validate()) return;
+
+                //var searchInputVm = new SearchInputVm();
+
+                //var inputInfo = new SearchInfo()
+                //{
+                //    Search = txtSearch.Text,
+                //    Folder = txtFolder.Text,
+                //    Method = (TypeMethod)cobMethod.SelectedValue,
+                //    Target = (TypeTarget)cobTarget.SelectedValue,
+                //    IsLowerOrUper = _isLowerOrUper,
+                //    IsMatchCase = _isMatchCase,
+                //    IsTabActive = true
+                //};
+
+                //searchInputVm.CommandSearch.Execute(inputInfo);
             }
         }
     }

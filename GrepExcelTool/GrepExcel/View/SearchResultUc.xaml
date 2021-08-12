@@ -5,8 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:GrepExcel.View"
+             xmlns:cvter="clr-namespace:GrepExcel.View.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <cvter:IndexConverter x:Key="idxConverter"/>
+        <cvter:HasAllTextConverter x:Key="HasAllTextConverter"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -18,15 +23,60 @@
                     <Button Command="{Binding CommandRefresh}" ToolTip="Refresh data search result.">
                         <Image Source="../Image/refresh.png" Width="20" Height="20" />
                     </Button>
-                    <!--<Button Command="Copy" ToolTip="Copy selection to Windows Clipboard.">
-                        <Image Source="/WpfTutorialSamples;component/Images/copy.png" />
+                </ToolBar>
+                <ToolBar>
+                    <Button Command="{Binding CommandRefresh}" ToolTip="Open selected file.">
+                        <Image Source="../Image/excel.png" Width="20" Height="20" />
                     </Button>
-                    <Button Command="Paste" ToolTip="Paste from Windows Clipboard.">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="/WpfTutorialSamples;component/Images/paste.png" />
-                            <TextBlock Margin="3,0,0,0">Paste</TextBlock>
-                        </StackPanel>
-                    </Button>-->
+                </ToolBar>
+                <ToolBar>
+                    <TextBox x:Name="txtFilter" Width="200"  KeyDown="txtFilter_KeyDown">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                <Style.Resources>
+                                    <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                        <VisualBrush.Visual>
+                                            <Label Content="Filter data here" Foreground="Gray" />
+                                        </VisualBrush.Visual>
+                                    </VisualBrush>
+                                </Style.Resources>
+                                <Setter Property="MinHeight" Value="27" />
+                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                <Style.Triggers>
+                                    <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                    </Trigger>
+                                    <Trigger Property="Text" Value="{x:Null}">
+                                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                    </Trigger>
+                                    <Trigger Property="IsKeyboardFocused" Value="True">
+                                        <Setter Property="Background" Value="White" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                    <Button Grid.Column="1"
+                                x:Name="btnDestroyFilter"
+                                Width="22" 
+                                Height="22" 
+                                Margin="-30,0,0,0" 
+                                Background="Transparent"
+                                BorderThickness="0">
+                        <Button.Visibility>
+                            <MultiBinding Converter="{StaticResource HasAllTextConverter}">
+                                <Binding ElementName="txtFilter" Path="Text" />
+                            </MultiBinding>
+                        </Button.Visibility>
+                        <materialDesign:PackIcon Width="20" Height="20" Kind="CloseCircle"/>
+                    </Button>
+                </ToolBar>
+                <ToolBar>
+                    <TextBlock x:Name="tbRowLoad" 
+                               FontFamily="Segoe UI"
+                               VerticalAlignment="Center"
+                               Text="{Binding Path=ResultInfos.Count,StringFormat='Total rows loaded: {0}'}"/>
                 </ToolBar>
             </ToolBarTray>
         </DockPanel>
@@ -36,27 +86,34 @@
                           SelectionChanged="lvSearchResults_SelectionChanged">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Width="70" DisplayMemberBinding="{Binding Path= ResultID }">
+                        <GridViewColumn Width="40" DisplayMemberBinding="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                                                         AncestorType={x:Type ListViewItem}}, 
+                                                                         Converter={StaticResource idxConverter}}">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Tag="ResultID" Click="lvSearchResultsColumnHeader_Click">Id</GridViewColumnHeader>
                             </GridViewColumn.Header>
+                            <!--<GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="txtName" Text="{Binding ResultID}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>-->
                         </GridViewColumn>
-                        <GridViewColumn Width="80" DisplayMemberBinding="{Binding Path= Result}">
+                        <GridViewColumn Width="400" DisplayMemberBinding="{Binding Path= Result}">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Tag="Result" Click="lvSearchResultsColumnHeader_Click">Result</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
-                        <GridViewColumn Width="300" DisplayMemberBinding="{Binding Path= FileName}">
+                        <GridViewColumn Width="350" DisplayMemberBinding="{Binding Path= FileName}">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Tag="FileName" Click="lvSearchResultsColumnHeader_Click">FileName</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
-                        <GridViewColumn Width="200" DisplayMemberBinding="{Binding Path= Sheet}">
+                        <GridViewColumn Width="150" DisplayMemberBinding="{Binding Path= Sheet}">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Tag="Sheet" Click="lvSearchResultsColumnHeader_Click">Sheet</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
-                        <GridViewColumn Width="80" DisplayMemberBinding="{Binding Path= Cell}">
+                        <GridViewColumn Width="50" DisplayMemberBinding="{Binding Path= Cell}">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Tag="Cell" Click="lvSearchResultsColumnHeader_Click">Cell</GridViewColumnHeader>
                             </GridViewColumn.Header>

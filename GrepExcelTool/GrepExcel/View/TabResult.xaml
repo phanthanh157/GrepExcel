@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:GrepExcel.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -12,7 +13,8 @@
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Height="21" Width="Auto">
                         <TextBlock Width="Auto" Text="{Binding Path=TabName}"/>
-                        <Image Source="../Image/close.png" Margin="5" Width="10" Height="10" MouseDown="Image_MouseDown"/>
+                        <!--<Image Source="../Image/close.png" Margin="5" Width="10" Height="10" MouseDown="Image_MouseDown"/>-->
+                        <materialDesign:PackIcon Width="20" Height="20" Kind="CloseBox" MouseDown="Image_MouseDown" />
                     </StackPanel>
                 </DataTemplate>
             </TabControl.ItemTemplate>
