@@ -178,5 +178,14 @@ namespace GrepExcel.Excel
             }
         }
 
+
+        public List<SearchInfo> GetSearchInfoAll()
+        {
+            using (var resultInfo = new SearchStore())
+            {
+                return resultInfo.GetSearchInfoAll();
+            }
+        }
+
     }
 }

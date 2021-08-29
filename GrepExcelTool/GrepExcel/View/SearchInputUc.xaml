@@ -66,7 +66,7 @@
                                          SearchTempalte ="{StaticResource folderTemplate}"/>
     </UserControl.Resources>
     <Grid>
-        <TabControl TabStripPlacement="Left">
+        <TabControl TabStripPlacement="Left" Background="WhiteSmoke">
             <TabItem>
                 <TabItem.Header>
                     <Image Source="../Image/search.png" Width="30" Height="30" Margin="5"/>
@@ -105,6 +105,7 @@
                                  Provider="{StaticResource ResourceKey=searchProvider}"
                                  x:Name="txtSearch"
                                  KeyDown="txtSearch_KeyDown"
+                                 Background="White"
                                 >
                             <wpf:AutoCompleteTextBox.SelectedItem>
                                 <Binding Path="SelectedPath" Mode="TwoWay">
@@ -175,7 +176,8 @@
                                  IconPlacement="Left"
                                  IconVisibility="Visible"
                                  Provider="{StaticResource ResourceKey=folderProvider}"
-                                 x:Name="txtFolder">
+                                 x:Name="txtFolder"
+                                 Background="White">
                             <wpf:AutoCompleteTextBox.SelectedItem>
                                 <Binding Path="SelectedPath" Mode="TwoWay">
                                     <Binding.ValidationRules>
@@ -245,19 +247,22 @@
                 <TabItem.Header>
                     <Image Source="../Image/store.png" Width="30" Height="30" Margin="5"/>
                 </TabItem.Header>
-                <Grid>
-                    <ToggleButton x:Name="btnNotify" BorderThickness="0" Background="Transparent" Height="20" Width="20" HorizontalAlignment="Left">
-                        <StackPanel>
-                            <materialDesign:PackIcon Width="20" Height="20" Kind="DockLeft"/>
-                            <Popup Name="myPopup" IsOpen="{Binding IsChecked, ElementName=btnNotify}" Placement="Top">
-                                <Border>
-                                    <TextBlock Name="myPopupText" Background="WhiteSmoke" Foreground="Gray" Padding="30">
-                Popup Text
-                                    </TextBlock>
-                                </Border>
-                            </Popup>
-                        </StackPanel>
-                    </ToggleButton>
+                <Grid Margin="10,5,5,5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid  Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="KEY SEARCH RECENT" FontWeight="Medium"/>
+                    </Grid>
+                    <local:ListSeachUC Grid.Row="1"/>
                 </Grid>
             </TabItem>
         </TabControl>

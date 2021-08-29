@@ -514,5 +514,55 @@ namespace GrepExcel.Excel
         }
 
 
+        public List<SearchInfo> GetSearchInfoAll()
+        {
+
+            if (_sqlConnection == null)
+            {
+                ShowDebug.Msg(F.FLMD(), "sql connection faile = null");
+                return null;
+            }
+
+            List<SearchInfo> lst = new List<SearchInfo>();
+
+            try
+            {
+
+                // create command text.
+                using (var command = _sqlConnection.CreateCommand())
+                {
+                    var sqlString = "SELECT * FROM pct_tblSearch";
+                    command.CommandText = sqlString;
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            // them vao doi tuong.
+                            SearchInfo searchInfo = new SearchInfo();
+                            searchInfo.Id = reader.GetInt32(0);
+                            searchInfo.Search = reader.GetString(1);
+                            searchInfo.Folder = reader.GetString(2);
+                            searchInfo.Method = (TypeMethod)reader.GetInt32(3);
+                            searchInfo.Target = (TypeTarget)reader.GetInt32(4);
+                            searchInfo.IsMatchCase = reader.GetBoolean(5);
+                            searchInfo.IsLowerOrUper = reader.GetBoolean(5);
+                            searchInfo.IsTabActive = reader.GetBoolean(5);
+
+                            lst.Add(searchInfo);
+                        }
+                    }
+                }
+            }
+            catch (SqliteException ex)
+            {
+                ShowDebug.Msg(F.FLMD(), ex.Message);
+                throw;
+            }
+
+            return lst;
+
+        }
+
+
     }
 }
