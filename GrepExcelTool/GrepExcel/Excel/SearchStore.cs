@@ -110,6 +110,55 @@ namespace GrepExcel.Excel
 
         }
 
+
+        public SqlResult DeleteBySearchId(SearchInfo data)
+        {
+            SqlResult res = SqlResult.DeleteFailed;
+
+            if (_sqlConnection == null)
+            {
+                ShowDebug.Msg(F.FLMD(), "sql connection faile = null");
+                return res;
+            }
+
+            if (data == null)
+            {
+                ShowDebug.Msg(F.FLMD(), "data = null");
+                return res;
+            }
+
+            try
+            {
+
+                using (var transaction = _sqlConnection.BeginTransaction())
+                {
+                    using (var command = _sqlConnection.CreateCommand())
+                    {
+                        //Del form table result
+                        command.CommandText = "DELETE FROM pct_tblResult WHERE search_id = $result";
+                        command.Parameters.AddWithValue("result", data.Id);
+                        command.ExecuteNonQuery();
+
+                        //Del from table search
+                        command.CommandText = "DELETE FROM pct_tblSearch WHERE search_id = $search_id ";
+                        command.Parameters.AddWithValue("$search_id", data.Id);
+                        command.ExecuteNonQuery();
+
+                    }
+                    transaction.Commit();
+                    res = SqlResult.DeleteSuccess;
+                }
+            }
+            catch (SqliteException ex)
+            {
+                ShowDebug.Msg(F.FLMD(), ex.Message);
+            }
+
+            return res;
+
+        }
+
+
         public SqlResult DropTable()
         {
             SqlResult res = SqlResult.DeleteTableFailed;

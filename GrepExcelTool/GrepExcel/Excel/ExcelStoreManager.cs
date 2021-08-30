@@ -187,5 +187,14 @@ namespace GrepExcel.Excel
             }
         }
 
+
+        public SqlResult DeleteBySearchId(SearchInfo data)
+        {
+            using (var searchInfo = new SearchStore())
+            {
+                return searchInfo.DeleteBySearchId(data);
+            }
+        }
+
     }
 }

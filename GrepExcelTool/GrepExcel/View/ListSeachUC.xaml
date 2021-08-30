@@ -79,16 +79,17 @@
           Value="true" />
             <Setter Property="OverridesDefaultStyle"
           Value="true" />
-            <Setter Property="Margin" Value="0,2,0,2"/>
+            <EventSetter Event="PreviewMouseDown" Handler="ItemOnPreviewMouseDown" />
+            <Setter Property="Margin" Value="0"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ListBoxItem">
                         <Border x:Name="BorderLB"
-                                BorderThickness="0.5"
+                                BorderThickness="0,0,0,0.5"
                                 Padding="2"
                                 BorderBrush="Gray"
                                 SnapsToDevicePixels="true"
-                                CornerRadius="2">
+                                CornerRadius="0">
                             <Border.Background>
                                 <SolidColorBrush Color="White" />
                             </Border.Background>
@@ -118,7 +119,8 @@
                                  
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
-                            <Grid>
+                            <ContentPresenter />
+                            <!--<Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                                     <ColumnDefinition Width="*"></ColumnDefinition>
@@ -133,6 +135,8 @@
                                         BorderThickness="0"
                                         Background="Transparent"
                                         Width="40"
+                                        Name="btnDelSerachResult"
+                                        Click="btnDelSerachResult_Click"
                                         >
                                     <Image Source="../Image/delete_bin.png" 
                                            Width="20" 
@@ -149,7 +153,7 @@
                                            Grid.Row="1"
                                            TextWrapping="Wrap"/>
                               
-                            </Grid>
+                            </Grid>-->
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="Selector.IsSelected" Value="True">
@@ -182,15 +186,55 @@
                                     </Setter.Value>
                                 </Setter>
                             </Trigger>
+                            
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <DataTemplate x:Key="ListboxDataTemp" >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Button Grid.Column="0"
+                                        Grid.Row="0"
+                                        Grid.RowSpan="2"
+                                        BorderThickness="0"
+                                        Background="Transparent"
+                                        Width="40"
+                                        Name="btnDelSerachResult"
+                                        Click="btnDelSerachResult_Click"
+                                        >
+                    <Image Source="../Image/delete_bin.png" 
+                                           Width="20" 
+                                           Height="20" 
+                                           ToolTip="Delete key search"/>
+                </Button>
+                <TextBlock Text="{Binding Path=Search}"
+                                           FontWeight="Bold"
+                                           Grid.Column="1"
+                                           Grid.Row="0"
+                                           TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding Path=Folder}"
+                                           Grid.Column="1"
+                                           Grid.Row="1"
+                                           TextWrapping="Wrap"/>
+
+            </Grid>
+        </DataTemplate>
     </UserControl.Resources>
     <Grid>
-        <ListBox Name="lstSearch"
-         ItemsSource="{Binding SearchInfos}"/>
+        <ListBox Name="lstSearch" 
+                 MouseDoubleClick="lstSearch_MouseDoubleClick"
+              
+                 ItemTemplate="{StaticResource ListboxDataTemp}"/>
 
     </Grid>
 </UserControl>

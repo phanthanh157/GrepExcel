@@ -35,6 +35,29 @@ namespace GrepExcel.Excel
 
         public bool IsTabActive { get; set; }
 
+        //public static bool operator ==(SearchInfo left, SearchInfo right)
+        //{
+        //    if(right is null)
+        //    {
+        //        if(left is null)
+        //        {
+        //            return true;
+        //        }
+        //        return false;
+        //    }
+        //    return ((left.Search == right.Search) &&
+        //          (left.Folder == right.Folder) &&
+        //          (left.Method == right.Method) &&
+        //          (left.Target == right.Target) &&
+        //          (left.IsMatchCase == right.IsMatchCase) &&
+        //          (left.IsLowerOrUper == right.IsLowerOrUper)) ;
+        //}
+
+        //public static bool operator !=(SearchInfo left, SearchInfo right)
+        //{
+        //    return !(left == right);
+        //}
+
     }
 
 
