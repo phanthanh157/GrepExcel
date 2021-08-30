@@ -66,7 +66,22 @@ namespace GrepExcel.ViewModel
                 return;
             }
             var mainVm = MainViewModel.Instance;
-            //Display result
+            var excelStore = ExcelStoreManager.Instance;
+
+            //update tabactive
+            searchInfo.IsTabActive = true;
+            excelStore.UpdateSearchInfo(searchInfo);
+
+            //check tab is open
+            int indexTab = -1;
+            bool isTabOpen = mainVm.isTabOpen(searchInfo,ref indexTab);
+            if(isTabOpen == true)
+            {
+                mainVm.ActionTabIndexActive(indexTab);
+                return;
+            }
+
+            //Display result add new tab
             SearchResultVm tabResult = new SearchResultVm();
             tabResult.Control = new SearchResultUc();
             tabResult.TabName = searchInfo.Search;
@@ -100,8 +115,15 @@ namespace GrepExcel.ViewModel
                 ShowDebug.MsgErr(F.FLMD(), "Search info is null");
                 return;
             }
-
+            var mainVm = MainViewModel.Instance;
             var excelStore = ExcelStoreManager.Instance;
+
+            //remove tab if tab opening
+            int indexTab = -1;
+            if (mainVm.isTabOpen(searchInfo,ref indexTab))
+            {
+                mainVm.RemoveTabControl(indexTab);
+            }
 
             var res =  excelStore.DeleteBySearchId(searchInfo);
             if(SqlResult.DeleteSuccess == res)
@@ -114,11 +136,9 @@ namespace GrepExcel.ViewModel
             }
 
             //update list collection
-             RemoveList(searchInfo.Id);
-            //SearchInfos.Remove(searchInfo);
-            //SearchInfos.Clear();
-            //SearchInfos.Add(searchInfo);
-
+            // RemoveList(searchInfo.Id);
+            SearchInfos.Remove(searchInfo);
+   
         }
 
 

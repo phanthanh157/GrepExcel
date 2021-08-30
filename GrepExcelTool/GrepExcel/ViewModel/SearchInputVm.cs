@@ -9,6 +9,7 @@ using GrepExcel.Excel;
 using System.Collections.ObjectModel;
 using GrepExcel.Commands;
 using System.Windows.Threading;
+using System.Windows;
 
 namespace GrepExcel.ViewModel
 {
@@ -65,6 +66,19 @@ namespace GrepExcel.ViewModel
             var inputInfo = sender as SearchInfo;
             var mainVm = MainViewModel.Instance;
             var excelStore = ExcelStoreManager.Instance;
+            var listSearch = ListSearchVm.Instance;
+
+            //check exits database
+            int searchIdFirst = -1;
+            if (CheckExitsSearchInfo(inputInfo,ref searchIdFirst))
+            {
+                // MessageBox.Show("Search keyword is exits on database", "Searching", MessageBoxButton.OK,MessageBoxImage.Information);
+                inputInfo.Id = searchIdFirst;
+                listSearch.ShowTabSearchResult(inputInfo);
+                
+                ShowDebug.Msg(F.FLMD(), "Search info is exits, searchId= {0}",searchIdFirst);
+                return;
+            }
 
             // await Task.Delay(1000);
             mainVm.NotifyTaskRunning(inputInfo.Search);
@@ -75,6 +89,7 @@ namespace GrepExcel.ViewModel
             {
                 ShowDebug.Msg(F.FLMD(), "Insert Search info success");
                 inputInfo.Id = excelStore.LastIndexSearch();// add id 
+
                 //Search process
                 var grep = new Grep();
                 //grep.GrepSpeedNonTask(inputInfo);
@@ -89,6 +104,9 @@ namespace GrepExcel.ViewModel
 
                 mainVm.AddTabControl(tabResult);
 
+                //add observer list serach
+                listSearch.SearchInfos.Add(inputInfo);
+
                 //mainVm.IsOpenNotify = true;
                 //mainVm.NotifyString = inputInfo.Search;
                 //DispatcherTimer time = new DispatcherTimer();
@@ -102,6 +120,24 @@ namespace GrepExcel.ViewModel
                 mainVm.NotifyTaskRunning(inputInfo.Search,false);
             }
         }
+
+
+        private bool CheckExitsSearchInfo(SearchInfo searchInfo, ref int searchId)
+        {
+            var excelStore = ExcelStoreManager.Instance;
+
+            var list = excelStore.GetSearchInfoAll();
+
+            var filter = list.Where(res => res == searchInfo);
+            
+            if(filter.Count() > 0)
+            {
+                searchId = filter.First().Id;
+                return true;
+            }
+            return false;
+        }
+
 
         public void LoadItem()
         {

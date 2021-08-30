@@ -245,6 +245,42 @@ namespace GrepExcel.ViewModel
             OnTabIndexActive(int.Parse(Config.ReadSetting("TAB_CURRENT_ACTIVE")));
         }
 
+
+        public void ActionTabIndexActive(int index)
+        {
+            if(index != -1 && index < Tabs.Count())
+                OnTabIndexActive(index);
+        }
+
+
+        public bool isTabOpen(SearchInfo searchInfo, ref int index)
+        {
+            if(Tabs.Count == 0)
+            {
+                ShowDebug.Msg(F.FLMD(), "All TabControl close");
+                return false;
+            }
+
+            int cnt = 0;
+            foreach(var tab in Tabs)
+            {
+                if(tab is SearchResultVm)
+                {
+                    var searchVm = tab as SearchResultVm;
+
+                    if(searchInfo.Id == searchVm.SearchId)
+                    {
+                        index = cnt;
+                        return true;
+                    }
+
+                }
+                cnt++;
+            }
+
+            return false;
+        }
+
         #endregion
     }
 }
