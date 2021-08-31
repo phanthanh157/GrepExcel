@@ -1,16 +1,13 @@
 ﻿using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GrepExcel.Excel
 {
     public class ResultStore : SqlLiteImp, ISqlLiteImp
     {
         private bool _dispose = false;
-        public ResultStore(string databaseName="", SqliteOpenMode sqliteOpenMode = SqliteOpenMode.ReadWriteCreate, SqliteCacheMode sqliteCacheMode = SqliteCacheMode.Shared)
+        public ResultStore(string databaseName = "", SqliteOpenMode sqliteOpenMode = SqliteOpenMode.ReadWriteCreate, SqliteCacheMode sqliteCacheMode = SqliteCacheMode.Shared)
             : base(databaseName, sqliteOpenMode, sqliteCacheMode)
         {
 
@@ -287,7 +284,7 @@ namespace GrepExcel.Excel
 
         public List<ResultInfo> GetResultInfoBySearchId(int searchId)
         {
-          
+
             if (_sqlConnection == null)
             {
                 ShowDebug.Msg(F.FLMD(), "sql connection faile = null");
@@ -303,7 +300,7 @@ namespace GrepExcel.Excel
 
             try
             {
-               
+
                 // create command text.
                 using (var command = _sqlConnection.CreateCommand())
                 {

@@ -14,7 +14,7 @@ namespace GrepExcel.Excel
 
         public async Task OpenFileAsync(ResultInfo resultInfo)
         {
-           await Task.Run(() => OpenFileExcel(resultInfo));
+            await Task.Run(() => OpenFileExcel(resultInfo));
         }
 
         private void OpenFileExcel(ResultInfo resultInfo)
@@ -38,13 +38,13 @@ namespace GrepExcel.Excel
                 xlWorkbook = xlApp.Workbooks.Open(resultInfo.FileName, false, misValue, misValue, misValue, misValue, misValue, misValue, misValue, misValue, misValue, misValue, misValue, misValue, misValue);
                 xlWorksheet = (ExcelApp.Worksheet)xlWorkbook.Worksheets.get_Item(resultInfo.Sheet);
                 wsFind = (ExcelApp.Range)xlWorksheet.get_Range(resultInfo.Cell, resultInfo.Cell);
-              
+
                 xlWorksheet.Activate();
                 wsFind.Activate();
                 xlApp.ScreenUpdating = true;
                 xlApp.DisplayAlerts = true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ShowDebug.MsgErr(F.FLMD(), ex.Message);
             }
@@ -125,17 +125,17 @@ namespace GrepExcel.Excel
                 int _noMatches = 0;
                 int _maxSearch = int.Parse(Config.ReadSetting("MAX_SEARCH"));
                 var files = new FileCollection(searchInfo.Folder, searchInfo.Method);
-  
+
                 foreach (string file in files)
                 {
-                   ShowDebug.Msg(F.FLMD(), "Open File:  '{0}'.", file);
-                   await Task.Run(()=>  ItemGrep(searchInfo,
-                                        file,
-                                        xlApp,
-                                        findExact,
-                                        targetCurrent,
-                                        _noMatches,
-                                        _maxSearch));
+                    ShowDebug.Msg(F.FLMD(), "Open File:  '{0}'.", file);
+                    await Task.Run(() => ItemGrep(searchInfo,
+                                         file,
+                                         xlApp,
+                                         findExact,
+                                         targetCurrent,
+                                         _noMatches,
+                                         _maxSearch));
                 }
 
 
@@ -167,7 +167,7 @@ namespace GrepExcel.Excel
 
         }
 
-        private void ItemGrep(SearchInfo searchInfo, 
+        private void ItemGrep(SearchInfo searchInfo,
                                  string file,
                                  ExcelApp.Application xlApp,
                                  ExcelApp.XlLookAt findExact,

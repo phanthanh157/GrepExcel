@@ -120,6 +120,7 @@
     <Compile Include="ViewModel\Folder\RequiredValidationRule.cs" />
     <Compile Include="ViewModel\ListSearchVm.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\RecentSearchVm.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\SearchInputVm.cs" />
     <Compile Include="ViewModel\SearchResultVm.cs" />
@@ -131,6 +132,9 @@
     <Compile Include="View\Converters\IndexConverter.cs" />
     <Compile Include="View\ListSeachUC.xaml.cs">
       <DependentUpon>ListSeachUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecentSearchUC.xaml.cs">
+      <DependentUpon>RecentSearchUC.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SearchInputUc.xaml.cs">
       <DependentUpon>SearchInputUc.xaml</DependentUpon>
@@ -156,6 +160,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\ListSeachUC.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RecentSearchUC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

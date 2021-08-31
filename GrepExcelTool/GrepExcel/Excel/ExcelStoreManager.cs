@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace GrepExcel.Excel
 {
@@ -11,7 +7,7 @@ namespace GrepExcel.Excel
         private static ExcelStoreManager _instance = null;
         public ExcelStoreManager()
         {
-             CreateTable();
+            CreateTable();
             // DropTable();
         }
 
@@ -32,10 +28,10 @@ namespace GrepExcel.Excel
         /// </summary>
         public void CreateTable()
         {
-            using(var searchInfo = new SearchStore())
+            using (var searchInfo = new SearchStore())
             {
-              SqlResult sqlResult =  searchInfo.CreateTable();
-                if(sqlResult == SqlResult.DeleteTableSuccess)
+                SqlResult sqlResult = searchInfo.CreateTable();
+                if (sqlResult == SqlResult.DeleteTableSuccess)
                 {
                     ShowDebug.Msg(F.FLMD(), "table pct_tblResult -- delete success ");
                 }
@@ -56,7 +52,7 @@ namespace GrepExcel.Excel
         /// </summary>
         public void DropTable()
         {
-        
+
             using (var resultInfo = new ResultStore())
             {
                 resultInfo.DropTable();
@@ -74,7 +70,7 @@ namespace GrepExcel.Excel
         {
             using (var searchInfo = new SearchStore())
             {
-              return  searchInfo.Insert(data);
+                return searchInfo.Insert(data);
             }
         }
 
@@ -91,7 +87,7 @@ namespace GrepExcel.Excel
         {
             using (var resultInfo = new ResultStore())
             {
-               return resultInfo.Insert(data);
+                return resultInfo.Insert(data);
             }
         }
 
@@ -109,7 +105,7 @@ namespace GrepExcel.Excel
         {
             using (var resultInfo = new ResultStore())
             {
-                if(SqlResult.DeleteSuccess == resultInfo.Delete(data))
+                if (SqlResult.DeleteSuccess == resultInfo.Delete(data))
                 {
                     using (var searchInfo = new SearchStore())
                     {
@@ -124,7 +120,7 @@ namespace GrepExcel.Excel
         {
             using (var resultInfo = new ResultStore())
             {
-                 return   resultInfo.GetResultInfoBySearchId(searchID);
+                return resultInfo.GetResultInfoBySearchId(searchID);
             }
         }
 
@@ -170,11 +166,11 @@ namespace GrepExcel.Excel
             }
         }
 
-        public List<SearchInfo> GetSearchInfoBySearch(string filter,int option=1)
+        public List<SearchInfo> GetSearchInfoBySearch(string filter, int option = 1)
         {
             using (var searchInfo = new SearchStore())
             {
-                return searchInfo.GetSearchInfoBySearch(filter,option);
+                return searchInfo.GetSearchInfoBySearch(filter, option);
             }
         }
 

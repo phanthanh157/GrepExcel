@@ -1,12 +1,11 @@
-﻿using System;
+﻿using GrepExcel.Commands;
+using GrepExcel.Excel;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using GrepExcel.Excel;
-using GrepExcel.Commands;
 
 
 namespace GrepExcel.ViewModel
@@ -21,7 +20,7 @@ namespace GrepExcel.ViewModel
     {
         public ObservableCollection<ResultInfo> ResultInfos { get; set; }
         public ObservableCollection<OptionFilter> OptionFilters { get; set; }
-   
+
         private ICommand _commandRefresh;
         private ICommand _searchResult;
         private ICommand _goToDocument;
@@ -83,7 +82,7 @@ namespace GrepExcel.ViewModel
 
         private void CommandSearchResultHander(object sender)
         {
-            if(sender == null)
+            if (sender == null)
             {
                 ShowDebug.Msg(F.FLMD(), "sender is null");
                 return;
@@ -94,7 +93,7 @@ namespace GrepExcel.ViewModel
 
             List<ResultInfo> resultInfos = ExcelStoreManager.Instance.GetResultInfoBySearchId(SearchId);
 
-            if(resultInfos != null)
+            if (resultInfos != null)
             {
                 IEnumerable<ResultInfo> filter = null;
                 switch (optionFilter)
@@ -114,7 +113,7 @@ namespace GrepExcel.ViewModel
                 }
 
                 ResultInfos.Clear();//Delete old result
-                foreach(var item in filter)
+                foreach (var item in filter)
                 {
                     ResultInfos.Add(item);
                 }
@@ -128,7 +127,7 @@ namespace GrepExcel.ViewModel
             {
                 if (_goToDocument == null)
                 {
-                    _goToDocument = new AsyncRelayCommand ((sender) => CommandGotoDocumentHander(sender));
+                    _goToDocument = new AsyncRelayCommand((sender) => CommandGotoDocumentHander(sender));
                 }
                 return _goToDocument;
             }

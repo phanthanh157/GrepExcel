@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GrepExcel.Excel
 {
@@ -16,7 +12,7 @@ namespace GrepExcel.Excel
         public FileCollection(string path, TypeMethod method)
         {
             _typeMethod = method;
-            if(!string.IsNullOrEmpty(path) && Directory.Exists(path))
+            if (!string.IsNullOrEmpty(path) && Directory.Exists(path))
                 GetFiles(path);
         }
 

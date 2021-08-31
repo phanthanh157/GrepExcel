@@ -25,7 +25,7 @@ namespace GrepExcel.ViewModel
         public MainViewModel()
         {
             InitClass();
-          
+
         }
 
         public void InitClass()
@@ -76,7 +76,7 @@ namespace GrepExcel.ViewModel
             }
         }
 
-        public int TabActive 
+        public int TabActive
         {
             get
             {
@@ -182,14 +182,14 @@ namespace GrepExcel.ViewModel
         public SearchResultVm GetActiveSearchResultVm()
         {
             if (Tabs.Count >= TabActive)
-                return (SearchResultVm) Tabs[TabActive];
+                return (SearchResultVm)Tabs[TabActive];
             return null;
         }
 
         public void NotifyTaskRunning(string taskName, bool isAdd = true)
         {
-      
-            if(_msgNotify.Count == 0)
+
+            if (_msgNotify.Count == 0)
             {
                 IsOpenNotify = true;
             }
@@ -198,12 +198,12 @@ namespace GrepExcel.ViewModel
             {
                 _msgNotify.Enqueue(taskName);
 
-                 NotifyString = "Task running (" + _msgNotify.Count + " tasks in queue)";
+                NotifyString = "Task running (" + _msgNotify.Count + " tasks in queue)";
 
             }
             else
             {
-                if(_msgNotify.Count > 0)
+                if (_msgNotify.Count > 0)
                 {
                     _msgNotify.Dequeue();
                     NotifyString = string.Empty;
@@ -248,27 +248,27 @@ namespace GrepExcel.ViewModel
 
         public void ActionTabIndexActive(int index)
         {
-            if(index != -1 && index < Tabs.Count())
+            if (index != -1 && index < Tabs.Count())
                 OnTabIndexActive(index);
         }
 
 
         public bool isTabOpen(SearchInfo searchInfo, ref int index)
         {
-            if(Tabs.Count == 0)
+            if (Tabs.Count == 0)
             {
                 ShowDebug.Msg(F.FLMD(), "All TabControl close");
                 return false;
             }
 
             int cnt = 0;
-            foreach(var tab in Tabs)
+            foreach (var tab in Tabs)
             {
-                if(tab is SearchResultVm)
+                if (tab is SearchResultVm)
                 {
                     var searchVm = tab as SearchResultVm;
 
-                    if(searchInfo.Id == searchVm.SearchId)
+                    if (searchInfo.Id == searchVm.SearchId)
                     {
                         index = cnt;
                         return true;

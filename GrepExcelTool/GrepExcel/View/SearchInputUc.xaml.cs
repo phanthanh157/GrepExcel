@@ -1,20 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using GrepExcel.Excel;
+﻿using GrepExcel.Excel;
 using GrepExcel.ViewModel;
 using System.IO;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace GrepExcel.View
 {
@@ -68,7 +58,7 @@ namespace GrepExcel.View
             var browser = new System.Windows.Forms.FolderBrowserDialog();
             var result = browser.ShowDialog();
 
-            if(System.Windows.Forms.DialogResult.OK == result)
+            if (System.Windows.Forms.DialogResult.OK == result)
             {
                 txtFolder.Text = browser.SelectedPath;
             }
@@ -97,7 +87,7 @@ namespace GrepExcel.View
 
         private void btnOptionLowAndUper_Click(object sender, RoutedEventArgs e)
         {
-            _isLowerOrUper =  _isLowerOrUper == true ? false : true;
+            _isLowerOrUper = _isLowerOrUper == true ? false : true;
 
             if (_isLowerOrUper)
             {

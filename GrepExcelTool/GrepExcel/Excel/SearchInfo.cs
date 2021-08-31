@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GrepExcel.Excel
+﻿namespace GrepExcel.Excel
 {
     public enum TypeMethod
     {
@@ -63,7 +57,7 @@ namespace GrepExcel.Excel
             if (obj == null || GetType() != obj.GetType())
                 return false;
 
-            var right = (SearchInfo) obj;
+            var right = (SearchInfo)obj;
             return ((this.Search == right.Search) &&
                      (this.Folder == right.Folder) &&
                      (this.Method == right.Method) &&

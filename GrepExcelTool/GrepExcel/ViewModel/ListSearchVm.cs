@@ -1,9 +1,6 @@
 ﻿using GrepExcel.Excel;
-using System.Collections.ObjectModel;
-using System.Linq;
-using Microsoft.Data.Sqlite;
 using GrepExcel.View;
-using System;
+using System.Collections.ObjectModel;
 
 namespace GrepExcel.ViewModel
 {
@@ -16,14 +13,15 @@ namespace GrepExcel.ViewModel
         #endregion 
 
         #region Properties
-        public ObservableCollection<SearchInfo> SearchInfos {
+        public ObservableCollection<SearchInfo> SearchInfos
+        {
             get
             {
                 return _searchInfos;
             }
             set
             {
-                if(value != _searchInfos)
+                if (value != _searchInfos)
                 {
                     _searchInfos = value;
                 }
@@ -47,7 +45,7 @@ namespace GrepExcel.ViewModel
         {
             get
             {
-                if(_instance == null)
+                if (_instance == null)
                 {
                     _instance = new ListSearchVm();
                 }
@@ -60,7 +58,7 @@ namespace GrepExcel.ViewModel
 
         public void ShowTabSearchResult(SearchInfo searchInfo)
         {
-            if(searchInfo == null)
+            if (searchInfo == null)
             {
                 ShowDebug.MsgErr(F.FLMD(), "Search info is null");
                 return;
@@ -74,8 +72,8 @@ namespace GrepExcel.ViewModel
 
             //check tab is open
             int indexTab = -1;
-            bool isTabOpen = mainVm.isTabOpen(searchInfo,ref indexTab);
-            if(isTabOpen == true)
+            bool isTabOpen = mainVm.isTabOpen(searchInfo, ref indexTab);
+            if (isTabOpen == true)
             {
                 mainVm.ActionTabIndexActive(indexTab);
                 return;
@@ -117,16 +115,17 @@ namespace GrepExcel.ViewModel
             }
             var mainVm = MainViewModel.Instance;
             var excelStore = ExcelStoreManager.Instance;
+            var recent = RecentSearchVm.Instance;
 
             //remove tab if tab opening
             int indexTab = -1;
-            if (mainVm.isTabOpen(searchInfo,ref indexTab))
+            if (mainVm.isTabOpen(searchInfo, ref indexTab))
             {
                 mainVm.RemoveTabControl(indexTab);
             }
 
-            var res =  excelStore.DeleteBySearchId(searchInfo);
-            if(SqlResult.DeleteSuccess == res)
+            var res = excelStore.DeleteBySearchId(searchInfo);
+            if (SqlResult.DeleteSuccess == res)
             {
                 ShowDebug.MsgErr(F.FLMD(), "Delete search info success");
             }
@@ -138,7 +137,10 @@ namespace GrepExcel.ViewModel
             //update list collection
             // RemoveList(searchInfo.Id);
             SearchInfos.Remove(searchInfo);
-   
+
+            //Update Recent list
+            recent.LoadRecents();
+
         }
 
 
@@ -146,9 +148,9 @@ namespace GrepExcel.ViewModel
         {
             int cnt = 0;
             int idxDelete = 0;
-            foreach(var item in SearchInfos)
+            foreach (var item in SearchInfos)
             {
-                if(item.Id == id)
+                if (item.Id == id)
                 {
                     idxDelete = cnt;
                     break;

@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using GrepExcel.Excel;
 using GrepExcel.View;
-using GrepExcel.Excel;
 using System.Collections.ObjectModel;
-using GrepExcel.Commands;
-using System.Windows.Threading;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace GrepExcel.ViewModel
 {
@@ -47,7 +42,7 @@ namespace GrepExcel.ViewModel
         {
             get
             {
-                if(_commandSearch == null)
+                if (_commandSearch == null)
                 {
                     _commandSearch = new Commands.AsyncRelayCommand(sender => CommandSeachHander(sender));
                 }
@@ -58,7 +53,7 @@ namespace GrepExcel.ViewModel
         private async Task CommandSeachHander(object sender)
         {
             ShowDebug.Msg(F.FLMD(), "Handler");
-            if(sender == null)
+            if (sender == null)
             {
                 ShowDebug.Msg(F.FLMD(), "Sender is null");
                 return;
@@ -67,16 +62,17 @@ namespace GrepExcel.ViewModel
             var mainVm = MainViewModel.Instance;
             var excelStore = ExcelStoreManager.Instance;
             var listSearch = ListSearchVm.Instance;
+            var listRecent = RecentSearchVm.Instance;
 
             //check exits database
             int searchIdFirst = -1;
-            if (CheckExitsSearchInfo(inputInfo,ref searchIdFirst))
+            if (CheckExitsSearchInfo(inputInfo, ref searchIdFirst))
             {
-                // MessageBox.Show("Search keyword is exits on database", "Searching", MessageBoxButton.OK,MessageBoxImage.Information);
+                MessageBox.Show("Search keyword is exits on database", "Searching", MessageBoxButton.OK, MessageBoxImage.Information);
                 inputInfo.Id = searchIdFirst;
                 listSearch.ShowTabSearchResult(inputInfo);
-                
-                ShowDebug.Msg(F.FLMD(), "Search info is exits, searchId= {0}",searchIdFirst);
+
+                ShowDebug.Msg(F.FLMD(), "Search info is exits, searchId= {0}", searchIdFirst);
                 return;
             }
 
@@ -84,8 +80,8 @@ namespace GrepExcel.ViewModel
             mainVm.NotifyTaskRunning(inputInfo.Search);
 
             //Insert input info to database
-            SqlResult sqlResult =  excelStore.InsertSearchInfo(inputInfo);
-            if(SqlResult.InsertSucess == sqlResult)
+            SqlResult sqlResult = excelStore.InsertSearchInfo(inputInfo);
+            if (SqlResult.InsertSucess == sqlResult)
             {
                 ShowDebug.Msg(F.FLMD(), "Insert Search info success");
                 inputInfo.Id = excelStore.LastIndexSearch();// add id 
@@ -104,20 +100,10 @@ namespace GrepExcel.ViewModel
 
                 mainVm.AddTabControl(tabResult);
 
+                mainVm.NotifyTaskRunning(inputInfo.Search, false);
                 //add observer list serach
                 listSearch.SearchInfos.Add(inputInfo);
-
-                //mainVm.IsOpenNotify = true;
-                //mainVm.NotifyString = inputInfo.Search;
-                //DispatcherTimer time = new DispatcherTimer();
-                //time.Interval = TimeSpan.FromSeconds(10);
-                //time.Start();
-                //time.Tick += delegate
-                //{
-                //    mainVm.IsOpenNotify = false;
-                //    time.Stop();
-                //};
-                mainVm.NotifyTaskRunning(inputInfo.Search,false);
+                listRecent.LoadRecents();
             }
         }
 
@@ -129,8 +115,8 @@ namespace GrepExcel.ViewModel
             var list = excelStore.GetSearchInfoAll();
 
             var filter = list.Where(res => res == searchInfo);
-            
-            if(filter.Count() > 0)
+
+            if (filter.Count() > 0)
             {
                 searchId = filter.First().Id;
                 return true;
@@ -141,7 +127,7 @@ namespace GrepExcel.ViewModel
 
         public void LoadItem()
         {
-            Methods.Add(new MethodView() { Icon = "Folder", Method = TypeMethod.Folder,Name = "Folder" });
+            Methods.Add(new MethodView() { Icon = "Folder", Method = TypeMethod.Folder, Name = "Folder" });
             Methods.Add(new MethodView() { Icon = "FolderMultiple", Method = TypeMethod.SubFolder, Name = "SubFolder" });
 
             Targets.Add(new TargetView() { Icon = "CurrencyUsd", Target = TypeTarget.Value, Name = "Value" });

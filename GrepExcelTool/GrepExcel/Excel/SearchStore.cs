@@ -1,16 +1,13 @@
 ﻿using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GrepExcel.Excel
 {
     public class SearchStore : SqlLiteImp, ISqlLiteImp
     {
         private bool _dispose = false;
-        public SearchStore(string databaseName="", SqliteOpenMode sqliteOpenMode = SqliteOpenMode.ReadWriteCreate, SqliteCacheMode sqliteCacheMode = SqliteCacheMode.Shared) 
+        public SearchStore(string databaseName = "", SqliteOpenMode sqliteOpenMode = SqliteOpenMode.ReadWriteCreate, SqliteCacheMode sqliteCacheMode = SqliteCacheMode.Shared)
             : base(databaseName, sqliteOpenMode, sqliteCacheMode)
         {
 
@@ -69,7 +66,7 @@ namespace GrepExcel.Excel
                 return res;
             }
 
-            if(data == null)
+            if (data == null)
             {
                 ShowDebug.Msg(F.FLMD(), "data = null");
                 return res;
@@ -88,12 +85,12 @@ namespace GrepExcel.Excel
                             var searchInfo = data as SearchInfo;
                             command.Parameters.AddWithValue("$search_id", searchInfo.Id);
                         }
-                        else if(typeof(ResultInfo) == data.GetType())
+                        else if (typeof(ResultInfo) == data.GetType())
                         {
                             var resultInfo = data as ResultInfo;
                             command.Parameters.AddWithValue("$search_id", resultInfo.SearchInfoID);
                         }
-                     
+
                         command.ExecuteNonQuery();
 
                     }
@@ -369,8 +366,8 @@ namespace GrepExcel.Excel
                             searchInfo.Id = reader.GetInt32(0);
                             searchInfo.Search = reader.GetString(1);
                             searchInfo.Folder = reader.GetString(2);
-                            searchInfo.Method = (TypeMethod) reader.GetInt32(3);
-                            searchInfo.Target = (TypeTarget) reader.GetInt32(4);
+                            searchInfo.Method = (TypeMethod)reader.GetInt32(3);
+                            searchInfo.Target = (TypeTarget)reader.GetInt32(4);
                             searchInfo.IsMatchCase = reader.GetBoolean(5);
                             searchInfo.IsLowerOrUper = reader.GetBoolean(5);
                             searchInfo.IsTabActive = reader.GetBoolean(5);
@@ -435,7 +432,7 @@ namespace GrepExcel.Excel
                 ShowDebug.Msg(F.FLMD(), ex.Message);
             }
 
-            if(lst.Count > 0)
+            if (lst.Count > 0)
             {
                 return lst[0];
             }
@@ -495,7 +492,7 @@ namespace GrepExcel.Excel
 
 
 
-        public List<SearchInfo> GetSearchInfoBySearch(string filter,int option = 1)
+        public List<SearchInfo> GetSearchInfoBySearch(string filter, int option = 1)
         {
 
             if (_sqlConnection == null)
@@ -515,15 +512,15 @@ namespace GrepExcel.Excel
                     string sqlString = string.Empty;
                     if (option == 1) //search
                     {
-                       sqlString += "SELECT DISTINCT search FROM pct_tblSearch WHERE search LIKE '%" + filter + "%'";
+                        sqlString += "SELECT DISTINCT search FROM pct_tblSearch WHERE search LIKE '%" + filter + "%'";
                     }
-                    else if(option == 2)//folder
+                    else if (option == 2)//folder
                     {
-                    sqlString += "SELECT DISTINCT folder FROM pct_tblSearch WHERE folder LIKE '%" + filter + "%'";
+                        sqlString += "SELECT DISTINCT folder FROM pct_tblSearch WHERE folder LIKE '%" + filter + "%'";
                     }
-                   
+
                     command.CommandText = sqlString;
-                   // command.Parameters.AddWithValue("$search", search);
+                    // command.Parameters.AddWithValue("$search", search);
 
                     using (var reader = command.ExecuteReader())
                     {
@@ -531,11 +528,11 @@ namespace GrepExcel.Excel
                         {
                             // them vao doi tuong.
                             SearchInfo searchInfo = new SearchInfo();
-                            if(option == 1)
+                            if (option == 1)
                             {
                                 searchInfo.Search = reader.GetString(0);
                             }
-                            else if(option == 2)
+                            else if (option == 2)
                             {
                                 searchInfo.Folder = reader.GetString(0);
                             }

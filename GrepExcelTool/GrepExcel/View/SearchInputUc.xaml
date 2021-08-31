@@ -78,6 +78,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -240,6 +241,15 @@
                             </ComboBox>
                         </StackPanel>
                     </Grid>
+                    <!--Recent search-->
+                    <Grid Grid.Row="5" Margin="0,30,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="SEARCH RECENT" FontWeight="Medium" Margin="0,0,0,5"/>
+                        <local:RecentSearchUC Grid.Row="1"/>
+                    </Grid>
                 </Grid>
             </TabItem>
             <!--Store Tab-->
@@ -260,7 +270,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="KEY SEARCH RECENT" FontWeight="Medium"/>
+                        <TextBlock Text="SEARCH KEY MANAGER" FontWeight="Medium"/>
                     </Grid>
                     <local:ListSeachUC Grid.Row="1"/>
                 </Grid>

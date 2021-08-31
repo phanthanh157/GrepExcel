@@ -1,11 +1,10 @@
-﻿using System;
-using Microsoft.Data.Sqlite;
-using GrepExcel;
+﻿using Microsoft.Data.Sqlite;
+using System;
 
 
 namespace GrepExcel.Excel
 {
- 
+
     public class SqlLiteImp : IDisposable
     {
         private readonly string DatabaseName = Define.Database;
@@ -19,7 +18,7 @@ namespace GrepExcel.Excel
 
         ~SqlLiteImp() => Dispose(false);
 
-        protected SqlLiteImp(string databaseName="", SqliteOpenMode sqliteOpenMode = SqliteOpenMode.ReadWriteCreate, SqliteCacheMode sqliteCacheMode = SqliteCacheMode.Shared)
+        protected SqlLiteImp(string databaseName = "", SqliteOpenMode sqliteOpenMode = SqliteOpenMode.ReadWriteCreate, SqliteCacheMode sqliteCacheMode = SqliteCacheMode.Shared)
         {
             if (string.IsNullOrEmpty(databaseName))
             {
