@@ -25,8 +25,8 @@ namespace GrepExcel.View
         {
             cobMethod.SelectedIndex = 1;
             cobTarget.SelectedIndex = 0;
-            txtSearch.Text = "thanh";
-            txtFolder.Text = @"D:\VBA-Excel";//test tam
+            //txtSearch.Text = "thanh";
+            //txtFolder.Text = @"D:\VBA-Excel";//test tam
         }
 
         public bool Validate()
