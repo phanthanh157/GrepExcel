@@ -24,5 +24,10 @@ namespace GrepExcel
         {
             InitializeComponent();
         }
+
+        private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
+        }
     }
 }

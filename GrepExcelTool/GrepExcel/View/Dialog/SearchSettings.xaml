@@ -18,7 +18,7 @@
     <Window.Resources>
 
             <Style x:Key="groupItem" TargetType="StackPanel" >
-                <Setter Property="Margin" Value="0,0,0,0.1"/>
+                <Setter Property="Margin" Value="0,0,0,0.3"/>
             <Setter Property="Background" Value="AliceBlue"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">

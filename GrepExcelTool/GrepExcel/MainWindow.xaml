@@ -13,6 +13,10 @@
         TextOptions.TextRenderingMode="Auto"
         Title="Grep Excel" 
         WindowState="Maximized">
+    <Window.InputBindings>
+        <KeyBinding Key="G" Modifiers="Ctrl" Command="{Binding CommandSearchSettings}"/>
+        <KeyBinding Key="F1" Command="{Binding CommandAboutOpen}"/>
+    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -24,12 +28,14 @@
         <Menu IsMainMenu="True" Grid.Row="0">
             <MenuItem Header="_Grep">
                 <MenuItem Header="_Search Settings" 
-                          Command="{Binding CommandSearchSettings}"/>
+                          Command="{Binding CommandSearchSettings}"
+                          InputGestureText="Ctrl+G" />
 
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="_About Grep Excel" 
-                          Command="{Binding CommandAboutOpen}"/>
+                          Command="{Binding CommandAboutOpen}"
+                          InputGestureText="F1"/>
             </MenuItem>
         </Menu>
 
