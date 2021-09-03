@@ -132,6 +132,12 @@
     <Compile Include="View\Converters\HasAllTextConverter.cs" />
     <Compile Include="View\Converters\IndexConverter.cs" />
     <Compile Include="View\Converters\PathNameConverter.cs" />
+    <Compile Include="View\Dialog\AboutInfo.xaml.cs">
+      <DependentUpon>AboutInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Dialog\SearchSettings.xaml.cs">
+      <DependentUpon>SearchSettings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ListSeachUC.xaml.cs">
       <DependentUpon>ListSeachUC.xaml</DependentUpon>
     </Compile>
@@ -162,6 +168,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Themes\SearchResultThemes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Dialog\AboutInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Dialog\SearchSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

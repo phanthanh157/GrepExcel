@@ -22,39 +22,14 @@
 
         <!--menu-->
         <Menu IsMainMenu="True" Grid.Row="0">
-            <MenuItem Header="_File">
-                <MenuItem Header="Save"
-                         Icon="{materialDesign:PackIcon Kind=ContentSave}"></MenuItem>
-                <MenuItem Header="Save As.." />
-
-                <MenuItem Header="Exit"
-                          Command="{Binding CommandClose}"
-                          InputGestureText="Ctrl+E"
-                          Icon="{materialDesign:PackIcon Kind=ExitToApp}" />
-
-            </MenuItem>
-            <MenuItem Header="_Edit">
-                <MenuItem Header="_Cut"
-                          Command="Cut"
-                          Icon="{materialDesign:PackIcon Kind=ContentCut}" />
-                <MenuItem Header="_Copy"
-                          Command="Copy"
-                          Icon="{materialDesign:PackIcon Kind=ContentCopy}" />
-                <MenuItem Header="_Paste"
-                          Command="Paste"
-                          Icon="{materialDesign:PackIcon Kind=ContentPaste}" />
-            </MenuItem>
-            <MenuItem Header="_View">
-                <MenuItem Header="_Message OpenAPI" />
-
-            </MenuItem>
-            <MenuItem Header="_Settings">
-                <MenuItem Header="_Specification" />
-
+            <MenuItem Header="_Grep">
+                <MenuItem Header="_Search Settings" 
+                          Command="{Binding CommandSearchSettings}"/>
 
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="_About AnalysLogOpenAPI"/>
+                <MenuItem Header="_About Grep Excel" 
+                          Command="{Binding CommandAboutOpen}"/>
             </MenuItem>
         </Menu>
 

@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using GrepExcel.View.Dialog;
 
 namespace GrepExcel.ViewModel
 {
@@ -18,6 +19,8 @@ namespace GrepExcel.ViewModel
         private int _tabActive;
         private Queue _msgNotify;
         private ICommand _commandClose;
+        private ICommand _commandAboutInfoOpen;
+        private ICommand _commandSearchSettings;
 
         #endregion
 
@@ -140,6 +143,56 @@ namespace GrepExcel.ViewModel
         private void CommandCloseHandler()
         {
             OnClose(EventArgs.Empty);
+        }
+
+
+        public ICommand CommandAboutOpen
+        {
+            get
+            {
+                if(_commandAboutInfoOpen == null)
+                {
+                    _commandAboutInfoOpen = new RelayCommand(x => { CommandAboutOpenHandler(); });
+                }
+                return _commandAboutInfoOpen;
+            }
+        }
+
+        private void CommandAboutOpenHandler()
+        {
+
+            AboutInfo aboutInfo = new AboutInfo();
+
+            aboutInfo.ShowDialog();
+
+        }
+
+
+        public ICommand CommandSearchSettings
+        {
+            get
+            {
+                if(_commandSearchSettings == null)
+                {
+                    _commandSearchSettings = new RelayCommand(x => { CommandSearchSettingsHandler(); });
+                }
+
+                return _commandSearchSettings;
+            }
+        }
+
+        private void CommandSearchSettingsHandler()
+        {
+
+            SearchSettings settings = new SearchSettings();
+
+            settings.cobMaxFiles.Text = Config.ReadSetting("MAX_FILE");
+            settings.cobMaxFolders.Text = Config.ReadSetting("MAX_FOLDER");
+            settings.cobMaxSearch.Text = Config.ReadSetting("MAX_SEARCH");
+
+
+            settings.ShowDialog();
+
         }
 
         #endregion

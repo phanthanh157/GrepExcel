@@ -22,7 +22,7 @@ namespace GrepExcel
         private static ConfigTable[] configs = new ConfigTable[]
         {
            //new ConfigTable("PATH_SPEC_INTERNAL",Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)),
-           new ConfigTable("VERSION","2.1.0"),
+           new ConfigTable("VERSION","0.0.1"),
            new ConfigTable("MAX_FILE","100"),
            new ConfigTable("MAX_FOLDER","100"),
            new ConfigTable("MAX_SEARCH","10000"),
