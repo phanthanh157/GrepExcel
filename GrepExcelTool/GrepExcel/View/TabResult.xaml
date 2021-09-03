@@ -7,6 +7,10 @@
              xmlns:local="clr-namespace:GrepExcel.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.InputBindings>
+        <KeyBinding Key="PageUp" Modifiers="Ctrl" Command="{Binding CommandTabNext}"/>
+        <KeyBinding Key="PageDown" Modifiers="Ctrl" Command="{Binding CommandTabPrev}"/>
+    </UserControl.InputBindings>
     <UserControl.Resources>
         <ControlTemplate x:Key="btnHoverFilter" TargetType="Button">
             <Border Name="border" BorderThickness="0" 

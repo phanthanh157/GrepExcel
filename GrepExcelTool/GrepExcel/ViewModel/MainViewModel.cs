@@ -21,6 +21,8 @@ namespace GrepExcel.ViewModel
         private ICommand _commandClose;
         private ICommand _commandAboutInfoOpen;
         private ICommand _commandSearchSettings;
+        private ICommand _commandTabNext;
+        private ICommand _commandTabPrev;
 
         #endregion
 
@@ -194,6 +196,50 @@ namespace GrepExcel.ViewModel
             settings.ShowDialog();
 
         }
+
+        public ICommand CommandTabNext
+        {
+            get
+            {
+                if(_commandTabNext == null)
+                {
+                    _commandTabNext = new RelayCommand(x => CommandTabNextHandler()) ;
+                }
+                return _commandTabNext;
+            }
+        }
+
+        private void CommandTabNextHandler()
+        {
+            if(TabActive < Tabs.Count-1)
+            {
+                TabActive = TabActive + 1;
+                OnTabIndexActive(TabActive);
+            }
+           
+        }
+
+        public ICommand CommandTabPrev
+        {
+            get
+            {
+                if(_commandTabPrev == null)
+                {
+                    _commandTabPrev = new RelayCommand(x => CommandTabPrevHandler());
+                }
+                return _commandTabPrev;
+            }
+        }
+
+        private void CommandTabPrevHandler()
+        {
+            if (TabActive > 0)
+            {
+                TabActive = TabActive - 1;
+                OnTabIndexActive(TabActive);
+            }
+        }
+
 
         #endregion
 
