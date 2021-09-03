@@ -1,4 +1,4 @@
-﻿#define DEBUG
+﻿#define MYDEBUG 
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -48,18 +48,17 @@ namespace GrepExcel
     public static class ShowDebug
     {
         private const string fileLog = @"Log\DebugLog.txt";
-#if DEBUG
+#if MYDEBUG
         private const bool flag = true;
-#endif
-
         private static int fisrtDebug = 0;
+#endif
         // Log a formatted message. Filename and line number of location of call
         // to Msg method is automatically appended to start of formatted message.
         // Must be called with this syntax:
         // Log.Msg(F.L(), "Format using {0} {1} etc", ...);
         public static void Msg(string fileLine, string format, params object[] parms)
         {
-#if DEBUG
+#if MYDEBUG
             if (flag == true)
             {
                 if (fisrtDebug == 0)
@@ -79,7 +78,7 @@ namespace GrepExcel
 
         public static void MsgErr(string fileLine, string format, params object[] parms)
         {
-#if DEBUG
+#if MYDEBUG
             if (flag == true)
             {
 

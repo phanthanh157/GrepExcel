@@ -1,4 +1,5 @@
-﻿using GrepExcel.ViewModel;
+﻿using GrepExcel.Excel;
+using GrepExcel.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -66,6 +67,39 @@ namespace GrepExcel.View
                 txtFilter.Text = string.Empty;
                 searchResultVm.CommandRefresh.Execute(this);
             }
+        }
+
+        private void txtFilter_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var mainVm = MainViewModel.Instance;
+            var searchResultVm = mainVm.GetActiveSearchResultVm();
+            if (txtFilter.Text == string.Empty)
+            {
+                if (searchResultVm != null)
+                {
+                    txtFilter.Text = string.Empty;
+                    searchResultVm.CommandRefresh.Execute(this);
+                }
+            }
+            else
+            {
+                var infoSearch = new { Search = txtFilter.Text, OptionFilter = cobOptionFilter.SelectedValue };
+                if (searchResultVm != null)
+                {
+                    searchResultVm.CommandSearchResult.Execute(infoSearch);
+                }
+            }
+        }
+
+        private void CopyPath_Click(object sender, RoutedEventArgs e)
+        {
+            var searchResult = lvSearchResults.SelectedItem as ResultInfo;
+
+            if(searchResult != null)
+            {
+                Clipboard.SetText(searchResult.FileName);
+            }
+
         }
     }
 }

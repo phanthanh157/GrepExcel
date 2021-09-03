@@ -128,8 +128,10 @@
     <Compile Include="ViewModel\Search\SearchSuggestionProvider.cs" />
     <Compile Include="ViewModel\Search\SearchTemplateSelector.cs" />
     <Compile Include="ViewModel\TabControl.cs" />
+    <Compile Include="View\Converters\FileNameConverter.cs" />
     <Compile Include="View\Converters\HasAllTextConverter.cs" />
     <Compile Include="View\Converters\IndexConverter.cs" />
+    <Compile Include="View\Converters\PathNameConverter.cs" />
     <Compile Include="View\ListSeachUC.xaml.cs">
       <DependentUpon>ListSeachUC.xaml</DependentUpon>
     </Compile>

@@ -15,6 +15,17 @@
 
     public class SearchInfo
     {
+        public SearchInfo()
+        {
+            Id = -1;
+            Search = string.Empty;
+            Folder = string.Empty;
+            Method = TypeMethod.SubFolder;
+            Target = TypeTarget.Value;
+            IsMatchCase = false;
+            IsLowerOrUper = false;
+            IsTabActive = false;
+        }
         public int Id { get; set; }
         public string Search { get; set; }
         public string Folder { get; set; }
@@ -68,7 +79,9 @@
 
         public override int GetHashCode()
         {
-            return Search.GetHashCode() ^ Method.GetHashCode() ^ Target.GetHashCode() ^ IsMatchCase.GetHashCode() ^ IsLowerOrUper.GetHashCode();
+
+             return Search.GetHashCode() ^ Method.GetHashCode() ^ Target.GetHashCode() ^ IsMatchCase.GetHashCode() ^ IsLowerOrUper.GetHashCode();
+            
         }
 
     }

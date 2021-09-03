@@ -94,10 +94,8 @@
                                     <VisualState x:Name="Selected">
                                         <Storyboard>
                                             <ColorAnimationUsingKeyFrames Storyboard.TargetName="BorderLB"
-                                                Storyboard.TargetProperty="(Panel.Background).
-                    (SolidColorBrush.Color)">
-                                                <EasingColorKeyFrame KeyTime="0"
-                                         Value="{StaticResource SelectedBackgroundColor}" />
+                                                Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)">
+                                                <EasingColorKeyFrame KeyTime="0" Value="#0033ff" />
                                             </ColorAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
@@ -107,26 +105,71 @@
                                                 Storyboard.TargetProperty="(Panel.Background).
                     (SolidColorBrush.Color)">
                                                 <EasingColorKeyFrame KeyTime="0"
-                                         Value="{StaticResource SelectedUnfocusedColor}" />
+                                         Value="#FFDDDDDD" />
                                             </ColorAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
 
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
-                            <ContentPresenter />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="0"
+                                        Grid.Row="0"
+                                        Grid.RowSpan="2"
+                                        BorderThickness="0"
+                                        Background="Transparent"
+                                        Width="40"
+                                        Name="btnDelSerachResult"
+                                        >
+                                    <Image Source="../Image/search_list.png" 
+                                           Width="20" 
+                                           Height="20" 
+                                           ToolTip="Delete key search"/>
+                                </Button>
+                                <TextBlock Text="{Binding Path=Search}"
+                                           Name="tbSearch"
+                                           FontWeight="Bold"
+                                           Grid.Column="1"
+                                           Grid.Row="0"
+                                           TextWrapping="Wrap">
+                                </TextBlock>
+                                <TextBlock Text="{Binding Path=Folder}"
+                                           Name="tbFolder"
+                                           Grid.Column="1"
+                                           Grid.Row="1"
+                                           TextWrapping="Wrap"/>
+
+                            </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="Selector.IsSelected" Value="True">
                                 <Setter Property="Panel.Background" TargetName="BorderLB">
                                     <Setter.Value>
-                                        <SolidColorBrush Color="{StaticResource SelectedBackgroundColor}"/>
+                                        <SolidColorBrush>#0066ff</SolidColorBrush>
                                     </Setter.Value>
                                 </Setter>
 
                                 <Setter Property="Border.BorderBrush" TargetName="BorderLB">
                                     <Setter.Value>
-                                        <SolidColorBrush>#FF26A0DA</SolidColorBrush>
+                                        <SolidColorBrush>#0033ff</SolidColorBrush>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="TextBlock.Foreground" TargetName="tbSearch">
+                                    <Setter.Value>
+                                        <SolidColorBrush>#ffffff</SolidColorBrush>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="TextBlock.Foreground" TargetName="tbFolder">
+                                    <Setter.Value>
+                                        <SolidColorBrush>#ffffff</SolidColorBrush>
                                     </Setter.Value>
                                 </Setter>
                             </Trigger>
@@ -154,7 +197,7 @@
             </Setter>
         </Style>
 
-        <DataTemplate x:Key="ListboxDataTemp" >
+        <!--<DataTemplate x:Key="ListboxDataTemp" >
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -178,22 +221,24 @@
                                            ToolTip="Delete key search"/>
                 </Button>
                 <TextBlock Text="{Binding Path=Search}"
+                                           Name="tbSearch"
                                            FontWeight="Bold"
                                            Grid.Column="1"
                                            Grid.Row="0"
-                                           TextWrapping="Wrap"/>
+                                           TextWrapping="Wrap">
+                </TextBlock>
                 <TextBlock Text="{Binding Path=Folder}"
                                            Grid.Column="1"
                                            Grid.Row="1"
                                            TextWrapping="Wrap"/>
 
             </Grid>
-        </DataTemplate>
+        </DataTemplate>-->
     </UserControl.Resources>
     <Grid>
         <ListBox Name="lstRecent" 
                  MouseDoubleClick="lstRecent_MouseDoubleClick"
-                 ItemTemplate="{StaticResource ListboxDataTemp}"/>
+               />
 
     </Grid>
 </UserControl>

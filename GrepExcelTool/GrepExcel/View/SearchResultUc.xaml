@@ -6,11 +6,138 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:GrepExcel.View"
              xmlns:cvter="clr-namespace:GrepExcel.View.Converters"
+             TextElement.FontSize="12"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <cvter:IndexConverter x:Key="idxConverter"/>
         <cvter:HasAllTextConverter x:Key="HasAllTextConverter"/>
+        <cvter:FileNameConverter x:Key="fileNameConverter"/>
+        <cvter:PathNameConverter x:Key="pathNameConverter"/>
+
+
+        <!--Listview Item stype-->
+        <Style x:Key="{x:Type ListViewItem}"
+       TargetType="ListViewItem">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property = "HorizontalContentAlignment" Value = "Stretch" />
+            <Setter Property = "VerticalContentAlignment" Value = "Stretch" />
+            <!--<Setter Property="ToolTip">
+                <Setter.Value>
+                    <UniformGrid Columns="1">
+                        --><!--<TextBlock Text="{Binding FileName, Converter={StaticResource pathNameConverter}}"/>--><!--
+                        <TextBlock Text="{Binding Sheet}" />
+                        <TextBlock Text="{Binding Cell}"/>
+                    </UniformGrid>
+                </Setter.Value>
+            </Setter>-->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border x:Name="BorderLV"
+                                Padding="3"
+                                SnapsToDevicePixels="true"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                BorderBrush="LightGray">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="MouseOver" />
+                                    <VisualState x:Name="Disabled" />
+                                </VisualStateGroup>
+
+                            </VisualStateManager.VisualStateGroups>
+                            <GridViewRowPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Selector.IsSelected" Value="True">
+                                <Setter Property="Panel.Background" TargetName="BorderLV">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="#0066ff"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="TextElement.Foreground" Value="White" />
+                            </Trigger>
+                            <Trigger Property="UIElement.IsMouseOver" Value="True">
+                                <Setter Property="Panel.Background" TargetName="BorderLV" Value="LightSteelBlue"/>
+                                <Setter Property="Border.BorderBrush" TargetName="BorderLV">
+                                    <Setter.Value>
+                                        <SolidColorBrush>#A826A0DA</SolidColorBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="UIElement.IsEnabled" Value="False">
+                                <Setter Property="TextElement.Foreground" TargetName="BorderLV">
+                                    <Setter.Value>
+                                        <DynamicResource ResourceKey="{x:Static SystemColors.GrayTextBrushKey}" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!--Id-->
+        <DataTemplate x:Key = "templateCell_Id" >
+            <Border BorderBrush = "Gray" BorderThickness = "0.3,0.3,0,0" Margin = "-7,-3,-7,-3" >
+                <StackPanel Margin = "6,2,6,2 ">
+                    <TextBlock Text ="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                       AncestorType={x:Type ListViewItem}}, 
+                                       Converter={StaticResource idxConverter}}" TextWrapping="Wrap" 
+                               TextAlignment="Center"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+        <!--Result-->
+        <DataTemplate x:Key = "templateCell_Result" >
+            <Border BorderBrush = "Gray" BorderThickness = "0.3,0.3,0,0" Margin = "-7,-3,-7,-3" >
+                <StackPanel Margin = "6,2,6,2 ">
+                    <TextBlock Text ="{Binding Result}" 
+                             TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+        <!--File Name-->
+        <DataTemplate x:Key = "templateCell_FileName" >
+            <Border BorderBrush = "Gray" BorderThickness = "0.3,0.3,0,0" Margin = "-7,-3,-7,-3" >
+                <StackPanel Margin = "6,2,6,2 ">
+                    <TextBlock Text ="{Binding FileName, Converter={StaticResource fileNameConverter}}"  
+                               TextWrapping="Wrap"
+                               />
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+        <!--Path Name-->
+        <DataTemplate x:Key = "templateCell_PathName" >
+            <Border BorderBrush = "Gray" BorderThickness = "0.3,0.3,0,0" Margin = "-7,-3,-7,-3" >
+                <StackPanel Margin = "6,2,6,2 ">
+                    <TextBlock Text ="{Binding FileName, Converter={StaticResource pathNameConverter}}"  
+                               TextWrapping="Wrap"
+                               />
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+        <!--Sheet-->
+        <DataTemplate x:Key = "templateCell_Sheet" >
+            <Border BorderBrush = "Gray" BorderThickness = "0.3,0.3,0,0" Margin = "-7,-3,-7,-3" >
+                <StackPanel Margin = "6,2,6,2 ">
+                    <TextBlock Text ="{Binding Sheet}" TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+        <!--Cell-->
+        <DataTemplate x:Key = "templateCell_Cell" >
+            <Border BorderBrush = "Gray" BorderThickness = "0.3,0.3,0.3,0" Margin = "-7,-3,-7,-3" >
+                <StackPanel Margin = "6,2,6,2 ">
+                    <TextBlock Text ="{Binding Cell}" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+
 
         <!--Commbobox data-->
         <XmlDataProvider x:Key="filteResult" XPath="Items">
@@ -43,7 +170,7 @@
                     </Button>
                 </ToolBar>
                 <ToolBar>
-                    <TextBox x:Name="txtFilter" Width="200"  KeyDown="txtFilter_KeyDown">
+                    <TextBox x:Name="txtFilter" Width="200"  KeyDown="txtFilter_KeyDown" TextChanged="txtFilter_TextChanged">
                         <TextBox.Style>
                             <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
                                 <Style.Resources>
@@ -115,34 +242,32 @@
                           SelectionChanged="lvSearchResults_SelectionChanged">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Width="40" DisplayMemberBinding="{Binding RelativeSource={RelativeSource FindAncestor, 
-                                                                         AncestorType={x:Type ListViewItem}}, 
-                                                                         Converter={StaticResource idxConverter}}">
+                        <GridViewColumn Width="40" CellTemplate="{StaticResource templateCell_Id}">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Tag="ResultID" Click="lvSearchResultsColumnHeader_Click">Id</GridViewColumnHeader>
                             </GridViewColumn.Header>
-                            <!--<GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock x:Name="txtName" Text="{Binding ResultID}" />
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>-->
                         </GridViewColumn>
-                        <GridViewColumn Width="400" DisplayMemberBinding="{Binding Path= Result}">
+                        <GridViewColumn Width="450" CellTemplate="{StaticResource templateCell_Result}">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Tag="Result" Click="lvSearchResultsColumnHeader_Click">Result</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
-                        <GridViewColumn Width="350" DisplayMemberBinding="{Binding Path= FileName}">
+                        <GridViewColumn Width="250" CellTemplate="{StaticResource templateCell_FileName}">
                             <GridViewColumn.Header>
-                                <GridViewColumnHeader Tag="FileName" Click="lvSearchResultsColumnHeader_Click">FileName</GridViewColumnHeader>
+                                <GridViewColumnHeader Tag="FileName" Click="lvSearchResultsColumnHeader_Click">File</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
-                        <GridViewColumn Width="150" DisplayMemberBinding="{Binding Path= Sheet}">
+                        <GridViewColumn Width="250" CellTemplate="{StaticResource templateCell_PathName}">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Tag="FileName" Click="lvSearchResultsColumnHeader_Click">Path</GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                        </GridViewColumn>
+                        <GridViewColumn Width="150" CellTemplate="{StaticResource templateCell_Sheet}">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Tag="Sheet" Click="lvSearchResultsColumnHeader_Click">Sheet</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
-                        <GridViewColumn Width="50" DisplayMemberBinding="{Binding Path= Cell}">
+                        <GridViewColumn Width="50" CellTemplate="{StaticResource templateCell_Cell}">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Tag="Cell" Click="lvSearchResultsColumnHeader_Click">Cell</GridViewColumnHeader>
                             </GridViewColumn.Header>
@@ -155,6 +280,9 @@
                               Icon="{materialDesign:PackIcon Kind=Search}"
                               Command="{Binding CommandGotoDocument}"
                               CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}" />
+                        <MenuItem Header="Copy Path"
+                                  Icon="{materialDesign:PackIcon Kind=LocationPath}"
+                                  Click="CopyPath_Click"/>
                     </ContextMenu>
                 </ListView.ContextMenu>
             </ListView>

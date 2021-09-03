@@ -48,14 +48,12 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsEnabled"
                    Value="false">
-                                <Setter TargetName="Border"
-                    Property="Background">
+                                <Setter TargetName="Border" Property="Background">
                                     <Setter.Value>
                                         <SolidColorBrush Color="{StaticResource DisabledControlLightColor}" />
                                     </Setter.Value>
                                 </Setter>
-                                <Setter TargetName="Border"
-                    Property="BorderBrush">
+                                <Setter TargetName="Border"  Property="BorderBrush">
                                     <Setter.Value>
                                         <SolidColorBrush Color="{DynamicResource DisabledBorderLightColor}" />
                                     </Setter.Value>
@@ -102,7 +100,7 @@
                                                 Storyboard.TargetProperty="(Panel.Background).
                     (SolidColorBrush.Color)">
                                                 <EasingColorKeyFrame KeyTime="0"
-                                         Value="{StaticResource SelectedBackgroundColor}" />
+                                         Value="#0066ff" />
                                             </ColorAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
@@ -112,7 +110,7 @@
                                                 Storyboard.TargetProperty="(Panel.Background).
                     (SolidColorBrush.Color)">
                                                 <EasingColorKeyFrame KeyTime="0"
-                                         Value="{StaticResource SelectedUnfocusedColor}" />
+                                         Value="#FFDDDDDD" />
                                             </ColorAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
@@ -120,49 +118,15 @@
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
                             <ContentPresenter />
-                            <!--<Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition></RowDefinition>
-                                    <RowDefinition></RowDefinition>
-                                </Grid.RowDefinitions>
-                                <Button Grid.Column="0"
-                                        Grid.Row="0"
-                                        Grid.RowSpan="2"
-                                        BorderThickness="0"
-                                        Background="Transparent"
-                                        Width="40"
-                                        Name="btnDelSerachResult"
-                                        Click="btnDelSerachResult_Click"
-                                        >
-                                    <Image Source="../Image/delete_bin.png" 
-                                           Width="20" 
-                                           Height="20" 
-                                           ToolTip="Delete key search"/>
-                                </Button>
-                                <TextBlock Text="{Binding Path=Search}"
-                                           FontWeight="Bold"
-                                           Grid.Column="1"
-                                           Grid.Row="0"
-                                           TextWrapping="Wrap"/>
-                                <TextBlock Text="{Binding Path=Folder}"
-                                           Grid.Column="1"
-                                           Grid.Row="1"
-                                           TextWrapping="Wrap"/>
-                              
-                            </Grid>-->
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="Selector.IsSelected" Value="True">
                                 <Setter Property="Panel.Background" TargetName="BorderLB">
                                     <Setter.Value>
-                                        <SolidColorBrush Color="{StaticResource SelectedBackgroundColor}"/>
+                                        <SolidColorBrush Color="#0066ff"/>
                                     </Setter.Value>
                                 </Setter>
-                                
+                                <Setter Property="TextElement.Foreground" Value="White" />
                                 <Setter Property="Border.BorderBrush" TargetName="BorderLB">
                                     <Setter.Value>
                                         <SolidColorBrush>#FF26A0DA</SolidColorBrush>
