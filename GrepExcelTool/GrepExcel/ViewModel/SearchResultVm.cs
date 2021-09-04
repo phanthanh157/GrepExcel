@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 
@@ -24,6 +26,8 @@ namespace GrepExcel.ViewModel
         private ICommand _commandRefresh;
         private ICommand _searchResult;
         private ICommand _goToDocument;
+        private ICommand _commandFocusFind;
+        private ICommand _copyFullPath;
         public SearchResultVm()
         {
             ResultInfos = new ObservableCollection<ResultInfo>();
@@ -145,6 +149,62 @@ namespace GrepExcel.ViewModel
 
             await grep.OpenFileAsync(resultInfo);
 
+        }
+
+
+
+        public ICommand CommandFocusFind
+        {
+            get
+            {
+                if(_commandFocusFind == null)
+                {
+                    _commandFocusFind = new RelayCommand(x => CommandFocusFindHandler(x));
+
+                }
+                return _commandFocusFind;
+            }
+        }
+
+        private void CommandFocusFindHandler(object sender)
+        {
+            if(sender is null)
+            {
+                ShowDebug.MsgErr(F.FLMD(), "sender is null");
+                return;
+            }
+
+            var txtFilter = sender as TextBox;
+
+            txtFilter.Focusable = true;
+            txtFilter.Focus();
+
+        }
+
+
+        public ICommand CopyFullPath
+        {
+            get
+            {
+                if(_copyFullPath == null)
+                {
+                    _copyFullPath = new RelayCommand(x => CopyFullPathHandler(x));
+                }
+                return _copyFullPath;
+            }
+        }
+
+        private void CopyFullPathHandler(object sender)
+        {
+            if (sender is null)
+            {
+                ShowDebug.MsgErr(F.FLMD(), "sender is null");
+                return;
+            }
+
+            var searchResult = sender as ResultInfo;
+
+            Clipboard.SetText(searchResult.FileName);
         }
     }
 }

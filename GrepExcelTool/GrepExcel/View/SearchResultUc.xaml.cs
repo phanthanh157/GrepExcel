@@ -91,6 +91,11 @@ namespace GrepExcel.View
             }
         }
 
+        /// <summary>
+        /// Never use
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CopyPath_Click(object sender, RoutedEventArgs e)
         {
             var searchResult = lvSearchResults.SelectedItem as ResultInfo;
@@ -99,7 +104,7 @@ namespace GrepExcel.View
             {
                 Clipboard.SetText(searchResult.FileName);
             }
-
         }
+
     }
 }
