@@ -135,6 +135,7 @@
     <Compile Include="View\Converters\HasAllTextConverter.cs" />
     <Compile Include="View\Converters\IndexConverter.cs" />
     <Compile Include="View\Converters\PathNameConverter.cs" />
+    <Compile Include="View\Converters\SortAdorner.cs" />
     <Compile Include="View\Dialog\AboutInfo.xaml.cs">
       <DependentUpon>AboutInfo.xaml</DependentUpon>
     </Compile>

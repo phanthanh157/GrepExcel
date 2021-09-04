@@ -149,6 +149,8 @@
                                   Command="{Binding CopyFullPath}"
                                   CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
                                   InputGestureText="Ctrl+C"/>
+                        <MenuItem Header="Copy Result to ClipBoard"
+                                  Click="CopyResult_Click"/>
                     </ContextMenu>
                 </ListView.ContextMenu>
             </ListView>
