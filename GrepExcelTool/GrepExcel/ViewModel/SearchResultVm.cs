@@ -12,6 +12,13 @@ using System.Windows.Input;
 
 namespace GrepExcel.ViewModel
 {
+    public enum TypeCloseTab
+    {
+        Close,
+        CloseAllButThis,
+        CloseToRight,
+        CloseToLeft
+    }
     public struct OptionFilter
     {
         public string Value { get; set; }
@@ -28,6 +35,8 @@ namespace GrepExcel.ViewModel
         private ICommand _goToDocument;
         private ICommand _commandFocusFind;
         private ICommand _copyFullPath;
+        private ICommand _commandCloseTab;
+        private ICommand _commandDelete;
         public SearchResultVm()
         {
             ResultInfos = new ObservableCollection<ResultInfo>();
@@ -58,6 +67,113 @@ namespace GrepExcel.ViewModel
         public int SearchId { get; set; }
 
         public ResultInfo SelectedItem { get; set; }
+
+
+
+
+
+        public ICommand CommandCloseTab
+        {
+            get
+            {
+                if (_commandCloseTab == null)
+                {
+                    _commandCloseTab = new RelayCommand(x => { CommandCloseTabHandler(x); });
+                }
+                return _commandCloseTab;
+            }
+
+        }
+
+
+        private void CommandCloseTabHandler(object sender)
+        {
+            if (sender == null)
+            {
+                ShowDebug.Msg(F.FLMD(), "sender is null");
+                return;
+            }
+            
+            var mainVm = MainViewModel.Instance;
+            var excelStore = ExcelStoreManager.Instance;
+            var typeClose = (TypeCloseTab)sender;
+            int tabActive = mainVm.TabActive;
+            if (mainVm.Tabs.Count != 0 && tabActive != -1)
+            {
+                switch (typeClose)
+                {
+                    case TypeCloseTab.Close:
+                        {
+                            ShowDebug.Msg(F.FLMD(), "Close tab: index = {0}", tabActive);
+                            var resultVm = mainVm.GetActiveSearchResultVm();
+                            if (resultVm == null) return;
+                            var searchInfo = excelStore.GetSearchInfoById(resultVm.SearchId);
+
+                            if (searchInfo != null)
+                            {
+                                searchInfo.IsTabActive = false;
+                                if (SqlResult.UpdateSuccess != excelStore.UpdateSearchInfo(searchInfo))
+                                {
+                                    ShowDebug.Msg(F.FLMD(), "Update field 'tabIndex' in database is fail");
+                                }
+                            }
+                            mainVm.Tabs.RemoveAt(tabActive);
+                        }
+                        break;
+                    case TypeCloseTab.CloseAllButThis:
+                        {
+                            CommandCloseTabHandler(TypeCloseTab.CloseToRight);
+                            CommandCloseTabHandler(TypeCloseTab.CloseToLeft);
+                        }
+                        break;
+                    case TypeCloseTab.CloseToLeft:
+                        {
+                            for(int idx = tabActive-1; idx > -1; idx--)
+                            {
+                                var resultVm = mainVm.GetSearchResultVm(idx);
+                                if (resultVm == null) return;
+                                var searchInfo = excelStore.GetSearchInfoById(resultVm.SearchId);
+
+                                if (searchInfo != null)
+                                {
+                                    searchInfo.IsTabActive = false;
+                                    if (SqlResult.UpdateSuccess != excelStore.UpdateSearchInfo(searchInfo))
+                                    {
+                                        ShowDebug.Msg(F.FLMD(), "Update field 'tabIndex' in database is fail");
+                                    }
+                                }
+                                mainVm.Tabs.RemoveAt(idx);
+                            }
+
+                        }
+                        break;
+                    case TypeCloseTab.CloseToRight:
+                        for (int idx = mainVm.Tabs.Count-1; idx > tabActive; idx--)
+                        {
+                            var resultVm = mainVm.GetSearchResultVm(idx);
+                            if (resultVm == null) return;
+                            var searchInfo = excelStore.GetSearchInfoById(resultVm.SearchId);
+
+                            if (searchInfo != null)
+                            {
+                                searchInfo.IsTabActive = false;
+                                if (SqlResult.UpdateSuccess != excelStore.UpdateSearchInfo(searchInfo))
+                                {
+                                    ShowDebug.Msg(F.FLMD(), "Update field 'tabIndex' in database is fail");
+                                }
+                            }
+                            mainVm.Tabs.RemoveAt(idx);
+                        }
+                        break;
+                    default:
+                        break;
+
+                }
+          
+            }
+
+        }
+
 
         public ICommand CommandRefresh
         {
@@ -232,6 +348,34 @@ namespace GrepExcel.ViewModel
             var searchResult = sender as ResultInfo;
 
             Clipboard.SetText(searchResult.FileName);
+        }
+
+
+        public ICommand CommandDelete
+        {
+            get
+            {
+                if(_commandDelete == null)
+                {
+                    _commandDelete = new RelayCommand(x => CommandDeleteHandler());
+                }
+                return _commandDelete;
+            }
+        }
+
+        private void CommandDeleteHandler()
+        {
+            var mainVm = MainViewModel.Instance;
+            var excelStore = ExcelStoreManager.Instance;
+            var listSearchVm = ListSearchVm.Instance;
+
+            var resultVm = mainVm.GetActiveSearchResultVm();
+            if (resultVm == null) return;
+            var searchInfo = excelStore.GetSearchInfoById(resultVm.SearchId);
+
+            listSearchVm.DelSearchResult(searchInfo);
+
+
         }
     }
 }

@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:GrepExcel.View"
+             xmlns:md="clr-namespace:GrepExcel.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.InputBindings>
@@ -12,6 +13,7 @@
         <KeyBinding Key="PageDown" Modifiers="Ctrl" Command="{Binding CommandTabPrev}"/>
     </UserControl.InputBindings>
     <UserControl.Resources>
+       
         <ControlTemplate x:Key="btnHoverFilter" TargetType="Button">
             <Border Name="border" BorderThickness="0" 
                 Background="Transparent">
@@ -45,12 +47,27 @@
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Height="21" Width="Auto">
-                        <TextBlock Width="Auto" Text="{Binding Path=TabName}"/>
-                        <!--<Image Source="../Image/close.png" Margin="5" Width="10" Height="10" MouseDown="Image_MouseDown"/>-->
-                        <!--<Button x:Name="btnClose" Click="btnClose_Click" Style="{StaticResource btnOne}">
-                            --><!--<materialDesign:PackIcon Width="20" Height="20" Kind="CloseBox" />--><!--
-                            abc
-                        </Button>-->
+                        <TextBlock Width="Auto" Text="{Binding Path=TabName}">
+                            <TextBlock.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Close"
+                                              Command="{Binding CommandCloseTab}"
+                                              CommandParameter="{x:Static md:TypeCloseTab.Close }"/>
+                                    <MenuItem Header="Close All But This"
+                                              Command="{Binding CommandCloseTab}"
+                                              CommandParameter="{x:Static md:TypeCloseTab.CloseAllButThis }"/>
+                                    <MenuItem Header="Close All to the Right"
+                                              Command="{Binding CommandCloseTab}"
+                                              CommandParameter="{x:Static md:TypeCloseTab.CloseToRight }"/>
+                                    <MenuItem Header="Close All to the Left"
+                                              Command="{Binding CommandCloseTab}"
+                                              CommandParameter="{x:Static md:TypeCloseTab.CloseToLeft }"/>
+                                    <Separator/>
+                                    <MenuItem Header="Delete In Database"
+                                              Command="{Binding CommandDelete}"/>
+                                </ContextMenu>
+                            </TextBlock.ContextMenu>
+                        </TextBlock>
                         <Button
                                 x:Name="btnClose"
                                 Grid.Column="1"
@@ -60,7 +77,8 @@
                                 VerticalAlignment="Top"
                                 BorderBrush="{x:Null}"
                                 BorderThickness="0"
-                                Click="btnClose_Click"
+                                Command="{Binding CommandCloseTab}"
+                                CommandParameter="{x:Static md:TypeCloseTab.Close }"
                                 ClickMode="Press"
                                 Content=""
                                 Foreground="{x:Null}"
@@ -120,6 +138,7 @@
                     <UserControl Height="Auto" Width="Auto" Content="{Binding  Path=Control}" Margin="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                 </DataTemplate>
             </TabControl.ContentTemplate>
+   
         </TabControl>
     </Grid>
 </UserControl>

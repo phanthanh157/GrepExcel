@@ -10,6 +10,7 @@ using GrepExcel.View.Dialog;
 
 namespace GrepExcel.ViewModel
 {
+
     public class MainViewModel : TabControl
     {
         #region Fileds
@@ -322,6 +323,15 @@ namespace GrepExcel.ViewModel
         {
             if (Tabs.Count >= TabActive)
                 return (SearchResultVm)Tabs[TabActive];
+            return null;
+        }
+
+        public SearchResultVm GetSearchResultVm(int tabIndex)
+        {
+            if(Tabs.Count >= tabIndex)
+            {
+                return (SearchResultVm) Tabs[tabIndex];
+            }
             return null;
         }
 

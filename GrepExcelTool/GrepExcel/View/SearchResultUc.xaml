@@ -144,7 +144,7 @@
                               CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
                               InputGestureText="Ctrl+G"/>
 
-                        <MenuItem Header="Copy Path"
+                        <MenuItem Header="Copy Path to ClipBoard"
                                   Icon="{materialDesign:PackIcon Kind=LocationPath}"
                                   Command="{Binding CopyFullPath}"
                                   CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"

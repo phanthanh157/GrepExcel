@@ -97,7 +97,7 @@
                 <StatusBarItem Grid.Column="4" Margin="0,0,5,0">
                     <TextBlock Text="{Binding TotalKeySearch,StringFormat='Search : {0}', Mode=TwoWay}"/>
                 </StatusBarItem>
-                <StatusBarItem Grid.Column="5">
+                <StatusBarItem Grid.Column="5" Margin="0,0,20,0">
                     <TextBlock Text="{Binding TotalResultSearch,StringFormat='Result : {0}', Mode=TwoWay}"/>
                 </StatusBarItem>
             </StatusBar>
