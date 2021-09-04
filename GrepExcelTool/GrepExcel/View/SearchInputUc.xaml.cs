@@ -1,6 +1,8 @@
 ﻿using GrepExcel.Excel;
 using GrepExcel.ViewModel;
+using System;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -28,6 +30,16 @@ namespace GrepExcel.View
             cobMethod.SelectedIndex = 1;
             cobTarget.SelectedIndex = 0;
             //txtSearch.Text = "thanh";
+
+            var lstSearchInfo = ExcelStoreManager.Instance.GetSearchInfoByLimit(10);
+            if(lstSearchInfo != null)
+            {
+                var searchInfo = lstSearchInfo.FirstOrDefault();
+                if(searchInfo != null)
+                {
+                    txtFolder.Text = searchInfo.Folder;
+                }
+            }
             //txtFolder.Text = @"D:\VBA-Excel";//test tam
         }
 
@@ -36,19 +48,19 @@ namespace GrepExcel.View
             var itemFolder = txtFolder.SelectedItem as SearchInfo;
             var itemSearch = txtSearch.SelectedItem as SearchInfo;
             if (itemFolder == null)
-                _folder = txtFolder.Text;
+                _folder = txtFolder.Editor.Text;
             else
                 _folder = itemFolder.Folder;
 
 
             if (itemSearch == null)
-                _search = txtSearch.Text;
+                _search = txtSearch.Editor.Text;
             else
                 _search = itemSearch.Search;
 
             if (string.IsNullOrEmpty(_search))
             {
-                MessageBox.Show("Search input empty", "Input information", MessageBoxButton.OK, MessageBoxImage.Information);
+                //MessageBox.Show("Search input empty", "Input information", MessageBoxButton.OK, MessageBoxImage.Information);
                 return false;
             }
 
@@ -143,10 +155,13 @@ namespace GrepExcel.View
         {
             if (e.Key == Key.Return)
             {
-                //TODO: Dang bi loi khong textchanged khong thay doi
+                btnSearch.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                 // TODO: Dang bi loi khong textchanged khong thay doi
                 //if (!Validate()) return;
 
                 //var searchInputVm = new SearchInputVm();
+
+                //ShowDebug.Msg(F.FLMD(), "search {0}", _search);
 
                 //var inputInfo = new SearchInfo()
                 //{

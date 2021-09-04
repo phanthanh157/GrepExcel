@@ -106,7 +106,7 @@
                                  IconVisibility="Visible"
                                  Provider="{StaticResource ResourceKey=searchProvider}"
                                  x:Name="txtSearch"
-                                 KeyDown="txtSearch_KeyDown"
+                                 KeyUp="txtSearch_KeyDown"
                                  Background="White"
                                  Focusable="True"
                                 >
