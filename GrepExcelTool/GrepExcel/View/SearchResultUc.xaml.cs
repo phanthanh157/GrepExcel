@@ -17,14 +17,14 @@ namespace GrepExcel.View
             InitializeComponent();
             _mainVm = MainViewModel.Instance;
             _mainVm.TabSelectionChange += TabChange;
-
+ 
         }
 
         private void TabChange(object sender, object e)
         {
             //Update again selection index
             cobOptionFilter.SelectedIndex = 0;
-
+           // lvSearchResults.UnselectAll();
         }
 
         private void lvSearchResults_SelectionChanged(object sender, SelectionChangedEventArgs e)

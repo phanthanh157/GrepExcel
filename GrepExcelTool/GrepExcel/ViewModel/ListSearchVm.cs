@@ -136,6 +136,7 @@ namespace GrepExcel.ViewModel
 
             //update list collection
             // RemoveList(searchInfo.Id);
+            mainVm.UpdateStatusBar();
             SearchInfos.Remove(searchInfo);
 
             //Update Recent list

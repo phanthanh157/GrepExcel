@@ -370,7 +370,6 @@ namespace GrepExcel.Excel
             catch (SqliteException ex)
             {
                 ShowDebug.Msg(F.FLMD(), ex.Message);
-                throw;
             }
 
             return lst;
@@ -418,10 +417,42 @@ namespace GrepExcel.Excel
             catch (SqliteException ex)
             {
                 ShowDebug.Msg(F.FLMD(), ex.Message);
-                throw;
             }
 
             return lst;
+
+        }
+
+
+        public int CountResultInfo()
+        {
+
+            if (_sqlConnection == null)
+            {
+                ShowDebug.Msg(F.FLMD(), "sql connection faile = null");
+                return 0;
+            }
+
+            try
+            {
+
+                // create command text.
+                using (var command = _sqlConnection.CreateCommand())
+                {
+                    var sqlString = "SELECT COUNT(*) FROM pct_tblResult";
+                    command.CommandText = sqlString;
+
+                    int count = Convert.ToInt32(command.ExecuteScalar());
+
+                    return count;
+                }
+            }
+            catch (SqliteException ex)
+            {
+                ShowDebug.Msg(F.FLMD(), ex.Message);
+            }
+
+            return 0;
 
         }
 

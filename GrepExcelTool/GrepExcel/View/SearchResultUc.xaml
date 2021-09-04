@@ -143,7 +143,7 @@
                               Command="{Binding CommandGotoDocument}"
                               CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
                               InputGestureText="Ctrl+G"/>
-                        
+
                         <MenuItem Header="Copy Path"
                                   Icon="{materialDesign:PackIcon Kind=LocationPath}"
                                   Command="{Binding CopyFullPath}"

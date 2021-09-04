@@ -14,10 +14,13 @@ namespace GrepExcel.ViewModel
     {
         #region Fileds
         private static MainViewModel _instance = null;
+        private ExcelStoreManager _excelStore = null;
         private string _notifyString;
         private bool _isOpenNotify = false;
         private int _tabActive;
         private Queue _msgNotify;
+        private int _totalKeySearch;
+        private int _totalResultSearch;
         private ICommand _commandClose;
         private ICommand _commandAboutInfoOpen;
         private ICommand _commandSearchSettings;
@@ -30,13 +33,17 @@ namespace GrepExcel.ViewModel
         public MainViewModel()
         {
             InitClass();
-
+            UpdateStatusBar();
+           
         }
 
         public void InitClass()
         {
             Tabs = new ObservableCollection<TabControl>();
+            _excelStore = ExcelStoreManager.Instance;
             _msgNotify = new Queue();
+            _totalKeySearch = 0;
+            _totalKeySearch = 0;
         }
 
 
@@ -128,7 +135,39 @@ namespace GrepExcel.ViewModel
             }
         }
 
-        #endregion
+        public int TotalKeySearch
+        {
+            get
+            {
+                return _totalKeySearch;
+            }
+            set
+            {
+                if (value != _totalKeySearch)
+                {
+                    _totalKeySearch = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public int TotalResultSearch
+        {
+            get
+            {
+                return _totalResultSearch;
+            }
+            set
+            {
+                if (value != _totalResultSearch)
+                {
+                    _totalResultSearch = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        #endregion //Properties
 
         #region Command
         public ICommand CommandClose
@@ -256,6 +295,7 @@ namespace GrepExcel.ViewModel
 
             this.Tabs.Add(tabControl);
 
+            UpdateStatusBar();
         }
 
         public TabControl SearchTabControl(string tabName)
@@ -378,6 +418,13 @@ namespace GrepExcel.ViewModel
             }
 
             return false;
+        }
+
+
+        public void UpdateStatusBar()
+        {
+            TotalKeySearch = _excelStore.CountSearchInfo();
+            TotalResultSearch = _excelStore.CountResultInfo();
         }
 
         #endregion

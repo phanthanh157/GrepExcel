@@ -200,5 +200,31 @@ namespace GrepExcel.Excel
             }
         }
 
+        /// <summary>
+        /// Total rows search info in database
+        /// </summary>
+        /// <returns></returns>
+        public int CountSearchInfo()
+        {
+            using (var searchInfo = new SearchStore())
+            {
+                return searchInfo.CountSearchInfo();
+            }
+        }
+
+        /// <summary>
+        /// Total rows result info in database
+        /// </summary>
+        /// <returns></returns>
+        public int CountResultInfo()
+        {
+            using (var resultInfo = new ResultStore())
+            {
+                return resultInfo.CountResultInfo();
+            }
+        }
+
+
+
     }
 }
