@@ -15,6 +15,8 @@ namespace GrepExcel.View
     {
         private bool _isMatchCase = false;
         private bool _isLowerOrUper = false;
+        private string _folder = string.Empty;
+        private string _search = string.Empty;
         public SearchInputUc()
         {
             InitializeComponent();
@@ -31,19 +33,33 @@ namespace GrepExcel.View
 
         public bool Validate()
         {
-            if (string.IsNullOrEmpty(txtSearch.Text))
+            var itemFolder = txtFolder.SelectedItem as SearchInfo;
+            var itemSearch = txtSearch.SelectedItem as SearchInfo;
+            if (itemFolder == null)
+                _folder = txtFolder.Text;
+            else
+                _folder = itemFolder.Folder;
+
+
+            if (itemSearch == null)
+                _search = txtSearch.Text;
+            else
+                _search = itemSearch.Search;
+
+            if (string.IsNullOrEmpty(_search))
             {
                 MessageBox.Show("Search input empty", "Input information", MessageBoxButton.OK, MessageBoxImage.Information);
                 return false;
             }
 
-            if (string.IsNullOrEmpty(txtFolder.Text))
+            if (string.IsNullOrEmpty(_folder))
             {
                 MessageBox.Show("Folder input empty", "Input information", MessageBoxButton.OK, MessageBoxImage.Information);
                 return false;
             }
 
-            if (!Directory.Exists(txtFolder.Text))
+      
+            if (!Directory.Exists(_folder))
             {
                 MessageBox.Show("Directory input not exits", "Input information", MessageBoxButton.OK, MessageBoxImage.Information);
                 return false;
@@ -52,6 +68,14 @@ namespace GrepExcel.View
 
             return true;
         }
+
+        //protected override void OnMouseMove(MouseEventArgs e)
+        //{
+        //    if(e.OriginalSource is Button)
+        //        btnSearch.Focus();
+        //    ShowDebug.Msg(F.FLMD(), "Folder: {0}", txtFolder.Text);
+        //    base.OnMouseMove(e);
+        //}
 
         private void btnOpenFolder_click(object sender, RoutedEventArgs e)
         {
@@ -71,10 +95,12 @@ namespace GrepExcel.View
 
             var searchInputVm = new SearchInputVm();
 
+            //get folder
+     
             var inputInfo = new SearchInfo()
             {
-                Search = txtSearch.Text,
-                Folder = txtFolder.Text,
+                Search = _search,
+                Folder = _folder,
                 Method = (TypeMethod)cobMethod.SelectedValue,
                 Target = (TypeTarget)cobTarget.SelectedValue,
                 IsLowerOrUper = _isLowerOrUper,
@@ -136,5 +162,6 @@ namespace GrepExcel.View
                 //searchInputVm.CommandSearch.Execute(inputInfo);
             }
         }
+
     }
 }

@@ -65,7 +65,8 @@
         <vmsearch:SearchTemplateSelector x:Key="FolderTemplateSelector"
                                          SearchTempalte ="{StaticResource folderTemplate}"/>
     </UserControl.Resources>
-    <Grid>
+    <Grid x:Name="GridSearchInput"
+          Focusable="True">
         <TabControl TabStripPlacement="Left" Background="WhiteSmoke">
             <TabItem>
                 <TabItem.Header>
@@ -107,14 +108,8 @@
                                  x:Name="txtSearch"
                                  KeyDown="txtSearch_KeyDown"
                                  Background="White"
+                                 Focusable="True"
                                 >
-                            <wpf:AutoCompleteTextBox.SelectedItem>
-                                <Binding Path="SelectedPath" Mode="TwoWay">
-                                    <Binding.ValidationRules>
-                                        <vmfolder:RequiredValidationRule/>
-                                    </Binding.ValidationRules>
-                                </Binding>
-                            </wpf:AutoCompleteTextBox.SelectedItem>
                             <wpf:AutoCompleteTextBox.LoadingContent>
                                 <TextBlock Text="Loading..."
                                            Margin="5"
@@ -179,13 +174,6 @@
                                  Provider="{StaticResource ResourceKey=folderProvider}"
                                  x:Name="txtFolder"
                                  Background="White">
-                            <wpf:AutoCompleteTextBox.SelectedItem>
-                                <Binding Path="SelectedPath" Mode="TwoWay">
-                                    <Binding.ValidationRules>
-                                        <vmfolder:RequiredValidationRule/>
-                                    </Binding.ValidationRules>
-                                </Binding>
-                            </wpf:AutoCompleteTextBox.SelectedItem>
                             <wpf:AutoCompleteTextBox.LoadingContent>
                                 <TextBlock Text="Loading..."
                                            Margin="5"
