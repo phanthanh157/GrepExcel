@@ -192,5 +192,13 @@ namespace GrepExcel.Excel
             }
         }
 
+        public SqlResult DeleteResultInfoBySearchId(SearchInfo data)
+        {
+            using (var resultInfo = new ResultStore())
+            {
+                return resultInfo.DeleteBySearchId(data);
+            }
+        }
+
     }
 }

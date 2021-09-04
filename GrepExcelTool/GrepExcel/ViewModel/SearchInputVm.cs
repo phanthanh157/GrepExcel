@@ -96,7 +96,7 @@ namespace GrepExcel.ViewModel
                 tabResult.Control = new SearchResultUc();
                 tabResult.TabName = inputInfo.Search;
                 tabResult.SearchId = inputInfo.Id;
-                tabResult.CommandRefeshHandler(); //load du lieu tu database
+                tabResult.LoadDataFromDatabase();
 
                 mainVm.AddTabControl(tabResult);
 

@@ -142,7 +142,7 @@
                               Icon="{materialDesign:PackIcon Kind=Search}"
                               Command="{Binding CommandGotoDocument}"
                               CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
-                              InputGestureText="F5"/>
+                              InputGestureText="Ctrl+G"/>
                         
                         <MenuItem Header="Copy Path"
                                   Icon="{materialDesign:PackIcon Kind=LocationPath}"
@@ -155,11 +155,14 @@
         </Grid>
     </Grid>
     <UserControl.InputBindings>
-        <KeyBinding Command="{Binding CommandFocusFind}" Key="F" Modifiers="Ctrl" 
+        <KeyBinding Command="{Binding CommandRefresh}" 
+                    Key="F5"/>
+        <KeyBinding Command="{Binding CommandFocusFind}" 
+                    Key="F" Modifiers="Ctrl" 
                     CommandParameter="{Binding ElementName=txtFilter}"/>
         <KeyBinding Command="{Binding CommandGotoDocument}"
                     CommandParameter="{Binding SelectedItem, ElementName=lvSearchResults}"
-                    Key="F5"/>
+                    Key="G" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding CopyFullPath}"
                     CommandParameter="{Binding SelectedItem, ElementName=lvSearchResults}"
                     Key="C" Modifiers="Ctrl"/>

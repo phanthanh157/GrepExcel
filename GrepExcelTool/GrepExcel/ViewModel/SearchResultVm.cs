@@ -42,6 +42,19 @@ namespace GrepExcel.ViewModel
             OptionFilters.Add(new OptionFilter { Color = "Blue", Value = "Sheet" });
         }
 
+        public void LoadDataFromDatabase()
+        {
+            var excelStore = ExcelStoreManager.Instance;
+            var listResult = excelStore.GetResultInfoBySearchId(SearchId);
+
+            //Clear before load again.
+            ResultInfos.Clear();
+            foreach (var result in listResult)
+            {
+                ResultInfos.Add(result);
+            }
+        }
+
         public int SearchId { get; set; }
 
         public ResultInfo SelectedItem { get; set; }
@@ -52,24 +65,38 @@ namespace GrepExcel.ViewModel
             {
                 if (_commandRefresh == null)
                 {
-                    _commandRefresh = new RelayCommand((sender) => CommandRefeshHandler());
+                    _commandRefresh = new Commands.AsyncRelayCommand((sender) => CommandRefeshHandler(sender));
                 }
                 return _commandRefresh;
             }
         }
 
-        public void CommandRefeshHandler()
+        private async Task CommandRefeshHandler(object sender)
         {
-
+            var mainVm = MainViewModel.Instance;
             var excelStore = ExcelStoreManager.Instance;
-            var listResult = excelStore.GetResultInfoBySearchId(SearchId);
+            var grep = new Grep();
+            var searchInfo = excelStore.GetSearchInfoById(SearchId);
 
-            //Clear before load again.
-            ResultInfos.Clear();
-            foreach (var result in listResult)
+            if(searchInfo == null)
             {
-                ResultInfos.Add(result);
+                ShowDebug.Msg(F.FLMD(), "search info is null");
+                return;
             }
+
+            //Delete result info old
+            if (SqlResult.DeleteSuccess != excelStore.DeleteResultInfoBySearchId(searchInfo))
+            {
+                ShowDebug.Msg(F.FLMD(), "Delete result info fail");
+                return;
+            }
+            mainVm.NotifyTaskRunning(searchInfo.Search);
+
+            await grep.GrepAsync(searchInfo);
+
+            LoadDataFromDatabase();
+
+            mainVm.NotifyTaskRunning(searchInfo.Search,false);
         }
 
         public ICommand CommandSearchResult
