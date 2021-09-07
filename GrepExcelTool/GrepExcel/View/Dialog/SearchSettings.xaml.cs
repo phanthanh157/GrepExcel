@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GrepExcel.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,11 @@ namespace GrepExcel.View.Dialog
     /// </summary>
     public partial class SearchSettings : Window
     {
+        private SettingVm _settingVm = null;
         public SearchSettings()
         {
             InitializeComponent();
+            _settingVm = SettingVm.Instance;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -89,6 +92,23 @@ namespace GrepExcel.View.Dialog
                     break;
                 default:
                     break;
+            }
+        }
+
+        private void txtNumberRecent_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if(txtNumberRecent.Text.Length > 0)
+            {
+                int result = 0;
+                bool tryConvert = int.TryParse(txtNumberRecent.Text, out result);
+                if (tryConvert)
+                {
+                    SettingArgs settingArgs = new SettingArgs();
+                    settingArgs.NumberRecent = result;
+                    _settingVm.Notify(settingArgs);
+                    Config.AddUpdateAppSettings("NUMBER_RECENTS", result.ToString());
+                }
+                    
             }
         }
     }

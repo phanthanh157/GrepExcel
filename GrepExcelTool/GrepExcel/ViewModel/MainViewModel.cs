@@ -231,7 +231,7 @@ namespace GrepExcel.ViewModel
             settings.cobMaxFiles.Text = Config.ReadSetting("MAX_FILE");
             settings.cobMaxFolders.Text = Config.ReadSetting("MAX_FOLDER");
             settings.cobMaxSearch.Text = Config.ReadSetting("MAX_SEARCH");
-
+            settings.txtNumberRecent.Text = Config.ReadSetting("NUMBER_RECENTS");
 
             settings.ShowDialog();
 

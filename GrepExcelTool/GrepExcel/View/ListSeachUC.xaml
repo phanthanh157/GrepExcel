@@ -191,7 +191,7 @@
                                            Grid.Column="1"
                                            Grid.Row="1"
                                            TextWrapping="Wrap"/>
-                <TextBlock Text="{Binding Path=Total, StringFormat='({0})'}"
+                <TextBlock Text="{Binding Path=Total}"
                                            Grid.Column="2"
                                            Grid.Row="0"
                                            TextWrapping="Wrap"

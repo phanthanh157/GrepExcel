@@ -177,10 +177,12 @@ namespace GrepExcel.Excel
             ExcelApp.Range wsFind;
             ExcelApp.Range currentFind;
             int _noMatches = 0;
-            int _maxSearch = int.Parse(Config.ReadSetting("MAX_SEARCH"));
+          
 
             try
             {
+                int _maxSearch = int.Parse(Config.ReadSetting("MAX_SEARCH"));
+
                 xlWorkbook = xlApp.Workbooks.Open(file, false, true, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 1);
 
                 int TotalSheet = xlWorkbook.Worksheets.Count; //totaol sheet
@@ -208,7 +210,7 @@ namespace GrepExcel.Excel
                     string fisrtAddressFind = currentFind.Address;
                     _noMatches++;
 
-                    ShowDebug.Msg(F.FLMD(), "search : {0} ; NoMatches: {1}", searchInfo.Search, _noMatches);
+                    //ShowDebug.Msg(F.FLMD(), "search : {0} ; NoMatches: {1}", searchInfo.Search, _noMatches);
                     //so luong toi da tim kiem
                     if (_noMatches > _maxSearch)
                     {
@@ -237,7 +239,7 @@ namespace GrepExcel.Excel
                         _noMatches++;
 
                         //so luong toi da tim kiem
-                        ShowDebug.Msg(F.FLMD(), "search : {0} ; NoMatches: {1}", searchInfo.Search, _noMatches);
+                        //ShowDebug.Msg(F.FLMD(), "search : {0} ; NoMatches: {1}", searchInfo.Search, _noMatches);
                         if (_noMatches > _maxSearch)
                         {
                             ShowDebug.Msg(F.FLMD(), "Maximum result search");

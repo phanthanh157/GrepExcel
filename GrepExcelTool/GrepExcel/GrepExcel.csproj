@@ -130,6 +130,7 @@
     <Compile Include="ViewModel\Search\FolderSuggestionProvider.cs" />
     <Compile Include="ViewModel\Search\SearchSuggestionProvider.cs" />
     <Compile Include="ViewModel\Search\SearchTemplateSelector.cs" />
+    <Compile Include="ViewModel\SettingVm.cs" />
     <Compile Include="ViewModel\TabControl.cs" />
     <Compile Include="View\Converters\FileNameConverter.cs" />
     <Compile Include="View\Converters\HasAllTextConverter.cs" />

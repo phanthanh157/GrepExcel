@@ -26,7 +26,8 @@ namespace GrepExcel
            new ConfigTable("MAX_FILE","100"),
            new ConfigTable("MAX_FOLDER","100"),
            new ConfigTable("MAX_SEARCH","1000"),
-           new ConfigTable("TAB_CURRENT_ACTIVE","0")
+           new ConfigTable("TAB_CURRENT_ACTIVE","0"),
+           new ConfigTable("NUMBER_RECENTS","10")
         };
 
         public List<ConfigTable> ConfigTables { get => _configTables; set => _configTables = value; }

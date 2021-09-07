@@ -82,6 +82,16 @@
                 </ComboBox>
             </StackPanel>
 
+            <StackPanel Style="{StaticResource groupItem}">
+                <Label Content="Number Recents" Style="{StaticResource lbItem}" />
+                <Label Content="Number of list recent." Style="{StaticResource lbDescription}"/>
+                <TextBox x:Name="txtNumberRecent" TextChanged="txtNumberRecent_TextChanged" 
+                         Margin="5"
+                         Width="300"
+                         Padding="3"
+                         HorizontalAlignment="Left"/>
+            </StackPanel>
+
 
         </StackPanel>
     </Grid>

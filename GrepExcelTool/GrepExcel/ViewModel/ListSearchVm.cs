@@ -1,5 +1,6 @@
 ﻿using GrepExcel.Excel;
 using GrepExcel.View;
+using System;
 using System.Collections.ObjectModel;
 
 namespace GrepExcel.ViewModel
@@ -9,6 +10,7 @@ namespace GrepExcel.ViewModel
         #region Fields
         private static ListSearchVm _instance = null;
         private ObservableCollection<ShowInfo> _searchInfos;
+        private SettingVm _settings = null;
 
         #endregion 
 
@@ -38,7 +40,23 @@ namespace GrepExcel.ViewModel
         {
             SearchInfos = new ObservableCollection<ShowInfo>();
 
+            InitClass();
+
             LoadData();
+        }
+
+        private void InitClass()
+        {
+            _settings = SettingVm.Instance;
+
+            _settings.SettingChanged += SettingChange;
+
+        }
+
+        private void SettingChange(object sender, EventArgs e)
+        {
+           
+
         }
 
         public static ListSearchVm Instance

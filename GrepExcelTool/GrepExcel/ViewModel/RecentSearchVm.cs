@@ -1,5 +1,6 @@
 ﻿using GrepExcel.Excel;
 using GrepExcel.View;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -104,7 +105,8 @@ namespace GrepExcel.ViewModel
         #region Fields
         private static RecentSearchVm _instance = null;
         private ObservableCollection<ShowInfo> _recents;
-        private readonly int _numberOfRecents = 10;
+        private SettingVm _settings = null;
+        private int _numberOfRecents;
 
         #endregion 
 
@@ -112,7 +114,7 @@ namespace GrepExcel.ViewModel
         public RecentSearchVm()
         {
             _recents = new ObservableCollection<ShowInfo>();
-
+            InitClass();
             LoadRecents();
         }
 
@@ -151,6 +153,24 @@ namespace GrepExcel.ViewModel
 
 
         #region Method
+
+        public void InitClass()
+        {
+            _numberOfRecents = int.Parse(Config.ReadSetting("NUMBER_RECENTS"));
+
+            _settings = SettingVm.Instance;
+            _settings.SettingChanged += SettingChange;
+
+        }
+
+        private void SettingChange(object sender, EventArgs e)
+        {
+            var settingArgs = e as SettingArgs;
+            _numberOfRecents = settingArgs.NumberRecent;
+
+            LoadRecents();
+        }
+
         public void LoadRecents()
         {
             var storeManager = ExcelStoreManager.Instance;
