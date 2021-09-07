@@ -85,7 +85,7 @@ namespace GrepExcel.View
             if (searchResultVm != null)
             {
                 txtFilter.Text = string.Empty;
-                searchResultVm.CommandRefresh.Execute(this);
+                searchResultVm.LoadDataFromDatabase();
             }
         }
 

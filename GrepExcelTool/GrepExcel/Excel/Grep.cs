@@ -122,8 +122,6 @@ namespace GrepExcel.Excel
 
             try
             {
-                int _noMatches = 0;
-                int _maxSearch = int.Parse(Config.ReadSetting("MAX_SEARCH"));
                 var files = new FileCollection(searchInfo.Folder, searchInfo.Method);
 
                 foreach (string file in files)
@@ -133,9 +131,8 @@ namespace GrepExcel.Excel
                                          file,
                                          xlApp,
                                          findExact,
-                                         targetCurrent,
-                                         _noMatches,
-                                         _maxSearch));
+                                         targetCurrent
+                                         ));
                 }
 
 
@@ -150,7 +147,7 @@ namespace GrepExcel.Excel
             }
             catch (Exception ex)
             {
-                ShowDebug.Msg(F.FLMD(), "Error: {0} ", ex.Message);
+                ShowDebug.MsgErr(F.FLMD(), ex.Message);
                 //MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
@@ -171,9 +168,7 @@ namespace GrepExcel.Excel
                                  string file,
                                  ExcelApp.Application xlApp,
                                  ExcelApp.XlLookAt findExact,
-                                 ExcelApp.XlFindLookIn targetCurrent,
-                                 int _noMatches,
-                                 int _maxSearch
+                                 ExcelApp.XlFindLookIn targetCurrent
                                  )
         {
             ExcelApp.Workbook xlWorkbook;
@@ -181,6 +176,8 @@ namespace GrepExcel.Excel
             ExcelApp.Worksheet xlWorksheet;
             ExcelApp.Range wsFind;
             ExcelApp.Range currentFind;
+            int _noMatches = 0;
+            int _maxSearch = int.Parse(Config.ReadSetting("MAX_SEARCH"));
 
             try
             {
@@ -211,13 +208,15 @@ namespace GrepExcel.Excel
                     string fisrtAddressFind = currentFind.Address;
                     _noMatches++;
 
+                    ShowDebug.Msg(F.FLMD(), "search : {0} ; NoMatches: {1}", searchInfo.Search, _noMatches);
                     //so luong toi da tim kiem
                     if (_noMatches > _maxSearch)
                     {
+                        ShowDebug.Msg(F.FLMD(), "Maximum result search");
+                        xlWorkbook.Close(false, Type.Missing, Type.Missing);
                         return;
                     }
                     //show result
-                    //Console.WriteLine("Result: " + currentFind.Value);
                     DataGrep(searchInfo, currentFind, file, xlWorksheet.Name);
 
                     for (int jdx = 1; jdx < _maxSearch; jdx++)
@@ -228,7 +227,7 @@ namespace GrepExcel.Excel
                         // If you didn't move to a new range, you are done.
                         if (currentFind == null)
                         {
-                            return;
+                            break;
                         }
 
                         if (currentFind.Address == fisrtAddressFind)
@@ -238,8 +237,11 @@ namespace GrepExcel.Excel
                         _noMatches++;
 
                         //so luong toi da tim kiem
+                        ShowDebug.Msg(F.FLMD(), "search : {0} ; NoMatches: {1}", searchInfo.Search, _noMatches);
                         if (_noMatches > _maxSearch)
                         {
+                            ShowDebug.Msg(F.FLMD(), "Maximum result search");
+                            xlWorkbook.Close(false, Type.Missing, Type.Missing);
                             return;
                         }
                         //show result next
@@ -247,13 +249,14 @@ namespace GrepExcel.Excel
 
                     }
                 }
+                // ShowDebug.Msg(F.FLMD(), "Close File when end");
                 xlWorkbook.Close(false, Type.Missing, Type.Missing);
 
             }
             catch (Exception ex)
             {
                 //MessageBox.Show("File "+ file + " Error: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                ShowDebug.Msg(F.FLMD(), "Error: {0} ", ex.Message);
+                ShowDebug.MsgErr(F.FLMD(), ex.Message);
             }
         }
 
@@ -312,6 +315,7 @@ namespace GrepExcel.Excel
             }
 
             //Insert database result search
+            ShowDebug.Msg(F.FLMD(), "Insert database - search: {0}", searchInfo.Search);
             excelStore.InsertResultInfo(searchResult);
 
         }

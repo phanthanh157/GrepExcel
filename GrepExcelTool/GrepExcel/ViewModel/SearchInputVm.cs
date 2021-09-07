@@ -92,13 +92,30 @@ namespace GrepExcel.ViewModel
                 await grep.GrepAsync(inputInfo);
 
                 //Display result
-                SearchResultVm tabResult = new SearchResultVm();
-                tabResult.Control = new SearchResultUc();
-                tabResult.TabName = inputInfo.Search;
-                tabResult.SearchId = inputInfo.Id;
-                tabResult.LoadDataFromDatabase();
+                int tabIndex = -1;
+                bool isTabOpen = mainVm.isTabOpen(inputInfo,ref tabIndex);
+                if (!isTabOpen)
+                {
+                    SearchResultVm tabResult = new SearchResultVm();
+                    tabResult.Control = new SearchResultUc();
+                    tabResult.TabName = inputInfo.Search;
+                    tabResult.SearchId = inputInfo.Id;
+                    tabResult.LoadDataFromDatabase();
+                    mainVm.AddTabControl(tabResult);
+                }
+                else // Tab is open and load again data
+                {
+                    if(tabIndex !=-1)
+                    {
+                        var resultVm = mainVm.GetSearchResultVm(tabIndex);
+                        if(resultVm != null)
+                        {
+                            resultVm.LoadDataFromDatabase();
+                        }
+                    }
+                }
 
-                mainVm.AddTabControl(tabResult);
+        
 
                 mainVm.NotifyTaskRunning(inputInfo.Search, false);
                 //add observer list serach

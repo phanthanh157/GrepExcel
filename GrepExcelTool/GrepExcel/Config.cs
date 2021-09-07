@@ -25,7 +25,7 @@ namespace GrepExcel
            new ConfigTable("VERSION","0.0.1"),
            new ConfigTable("MAX_FILE","100"),
            new ConfigTable("MAX_FOLDER","100"),
-           new ConfigTable("MAX_SEARCH","10000"),
+           new ConfigTable("MAX_SEARCH","1000"),
            new ConfigTable("TAB_CURRENT_ACTIVE","0")
         };
 

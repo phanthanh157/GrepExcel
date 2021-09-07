@@ -72,12 +72,13 @@
             </StackPanel>
             <StackPanel Style="{StaticResource groupItem}">
                 <Label Content="Max Search" Style="{StaticResource lbItem}" />
-                <Label Content="Maximum results returned in one search." Style="{StaticResource lbDescription}"/>
+                <Label Content="Maximum results returned in one file search." Style="{StaticResource lbDescription}"/>
                 <ComboBox Name="cobMaxSearch" 
                           SelectionChanged="cobMaxSearch_SelectionChanged">
-                    <ComboBoxItem Tag="50" Content="5000"/>
-                    <ComboBoxItem Tag="100" Content="10000"/>
-                    <ComboBoxItem Tag="200" Content="15000"/>
+                    <ComboBoxItem Content="500"/>
+                    <ComboBoxItem Content="1000"/>
+                    <ComboBoxItem Content="2000"/>
+                    <ComboBoxItem Content="5000"/>
                 </ComboBox>
             </StackPanel>
 

@@ -402,6 +402,33 @@ namespace GrepExcel.ViewModel
         }
 
 
+        public bool isTabOpen(SearchInfo searchInfo)
+        {
+            if (Tabs.Count == 0)
+            {
+                ShowDebug.Msg(F.FLMD(), "All TabControl close");
+                return false;
+            }
+
+            int cnt = 0;
+            foreach (var tab in Tabs)
+            {
+                if (tab is SearchResultVm)
+                {
+                    var searchVm = tab as SearchResultVm;
+
+                    if (searchInfo.Id == searchVm.SearchId)
+                    {
+                        return true;
+                    }
+
+                }
+                cnt++;
+            }
+
+            return false;
+        }
+
         public bool isTabOpen(SearchInfo searchInfo, ref int index)
         {
             if (Tabs.Count == 0)
@@ -429,6 +456,8 @@ namespace GrepExcel.ViewModel
 
             return false;
         }
+
+        
 
 
         public void UpdateStatusBar()

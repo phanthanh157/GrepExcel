@@ -35,14 +35,17 @@ namespace GrepExcel.View.Dialog
 
             switch (item.Content.ToString())
             {
+                case "500":
+                    Config.AddUpdateAppSettings("MAX_SEARCH", "500");
+                    break;
+                case "1000":
+                    Config.AddUpdateAppSettings("MAX_SEARCH", "1000");
+                    break;
+                case "2000":
+                    Config.AddUpdateAppSettings("MAX_SEARCH", "2000");
+                    break;
                 case "5000":
                     Config.AddUpdateAppSettings("MAX_SEARCH", "5000");
-                    break;
-                case "10000":
-                    Config.AddUpdateAppSettings("MAX_SEARCH", "10000");
-                    break;
-                case "15000":
-                    Config.AddUpdateAppSettings("MAX_SEARCH", "15000");
                     break;
                 default:
                     break;
