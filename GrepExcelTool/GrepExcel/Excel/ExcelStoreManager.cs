@@ -224,6 +224,17 @@ namespace GrepExcel.Excel
             }
         }
 
+        /// <summary>
+        /// Total rows result info in database
+        /// </summary>
+        /// <returns></returns>
+        public int CountResultInfoBySearchId(int searchId)
+        {
+            using (var resultInfo = new ResultStore())
+            {
+                return resultInfo.CountResultInfoBySearchId(searchId);
+            }
+        }
 
 
     }

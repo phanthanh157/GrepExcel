@@ -114,12 +114,13 @@
                             </VisualStateManager.VisualStateGroups>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition></RowDefinition>
-                                    <RowDefinition></RowDefinition>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
                                 </Grid.RowDefinitions>
                                 <Button Grid.Column="0"
                                         Grid.Row="0"
@@ -131,22 +132,37 @@
                                         >
                                     <Image Source="../Image/search_list.png" 
                                            Width="20" 
-                                           Height="20" 
-                                           ToolTip="Delete key search"/>
+                                           Height="20"/>
                                 </Button>
-                                <TextBlock Text="{Binding Path=Search}"
+                                <TextBlock Text="{Binding Path=Info.Search}"
                                            Name="tbSearch"
                                            FontWeight="Bold"
                                            Grid.Column="1"
                                            Grid.Row="0"
                                            TextWrapping="Wrap">
                                 </TextBlock>
-                                <TextBlock Text="{Binding Path=Folder}"
+                                <TextBlock Text="{Binding Path=Info.Folder}"
                                            Name="tbFolder"
                                            Grid.Column="1"
                                            Grid.Row="1"
                                            TextWrapping="Wrap"/>
-
+                                <TextBlock Text="{Binding Path=Total}"
+                                           Name="tbTotal"
+                                           Grid.Column="2"
+                                           Grid.Row="0"
+                                           TextWrapping="Wrap"
+                                           VerticalAlignment="Bottom"
+                                           HorizontalAlignment="Right"
+                                           Foreground="Green"/>
+                                <TextBlock Text="{Binding Path=Type}"
+                                           Name="tbType"
+                                           Grid.Column="2"
+                                           Grid.Row="1"
+                                           TextWrapping="Wrap"
+                                           FontSize="9"
+                                           VerticalAlignment="Bottom"
+                                           HorizontalAlignment="Right"
+                                           Foreground="Gray"/>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -167,7 +183,17 @@
                                         <SolidColorBrush>#ffffff</SolidColorBrush>
                                     </Setter.Value>
                                 </Setter>
+                                <Setter Property="TextBlock.Foreground" TargetName="tbTotal">
+                                    <Setter.Value>
+                                        <SolidColorBrush>#ffffff</SolidColorBrush>
+                                    </Setter.Value>
+                                </Setter>
                                 <Setter Property="TextBlock.Foreground" TargetName="tbFolder">
+                                    <Setter.Value>
+                                        <SolidColorBrush>#ffffff</SolidColorBrush>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="TextBlock.Foreground" TargetName="tbType">
                                     <Setter.Value>
                                         <SolidColorBrush>#ffffff</SolidColorBrush>
                                     </Setter.Value>
@@ -196,44 +222,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <!--<DataTemplate x:Key="ListboxDataTemp" >
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
-                </Grid.RowDefinitions>
-                <Button Grid.Column="0"
-                                        Grid.Row="0"
-                                        Grid.RowSpan="2"
-                                        BorderThickness="0"
-                                        Background="Transparent"
-                                        Width="40"
-                                        Name="btnDelSerachResult"
-                                        >
-                    <Image Source="../Image/search_list.png" 
-                                           Width="20" 
-                                           Height="20" 
-                                           ToolTip="Delete key search"/>
-                </Button>
-                <TextBlock Text="{Binding Path=Search}"
-                                           Name="tbSearch"
-                                           FontWeight="Bold"
-                                           Grid.Column="1"
-                                           Grid.Row="0"
-                                           TextWrapping="Wrap">
-                </TextBlock>
-                <TextBlock Text="{Binding Path=Folder}"
-                                           Grid.Column="1"
-                                           Grid.Row="1"
-                                           TextWrapping="Wrap"/>
-
-            </Grid>
-        </DataTemplate>-->
     </UserControl.Resources>
     <Grid>
         <ListBox Name="lstRecent" 

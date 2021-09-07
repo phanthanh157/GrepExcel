@@ -369,8 +369,8 @@ namespace GrepExcel.Excel
                             searchInfo.Method = (TypeMethod)reader.GetInt32(3);
                             searchInfo.Target = (TypeTarget)reader.GetInt32(4);
                             searchInfo.IsMatchCase = reader.GetBoolean(5);
-                            searchInfo.IsLowerOrUper = reader.GetBoolean(5);
-                            searchInfo.IsTabActive = reader.GetBoolean(5);
+                            searchInfo.IsLowerOrUper = reader.GetBoolean(6);
+                            searchInfo.IsTabActive = reader.GetBoolean(7);
 
                             lst.Add(searchInfo);
                         }
@@ -419,8 +419,8 @@ namespace GrepExcel.Excel
                             searchInfo.Method = (TypeMethod)reader.GetInt32(3);
                             searchInfo.Target = (TypeTarget)reader.GetInt32(4);
                             searchInfo.IsMatchCase = reader.GetBoolean(5);
-                            searchInfo.IsLowerOrUper = reader.GetBoolean(5);
-                            searchInfo.IsTabActive = reader.GetBoolean(5);
+                            searchInfo.IsLowerOrUper = reader.GetBoolean(6);
+                            searchInfo.IsTabActive = reader.GetBoolean(7);
 
                             lst.Add(searchInfo);
                         }
@@ -474,8 +474,8 @@ namespace GrepExcel.Excel
                             searchInfo.Method = (TypeMethod)reader.GetInt32(3);
                             searchInfo.Target = (TypeTarget)reader.GetInt32(4);
                             searchInfo.IsMatchCase = reader.GetBoolean(5);
-                            searchInfo.IsLowerOrUper = reader.GetBoolean(5);
-                            searchInfo.IsTabActive = reader.GetBoolean(5);
+                            searchInfo.IsLowerOrUper = reader.GetBoolean(6);
+                            searchInfo.IsTabActive = reader.GetBoolean(7);
 
                             lst.Add(searchInfo);
                         }
@@ -537,15 +537,6 @@ namespace GrepExcel.Excel
                                 searchInfo.Folder = reader.GetString(0);
                             }
 
-                            //searchInfo.Id = reader.GetInt32(0);
-                            //searchInfo.Search = reader.GetString(1);
-                            //searchInfo.Folder = reader.GetString(2);
-                            //searchInfo.Method = (TypeMethod)reader.GetInt32(3);
-                            //searchInfo.Target = (TypeTarget)reader.GetInt32(4);
-                            //searchInfo.IsMatchCase = reader.GetBoolean(5);
-                            //searchInfo.IsLowerOrUper = reader.GetBoolean(5);
-                            //searchInfo.IsTabActive = reader.GetBoolean(5);
-
                             lst.Add(searchInfo);
                         }
                     }
@@ -591,8 +582,8 @@ namespace GrepExcel.Excel
                             searchInfo.Method = (TypeMethod)reader.GetInt32(3);
                             searchInfo.Target = (TypeTarget)reader.GetInt32(4);
                             searchInfo.IsMatchCase = reader.GetBoolean(5);
-                            searchInfo.IsLowerOrUper = reader.GetBoolean(5);
-                            searchInfo.IsTabActive = reader.GetBoolean(5);
+                            searchInfo.IsLowerOrUper = reader.GetBoolean(6);
+                            searchInfo.IsTabActive = reader.GetBoolean(7);
 
                             lst.Add(searchInfo);
                         }

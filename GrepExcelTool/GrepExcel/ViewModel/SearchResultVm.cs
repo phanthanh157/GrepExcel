@@ -373,7 +373,7 @@ namespace GrepExcel.ViewModel
             if (resultVm == null) return;
             var searchInfo = excelStore.GetSearchInfoById(resultVm.SearchId);
 
-            listSearchVm.DelSearchResult(searchInfo);
+            listSearchVm.DelSearchResult(new ShowInfo().SetData(searchInfo));
 
 
         }

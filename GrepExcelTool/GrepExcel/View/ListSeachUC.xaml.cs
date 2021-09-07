@@ -22,33 +22,25 @@ namespace GrepExcel.View
 
         private void lstSearch_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var searchResult = lstSearch.SelectedItem as SearchInfo;
+            var searchResult = (ShowInfo) lstSearch.SelectedItem;
 
-            if (searchResult == null)
-            {
-                ShowDebug.MsgErr(F.FLMD(), "Select search result is null");
-                return;
-            }
+            //if (searchResult == null)
+            //{
+            //    ShowDebug.MsgErr(F.FLMD(), "Select search result is null");
+            //    return;
+            //}
 
             _lstSearchVm.ShowTabSearchResult(searchResult);
         }
 
         private void btnDelSerachResult_Click(object sender, RoutedEventArgs e)
         {
-            var searchResult = lstSearch.SelectedItem as SearchInfo;
+            var showInfo = (ShowInfo) lstSearch.SelectedItem ;
 
-            if (searchResult == null)
-            {
-                ShowDebug.MsgErr(F.FLMD(), "Select search result is null");
-                return;
-            }
-            ShowDebug.MsgErr(F.FLMD(), "Delete id = {0}", searchResult.Id);
+            ShowDebug.MsgErr(F.FLMD(), "Delete id = {0}", showInfo.Info.Id);
 
-            _lstSearchVm.DelSearchResult(searchResult);
+            _lstSearchVm.DelSearchResult(showInfo);
 
-            //   lstSearch.Items.Refresh();
-            // lstSearch.Items.Refresh();
-            // lstSearch.InvalidateArrange();
             lstSearch.UpdateLayout();
         }
 

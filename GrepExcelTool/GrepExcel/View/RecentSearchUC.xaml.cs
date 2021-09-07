@@ -26,15 +26,15 @@ namespace GrepExcel.View
 
         private void lstRecent_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var recentSearch = lstRecent.SelectedItem as SearchInfo;
+            var showInfo = (ShowInfo) lstRecent.SelectedItem;
 
-            if (recentSearch == null)
-            {
-                ShowDebug.MsgErr(F.FLMD(), "Select search result is null");
-                return;
-            }
+            //if (recentSearch == null)
+            //{
+            //    ShowDebug.MsgErr(F.FLMD(), "Select search result is null");
+            //    return;
+            //}
 
-            ListSearchVm.Instance.ShowTabSearchResult(recentSearch);
+            ListSearchVm.Instance.ShowTabSearchResult(showInfo);
         }
     }
 }

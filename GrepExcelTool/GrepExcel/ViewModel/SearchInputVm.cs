@@ -70,8 +70,8 @@ namespace GrepExcel.ViewModel
             {
                 MessageBox.Show("Search keyword is exits on database", "Searching", MessageBoxButton.OK, MessageBoxImage.Information);
                 inputInfo.Id = searchIdFirst;
-                listSearch.ShowTabSearchResult(inputInfo);
 
+                listSearch.ShowTabSearchResult(new ShowInfo().SetData(inputInfo));
                 ShowDebug.Msg(F.FLMD(), "Search info is exits, searchId= {0}", searchIdFirst);
                 return;
             }
@@ -115,11 +115,10 @@ namespace GrepExcel.ViewModel
                     }
                 }
 
-        
-
                 mainVm.NotifyTaskRunning(inputInfo.Search, false);
                 //add observer list serach
-                listSearch.SearchInfos.Add(inputInfo);
+                listSearch.SearchInfos.Add(new ShowInfo { Info = inputInfo,
+                                                          Total = excelStore.CountResultInfoBySearchId(inputInfo.Id) });
                 listRecent.LoadRecents();
             }
         }
