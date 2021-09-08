@@ -1,0 +1,147 @@
+﻿<Window x:Class="GrepExcel.View.Dialog.ManagerDatabase"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GrepExcel.View.Dialog"
+        mc:Ignorable="d"
+        MinHeight="300"
+        MaxHeight="500"
+        MinWidth="600"
+        MaxWidth="700"
+        SizeToContent="WidthAndHeight"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Manager Database">
+    <Window.Resources>
+        <Style x:Key="{x:Type Label}" TargetType="Label">
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+
+        <Style x:Key="{x:Type TextBox}" TargetType="TextBox">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="MinWidth" Value="120" />
+            <Setter Property="MinHeight" Value="20" />
+            <Setter Property="AllowDrop" Value="true" />
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBoxBase}">
+                        <Border Name="Border"
+                                Padding="2"
+                                BorderThickness="0.3">
+                            <Border.Background>
+                                <SolidColorBrush Color="{DynamicResource ControlLightColor}" />
+                            </Border.Background>
+                            <Border.BorderBrush>
+                                <SolidColorBrush Color="{DynamicResource BorderMediumColor}" />
+                            </Border.BorderBrush>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
+                                                Storyboard.TargetProperty="(Panel.Background).
+                    (SolidColorBrush.Color)">
+                                                <EasingColorKeyFrame KeyTime="0"
+                                         Value="{StaticResource DisabledControlLightColor}" />
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="ReadOnly">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
+                                                Storyboard.TargetProperty="(Panel.Background).
+                    (SolidColorBrush.Color)">
+                                                <EasingColorKeyFrame KeyTime="0"
+                                         Value="#ffffff" />
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="MouseOver" />
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ScrollViewer Margin="0"
+                        x:Name="PART_ContentHost" VerticalAlignment="Center" />
+                         
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="{x:Type Button}" TargetType="Button">
+            <Setter Property="MinHeight"
+          Value="20" />
+            <Setter Property="MinWidth"
+          Value="90" />
+            <Setter Property="Margin"
+          Value="10,0,0,0" />
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Border" 
+                                BorderThickness="0.5"
+                                BorderBrush="Gray"
+                                CornerRadius="3"
+                                Background="LightGray">
+                            <ContentPresenter Margin="2"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            RecognizesAccessKey="True"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDefault" Value="true">
+                                <Setter TargetName="Border" Property="Background" Value="LightGray"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter TargetName="Border" Property="Background" Value="Gray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Label Content="Directory:"/>
+        <TextBox x:Name="txtDirDb"
+                 Text="{Binding DirDb,Mode=TwoWay}"
+                 Grid.Row="0"
+                 Height="25"
+                 Grid.Column="1"
+                 IsReadOnly="True"/>
+        <Button x:Name="btnDelete"
+                Grid.Row="0"
+                Grid.Column="2"
+                Height="25"
+                Command="{Binding CommandResetDatabase}"
+                CommandParameter="{Binding ElementName=txtDirDb,Path=Text}"
+                Content="Reset Database"
+                />
+
+        <Label  Grid.Row="1"  Grid.Column="0" Content="Size: "/>
+        <TextBox x:Name="txtSizeDb"
+                 Text="{Binding SizeDb,Mode=TwoWay}"
+                 Height="25"
+                 Grid.Row="1"
+                 Grid.Column="1"
+                 IsReadOnly="True"/>
+
+    </Grid>
+</Window>

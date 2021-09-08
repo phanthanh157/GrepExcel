@@ -26,42 +26,52 @@ namespace GrepExcel.Excel
         /// <summary>
         /// Create table 
         /// </summary>
-        public void CreateTable()
+        public SqlResult CreateTable()
         {
             using (var searchInfo = new SearchStore())
             {
-                SqlResult sqlResult = searchInfo.CreateTable();
-                if (sqlResult == SqlResult.DeleteTableSuccess)
+                if ( SqlResult.CreateTableFailed == searchInfo.CreateTable())
                 {
-                    ShowDebug.Msg(F.FLMD(), "table pct_tblResult -- delete success ");
+                    ShowDebug.Msg(F.FLMD(), "table pct_tblResult -- create failed");
+                    return SqlResult.CreateTableFailed;
                 }
             }
 
             using (var resultInfo = new ResultStore())
             {
-                SqlResult sqlResult = resultInfo.CreateTable();
-                if (sqlResult == SqlResult.DeleteTableSuccess)
+                if ( SqlResult.CreateTableFailed == resultInfo.CreateTable())
                 {
-                    ShowDebug.Msg(F.FLMD(), "table pct_tblSearch -- delete success ");
+                    ShowDebug.Msg(F.FLMD(), "table pct_tblSearch --  create failed ");
+                    return SqlResult.CreateTableFailed;
                 }
             }
+            return SqlResult.CreateTableSuccess;
         }
 
         /// <summary>
         /// Droptable
         /// </summary>
-        public void DropTable()
+        public SqlResult DropTable()
         {
 
             using (var resultInfo = new ResultStore())
             {
-                resultInfo.DropTable();
+                if(SqlResult.DeleteTableFailed == resultInfo.DropTable())
+                {
+                    ShowDebug.Msg(F.FLMD(), "table pct_tblResult -- delete failed");
+                    return SqlResult.DeleteTableFailed;
+                }
             }
 
             using (var searchInfo = new SearchStore())
             {
-                searchInfo.DropTable();
+                if (SqlResult.DeleteTableFailed == searchInfo.DropTable())
+                {
+                    ShowDebug.Msg(F.FLMD(), "table pct_tblSearch -- delete failed");
+                    return SqlResult.DeleteTableFailed;
+                }
             }
+            return SqlResult.DeleteTableSuccess;
         }
 
 

@@ -30,6 +30,8 @@
                 <MenuItem Header="_Search Settings" 
                           Command="{Binding CommandSearchSettings}"
                           InputGestureText="Alt+G" />
+                <MenuItem Header="_Manager Database" 
+                          Command="{Binding CommandManagerDatabaseOpen}" />
 
             </MenuItem>
             <MenuItem Header="_Help">

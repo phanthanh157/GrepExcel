@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using GrepExcel.View.Dialog;
+using System.IO;
 
 namespace GrepExcel.ViewModel
 {
@@ -27,6 +28,7 @@ namespace GrepExcel.ViewModel
         private ICommand _commandSearchSettings;
         private ICommand _commandTabNext;
         private ICommand _commandTabPrev;
+        private ICommand _commandManagerDatabaseOpen;
 
         #endregion
 
@@ -280,6 +282,40 @@ namespace GrepExcel.ViewModel
             }
         }
 
+
+        public ICommand CommandManagerDatabaseOpen
+        {
+            get
+            {
+                if (_commandManagerDatabaseOpen == null)
+                {
+                    _commandManagerDatabaseOpen = new RelayCommand(x => CommandManagerDatabaseOpenHandler());
+                }
+                return _commandManagerDatabaseOpen;
+            }
+        }
+
+        private void CommandManagerDatabaseOpenHandler()
+        {
+            var managerDatabase = new ManagerDatabase();
+            var mDbVm = ManagerDatabaseVm.Instance;
+
+            string database = Define.Database;
+            string dir = Directory.GetCurrentDirectory();
+            string pathDb = Path.Combine(dir, database);
+
+            if (File.Exists(pathDb))
+            {
+                mDbVm.InitClass();
+                managerDatabase.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Database not found", "Notification", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+     
 
         #endregion
 
