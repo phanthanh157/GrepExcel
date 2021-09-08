@@ -117,8 +117,7 @@ namespace GrepExcel.ViewModel
 
                 mainVm.NotifyTaskRunning(inputInfo.Search, false);
                 //add observer list serach
-                listSearch.SearchInfos.Add(new ShowInfo { Info = inputInfo,
-                                                          Total = excelStore.CountResultInfoBySearchId(inputInfo.Id) });
+                listSearch.SearchInfos.Add(new ShowInfo().SetData(inputInfo));
                 listRecent.LoadRecents();
             }
         }
