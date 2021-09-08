@@ -55,7 +55,7 @@ namespace GrepExcel.ViewModel
 
         private void SettingChange(object sender, EventArgs e)
         {
-           
+
 
         }
 
@@ -97,14 +97,14 @@ namespace GrepExcel.ViewModel
             {
                 //Check data change and load again data if change
                 var listResult = excelStore.GetResultInfoBySearchId(showInfo.Info.Id);
-                if(listResult != null)
+                if (listResult != null)
                 {
                     var resultVm = mainVm.GetSearchResultVm(indexTab);
                     if (resultVm != null)
                     {
                         if (listResult.Count > resultVm.ResultInfos.Count)
                         {
-                            resultVm.LoadDataFromDatabase(); 
+                            resultVm.LoadDataFromDatabase();
                         }
                     }
                 }
@@ -135,7 +135,7 @@ namespace GrepExcel.ViewModel
                 return;
             }
 
-            foreach(var item in listInfo)
+            foreach (var item in listInfo)
             {
                 SearchInfos.Add(new ShowInfo().SetData(item));
             }

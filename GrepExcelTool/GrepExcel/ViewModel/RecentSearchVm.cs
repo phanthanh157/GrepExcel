@@ -45,7 +45,7 @@ namespace GrepExcel.ViewModel
         private string SubOptionMethod(SearchInfo searchInfo)
         {
             string res = string.Empty;
-            if(searchInfo.Method == TypeMethod.Folder)
+            if (searchInfo.Method == TypeMethod.Folder)
             {
                 res = "F";
             }
@@ -63,7 +63,7 @@ namespace GrepExcel.ViewModel
             {
                 res = "C";
             }
-            else if( searchInfo.Target == TypeTarget.Fomular)
+            else if (searchInfo.Target == TypeTarget.Fomular)
             {
                 res = "F";
             }
@@ -102,7 +102,7 @@ namespace GrepExcel.ViewModel
     {
         #region Fields
         private static RecentSearchVm _instance = null;
-       // private ObservableCollection<ShowInfo> _recents;
+        // private ObservableCollection<ShowInfo> _recents;
         private SettingVm _settings = null;
         private int _numberOfRecents;
 
@@ -181,7 +181,7 @@ namespace GrepExcel.ViewModel
                                  .ToList();
             Recents.Clear();
 
-            foreach(var item in filter)
+            foreach (var item in filter)
             {
                 Recents.Add(new ShowInfo().SetData(item));
             }

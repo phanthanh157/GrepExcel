@@ -93,7 +93,7 @@ namespace GrepExcel.ViewModel
 
                 //Display result
                 int tabIndex = -1;
-                bool isTabOpen = mainVm.isTabOpen(inputInfo,ref tabIndex);
+                bool isTabOpen = mainVm.isTabOpen(inputInfo, ref tabIndex);
                 if (!isTabOpen)
                 {
                     SearchResultVm tabResult = new SearchResultVm();
@@ -105,10 +105,10 @@ namespace GrepExcel.ViewModel
                 }
                 else // Tab is open and load again data
                 {
-                    if(tabIndex !=-1)
+                    if (tabIndex != -1)
                     {
                         var resultVm = mainVm.GetSearchResultVm(tabIndex);
-                        if(resultVm != null)
+                        if (resultVm != null)
                         {
                             resultVm.LoadDataFromDatabase();
                         }

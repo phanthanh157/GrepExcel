@@ -1,11 +1,6 @@
 ﻿using GrepExcel.Excel;
 using GrepExcel.View;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -44,7 +39,7 @@ namespace GrepExcel.ViewModel
         {
             get
             {
-                if(_instance == null)
+                if (_instance == null)
                 {
                     _instance = new ManagerDatabaseVm();
                 }
@@ -60,7 +55,7 @@ namespace GrepExcel.ViewModel
             }
             set
             {
-                if(value != _dirDb)
+                if (value != _dirDb)
                 {
                     _dirDb = value;
                     OnPropertyChanged();
@@ -76,7 +71,7 @@ namespace GrepExcel.ViewModel
             }
             set
             {
-                if(value != _sizeDb)
+                if (value != _sizeDb)
                 {
                     _sizeDb = value;
                     OnPropertyChanged();
@@ -98,15 +93,15 @@ namespace GrepExcel.ViewModel
 
         private void CommandResetDatabaseHandler(object sender)
         {
-            if(sender == null)
+            if (sender == null)
             {
-                ShowDebug.MsgErr(F.FLMD(),"sender is null");
+                ShowDebug.MsgErr(F.FLMD(), "sender is null");
                 return;
             }
 
             var isReset = MessageBox.Show("Do you want to reset database ?", "Reset Database", MessageBoxButton.YesNo);
 
-            if(isReset == MessageBoxResult.No)
+            if (isReset == MessageBoxResult.No)
             {
                 return;
             }

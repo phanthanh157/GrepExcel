@@ -1,13 +1,13 @@
 ﻿using GrepExcel.Excel;
 using GrepExcel.View;
+using GrepExcel.View.Dialog;
 using System;
 using System.Collections;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using GrepExcel.View.Dialog;
-using System.IO;
 
 namespace GrepExcel.ViewModel
 {
@@ -37,7 +37,7 @@ namespace GrepExcel.ViewModel
         {
             InitClass();
             UpdateStatusBar();
-           
+
         }
 
         public void InitClass()
@@ -194,7 +194,7 @@ namespace GrepExcel.ViewModel
         {
             get
             {
-                if(_commandAboutInfoOpen == null)
+                if (_commandAboutInfoOpen == null)
                 {
                     _commandAboutInfoOpen = new RelayCommand(x => { CommandAboutOpenHandler(); });
                 }
@@ -216,7 +216,7 @@ namespace GrepExcel.ViewModel
         {
             get
             {
-                if(_commandSearchSettings == null)
+                if (_commandSearchSettings == null)
                 {
                     _commandSearchSettings = new RelayCommand(x => { CommandSearchSettingsHandler(); });
                 }
@@ -243,9 +243,9 @@ namespace GrepExcel.ViewModel
         {
             get
             {
-                if(_commandTabNext == null)
+                if (_commandTabNext == null)
                 {
-                    _commandTabNext = new RelayCommand(x => CommandTabNextHandler()) ;
+                    _commandTabNext = new RelayCommand(x => CommandTabNextHandler());
                 }
                 return _commandTabNext;
             }
@@ -253,19 +253,19 @@ namespace GrepExcel.ViewModel
 
         private void CommandTabNextHandler()
         {
-            if(TabActive < Tabs.Count-1)
+            if (TabActive < Tabs.Count - 1)
             {
                 TabActive = TabActive + 1;
                 OnTabIndexActive(TabActive);
             }
-           
+
         }
 
         public ICommand CommandTabPrev
         {
             get
             {
-                if(_commandTabPrev == null)
+                if (_commandTabPrev == null)
                 {
                     _commandTabPrev = new RelayCommand(x => CommandTabPrevHandler());
                 }
@@ -315,7 +315,7 @@ namespace GrepExcel.ViewModel
             }
         }
 
-     
+
 
         #endregion
 
@@ -364,9 +364,9 @@ namespace GrepExcel.ViewModel
 
         public SearchResultVm GetSearchResultVm(int tabIndex)
         {
-            if(Tabs.Count >= tabIndex)
+            if (Tabs.Count >= tabIndex)
             {
-                return (SearchResultVm) Tabs[tabIndex];
+                return (SearchResultVm)Tabs[tabIndex];
             }
             return null;
         }
@@ -493,7 +493,7 @@ namespace GrepExcel.ViewModel
             return false;
         }
 
-        
+
 
 
         public void UpdateStatusBar()

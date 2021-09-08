@@ -80,8 +80,8 @@
         public override int GetHashCode()
         {
 
-             return Search.GetHashCode() ^ Method.GetHashCode() ^ Target.GetHashCode() ^ IsMatchCase.GetHashCode() ^ IsLowerOrUper.GetHashCode();
-            
+            return Search.GetHashCode() ^ Method.GetHashCode() ^ Target.GetHashCode() ^ IsMatchCase.GetHashCode() ^ IsLowerOrUper.GetHashCode();
+
         }
 
     }

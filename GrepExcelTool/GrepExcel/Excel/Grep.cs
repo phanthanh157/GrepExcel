@@ -177,7 +177,7 @@ namespace GrepExcel.Excel
             ExcelApp.Range wsFind;
             ExcelApp.Range currentFind;
             int _noMatches = 0;
-          
+
 
             try
             {

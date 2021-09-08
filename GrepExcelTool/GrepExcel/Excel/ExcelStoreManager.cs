@@ -30,7 +30,7 @@ namespace GrepExcel.Excel
         {
             using (var searchInfo = new SearchStore())
             {
-                if ( SqlResult.CreateTableFailed == searchInfo.CreateTable())
+                if (SqlResult.CreateTableFailed == searchInfo.CreateTable())
                 {
                     ShowDebug.Msg(F.FLMD(), "table pct_tblResult -- create failed");
                     return SqlResult.CreateTableFailed;
@@ -39,7 +39,7 @@ namespace GrepExcel.Excel
 
             using (var resultInfo = new ResultStore())
             {
-                if ( SqlResult.CreateTableFailed == resultInfo.CreateTable())
+                if (SqlResult.CreateTableFailed == resultInfo.CreateTable())
                 {
                     ShowDebug.Msg(F.FLMD(), "table pct_tblSearch --  create failed ");
                     return SqlResult.CreateTableFailed;
@@ -56,7 +56,7 @@ namespace GrepExcel.Excel
 
             using (var resultInfo = new ResultStore())
             {
-                if(SqlResult.DeleteTableFailed == resultInfo.DropTable())
+                if (SqlResult.DeleteTableFailed == resultInfo.DropTable())
                 {
                     ShowDebug.Msg(F.FLMD(), "table pct_tblResult -- delete failed");
                     return SqlResult.DeleteTableFailed;

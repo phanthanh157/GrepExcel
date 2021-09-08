@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GrepExcel.ViewModel
 {
@@ -12,7 +8,7 @@ namespace GrepExcel.ViewModel
         {
 
         }
-        public int NumberRecent {get;set;}
+        public int NumberRecent { get; set; }
     }
 
     public class SettingVm
@@ -30,7 +26,7 @@ namespace GrepExcel.ViewModel
         {
             get
             {
-                if(_instance == null)
+                if (_instance == null)
                 {
                     _instance = new SettingVm();
                 }

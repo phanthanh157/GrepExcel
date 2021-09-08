@@ -93,7 +93,7 @@ namespace GrepExcel.ViewModel
                 ShowDebug.Msg(F.FLMD(), "sender is null");
                 return;
             }
-            
+
             var mainVm = MainViewModel.Instance;
             var excelStore = ExcelStoreManager.Instance;
             var typeClose = (TypeCloseTab)sender;
@@ -128,7 +128,7 @@ namespace GrepExcel.ViewModel
                         break;
                     case TypeCloseTab.CloseToLeft:
                         {
-                            for(int idx = tabActive-1; idx > -1; idx--)
+                            for (int idx = tabActive - 1; idx > -1; idx--)
                             {
                                 var resultVm = mainVm.GetSearchResultVm(idx);
                                 if (resultVm == null) return;
@@ -148,7 +148,7 @@ namespace GrepExcel.ViewModel
                         }
                         break;
                     case TypeCloseTab.CloseToRight:
-                        for (int idx = mainVm.Tabs.Count-1; idx > tabActive; idx--)
+                        for (int idx = mainVm.Tabs.Count - 1; idx > tabActive; idx--)
                         {
                             var resultVm = mainVm.GetSearchResultVm(idx);
                             if (resultVm == null) return;
@@ -169,7 +169,7 @@ namespace GrepExcel.ViewModel
                         break;
 
                 }
-          
+
             }
 
         }
@@ -194,7 +194,7 @@ namespace GrepExcel.ViewModel
             var grep = new Grep();
             var searchInfo = excelStore.GetSearchInfoById(SearchId);
 
-            if(searchInfo == null)
+            if (searchInfo == null)
             {
                 ShowDebug.Msg(F.FLMD(), "search info is null");
                 return;
@@ -212,7 +212,7 @@ namespace GrepExcel.ViewModel
 
             LoadDataFromDatabase();
 
-            mainVm.NotifyTaskRunning(searchInfo.Search,false);
+            mainVm.NotifyTaskRunning(searchInfo.Search, false);
         }
 
         public ICommand CommandSearchResult
@@ -300,7 +300,7 @@ namespace GrepExcel.ViewModel
         {
             get
             {
-                if(_commandFocusFind == null)
+                if (_commandFocusFind == null)
                 {
                     _commandFocusFind = new RelayCommand(x => CommandFocusFindHandler(x));
 
@@ -311,7 +311,7 @@ namespace GrepExcel.ViewModel
 
         private void CommandFocusFindHandler(object sender)
         {
-            if(sender is null)
+            if (sender is null)
             {
                 ShowDebug.MsgErr(F.FLMD(), "sender is null");
                 return;
@@ -329,7 +329,7 @@ namespace GrepExcel.ViewModel
         {
             get
             {
-                if(_copyFullPath == null)
+                if (_copyFullPath == null)
                 {
                     _copyFullPath = new RelayCommand(x => CopyFullPathHandler(x));
                 }
@@ -355,7 +355,7 @@ namespace GrepExcel.ViewModel
         {
             get
             {
-                if(_commandDelete == null)
+                if (_commandDelete == null)
                 {
                     _commandDelete = new RelayCommand(x => CommandDeleteHandler());
                 }
