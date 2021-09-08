@@ -11,8 +11,6 @@ namespace GrepExcel.ViewModel
         public SearchInfo Info { get; set; }
         public int Total { get; set; }
 
-        public string Option { get; set; }
-
         public string Type { get; set; }
 
         public ShowInfo SetData(SearchInfo searchInfo)
@@ -104,7 +102,7 @@ namespace GrepExcel.ViewModel
     {
         #region Fields
         private static RecentSearchVm _instance = null;
-        private ObservableCollection<ShowInfo> _recents;
+       // private ObservableCollection<ShowInfo> _recents;
         private SettingVm _settings = null;
         private int _numberOfRecents;
 
@@ -113,7 +111,7 @@ namespace GrepExcel.ViewModel
 
         public RecentSearchVm()
         {
-            _recents = new ObservableCollection<ShowInfo>();
+            Recents = new ObservableCollection<ShowInfo>();
             InitClass();
             LoadRecents();
         }
@@ -135,18 +133,7 @@ namespace GrepExcel.ViewModel
 
         public ObservableCollection<ShowInfo> Recents
         {
-            get
-            {
-                return _recents;
-            }
-            set
-            {
-                if (value != _recents)
-                {
-                    _recents = value;
-                }
-                OnPropertyChanged();
-            }
+            get; set;
         }
 
         #endregion //Properties
@@ -156,11 +143,17 @@ namespace GrepExcel.ViewModel
 
         public void InitClass()
         {
-            _numberOfRecents = int.Parse(Config.ReadSetting("NUMBER_RECENTS"));
+            try
+            {
+                _numberOfRecents = int.Parse(Config.ReadSetting("NUMBER_RECENTS"));
 
-            _settings = SettingVm.Instance;
-            _settings.SettingChanged += SettingChange;
-
+                _settings = SettingVm.Instance;
+                _settings.SettingChanged += SettingChange;
+            }
+            catch
+            {
+                _numberOfRecents = 10;
+            }
         }
 
         private void SettingChange(object sender, EventArgs e)

@@ -10,10 +10,15 @@ namespace GrepExcel.View
     /// </summary>
     public partial class RecentSearchUC : UserControl
     {
-        private RecentSearchVm _recentVm = null;
+        private RecentSearchVm _recentVm ;
         public RecentSearchUC()
         {
             InitializeComponent();
+            Init();
+        }
+
+        private void Init()
+        {
             _recentVm = RecentSearchVm.Instance;
             this.DataContext = _recentVm;
             lstRecent.ItemsSource = _recentVm.Recents;
@@ -27,6 +32,7 @@ namespace GrepExcel.View
         private void lstRecent_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var showInfo = (ShowInfo) lstRecent.SelectedItem;
+
 
             //if (recentSearch == null)
             //{
