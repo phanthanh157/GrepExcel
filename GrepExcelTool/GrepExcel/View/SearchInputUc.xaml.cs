@@ -77,7 +77,7 @@ namespace GrepExcel.View
                 return false;
             }
 
-
+            txtSearch.Editor.Text = string.Empty;
             return true;
         }
 
@@ -155,6 +155,7 @@ namespace GrepExcel.View
         {
             if (e.Key == Key.Return)
             {
+            
                 btnSearch.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
                  // TODO: Dang bi loi khong textchanged khong thay doi
                 //if (!Validate()) return;

@@ -1,4 +1,4 @@
-﻿//#define MYDEBUG 
+﻿#define MYDEBUG 
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;

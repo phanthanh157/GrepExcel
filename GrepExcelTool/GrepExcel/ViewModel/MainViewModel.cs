@@ -19,6 +19,7 @@ namespace GrepExcel.ViewModel
         private ExcelStoreManager _excelStore = null;
         private string _notifyString;
         private bool _isOpenNotify = false;
+        private string _isShowStatus = "Collapsed";
         private int _tabActive;
         private Queue _msgNotify;
         private int _totalKeySearch;
@@ -118,6 +119,22 @@ namespace GrepExcel.ViewModel
                 if (value != _notifyString)
                 {
                     _notifyString = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public string IsShowStatus
+        {
+            get
+            {
+                return _isShowStatus;
+            }
+            set
+            {
+                if (value != _isShowStatus)
+                {
+                    _isShowStatus = value;
                     OnPropertyChanged();
                 }
             }
@@ -377,13 +394,14 @@ namespace GrepExcel.ViewModel
             if (_msgNotify.Count == 0)
             {
                 IsOpenNotify = true;
+                IsShowStatus = "Visible";
             }
 
             if (isAdd)
             {
                 _msgNotify.Enqueue(taskName);
 
-                NotifyString = "Task running (" + _msgNotify.Count + " tasks in queue)";
+                NotifyString =  _msgNotify.Count.ToString();
 
             }
             else
@@ -393,16 +411,18 @@ namespace GrepExcel.ViewModel
                     _msgNotify.Dequeue();
                     NotifyString = string.Empty;
 
-                    NotifyString = "Task running (" + _msgNotify.Count + " tasks in queue)";
+                    NotifyString = _msgNotify.Count.ToString();
 
                     if (_msgNotify.Count == 0)
                     {
                         IsOpenNotify = false;
+                        IsShowStatus = "Collapsed";
                     }
                 }
                 else
                 {
                     IsOpenNotify = false;
+                    IsShowStatus = "Collapsed";
                 }
             }
 
