@@ -5,11 +5,31 @@ using ExcelApp = Microsoft.Office.Interop.Excel;
 
 namespace GrepExcel.Excel
 {
+    public class GrepInfoArgs : EventArgs
+    {
+        public string SearchText { get; set; }
+        public int TotalFiles { get; set; }
+        public string CurrentFile { get; set; }
+        public int CurrentFileIndex { get; set; }
+        public int CurrentMatch { get; set; }
+
+    }
+
     public class Grep
     {
+        private int m_totalFiles;
+        private int m_currentMatch;
+
+        public event EventHandler<GrepInfoArgs> GrepEvent;
         public Grep()
         {
+            this.m_totalFiles = 0;
+            this.m_currentMatch = 0;
+        }
 
+        private void OnGrepEvent(GrepInfoArgs e)
+        {
+            this.GrepEvent?.Invoke(this, e);
         }
 
         public async Task OpenFileAsync(ResultInfo resultInfo)
@@ -124,6 +144,15 @@ namespace GrepExcel.Excel
             {
                 var files = new FileCollection(searchInfo.Folder, searchInfo.Method);
 
+                int countFile = 0;
+                foreach(string file in files)
+                {
+                    countFile++;
+                }
+
+                this.m_totalFiles = countFile;
+
+                countFile = 1;
                 foreach (string file in files)
                 {
                     ShowDebug.Msg(F.FLMD(), "Open File:  '{0}'.", file);
@@ -131,8 +160,10 @@ namespace GrepExcel.Excel
                                          file,
                                          xlApp,
                                          findExact,
-                                         targetCurrent
+                                         targetCurrent,
+                                         countFile
                                          ));
+                    countFile++;
                 }
 
 
@@ -168,7 +199,8 @@ namespace GrepExcel.Excel
                                  string file,
                                  ExcelApp.Application xlApp,
                                  ExcelApp.XlLookAt findExact,
-                                 ExcelApp.XlFindLookIn targetCurrent
+                                 ExcelApp.XlFindLookIn targetCurrent,
+                                 int countFile
                                  )
         {
             ExcelApp.Workbook xlWorkbook;
@@ -209,6 +241,7 @@ namespace GrepExcel.Excel
 
                     string fisrtAddressFind = currentFind.Address;
                     _noMatches++;
+                    this.m_currentMatch++;
 
                     //ShowDebug.Msg(F.FLMD(), "search : {0} ; NoMatches: {1}", searchInfo.Search, _noMatches);
                     //so luong toi da tim kiem
@@ -237,6 +270,7 @@ namespace GrepExcel.Excel
                             break;
                         }
                         _noMatches++;
+                        this.m_currentMatch++;
 
                         //so luong toi da tim kiem
                         //ShowDebug.Msg(F.FLMD(), "search : {0} ; NoMatches: {1}", searchInfo.Search, _noMatches);
@@ -248,6 +282,16 @@ namespace GrepExcel.Excel
                         }
                         //show result next
                         this.DataGrep(searchInfo, currentFind, file, xlWorksheet.Name);
+
+                        //notify result
+                        GrepInfoArgs grepInfo = new GrepInfoArgs();
+                        grepInfo.SearchText = searchInfo.Search;
+                        grepInfo.TotalFiles = this.m_totalFiles;
+                        grepInfo.CurrentFile = file;
+                        grepInfo.CurrentMatch = this.m_currentMatch;
+                        grepInfo.CurrentFileIndex = countFile;
+
+                        OnGrepEvent(grepInfo);
 
                     }
                 }

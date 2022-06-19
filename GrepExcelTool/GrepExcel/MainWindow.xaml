@@ -68,9 +68,9 @@
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="400"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="500"/>
                                 <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
@@ -81,21 +81,6 @@
                 <StatusBarItem>
                     <ToggleButton x:Name="btnNotify" BorderThickness="0" Background="Transparent" Height="20" Width="20" HorizontalAlignment="Left">
                         <materialDesign:PackIcon Width="20" Height="20" Kind="DockLeft"/>
-                        <!--<StackPanel>
-                            <materialDesign:PackIcon Width="20" Height="20" Kind="DockLeft"/>
-                            <Popup Name="myPopup" IsOpen="{Binding IsOpenNotify}" Placement="Top">
-                                <Border BorderThickness="0.1">
-                                    <StackPanel>
-                                        <TextBlock Name="myPopupText" 
-                                               Text="{Binding NotifyString}"
-                                               Background="LightGray" 
-                                               Foreground="Black"
-                                               Padding="5"/>
-                                        <ProgressBar Minimum="0" Maximum="100" Height="10" IsIndeterminate="True" />
-                                    </StackPanel>
-                                </Border>
-                            </Popup>
-                        </StackPanel>-->
                     </ToggleButton>
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="1" Visibility="{Binding IsShowStatus}">
@@ -103,15 +88,19 @@
                         <TextBlock  Text="{Binding NotifyString,StringFormat='Search {0} in queue'}"
                                     Foreground="Black"
                                     Margin="0,0,10,0"/>
-                        <ProgressBar Minimum="0" Maximum="100" Name="pbStatus" Width="300" Height="10" IsIndeterminate="True" />
+                        <ProgressBar Minimum="0" Maximum="100" Name="pbStatus" Value="{Binding SearchPercent}"  Width="300" Height="10" IsIndeterminate="False" />
+                        <TextBlock Text="{Binding ElementName=pbStatus, Path=Value, StringFormat={}{0:0}%}" Margin="-300 0 0 0" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </StackPanel>
                    
+                </StatusBarItem>
+                <StatusBarItem Grid.Column="2" Margin="0,0,5,0" Visibility="{Binding IsShowStatus}">
+                    <TextBlock Text="{Binding CurrentResults,StringFormat='Matched : {0}', Mode=TwoWay}"/>
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="4" Margin="0,0,5,0">
                     <TextBlock Text="{Binding TotalKeySearch,StringFormat='Search : {0}', Mode=TwoWay}"/>
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="5" Margin="0,0,20,0">
-                    <TextBlock Text="{Binding TotalResultSearch,StringFormat='Result : {0}', Mode=TwoWay}"/>
+                    <TextBlock Text="{Binding TotalResultSearch,StringFormat='Results : {0}', Mode=TwoWay}"/>
                 </StatusBarItem>
             </StatusBar>
         </DockPanel>

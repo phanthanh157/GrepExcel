@@ -88,8 +88,11 @@ namespace GrepExcel.ViewModel
 
                 //Search process
                 var grep = new Grep();
+                grep.GrepEvent += Grep_GrepEvent;
                 //grep.GrepSpeedNonTask(inputInfo);
                 await grep.GrepAsync(inputInfo);
+
+                grep.GrepEvent -= Grep_GrepEvent;
 
                 //Display result
                 int tabIndex = -1;
@@ -122,6 +125,22 @@ namespace GrepExcel.ViewModel
             }
         }
 
+        private void Grep_GrepEvent(object sender, GrepInfoArgs e)
+        {
+            if(e is null)
+            {
+                return;
+            }
+
+            ShowDebug.Msg(F.FLMD(), "Search {0} ,Total File {1} , Current File {2}, Index {3}, Count Result {4} ", e.SearchText,e.TotalFiles,e.CurrentFile,e.CurrentFileIndex ,e.CurrentMatch);
+            var mainVm = MainViewModel.Instance;
+
+            int percent = e.CurrentFileIndex * 100 / e.TotalFiles;
+            mainVm.SearchPercent = percent;
+            mainVm.CurrentResults = e.CurrentMatch;
+
+            ShowDebug.Msg(F.FLMD(), "Search Percent: {0}", percent);
+        }
 
         private bool CheckExitsSearchInfo(SearchInfo searchInfo, ref int searchId)
         {

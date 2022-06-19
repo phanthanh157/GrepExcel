@@ -24,6 +24,8 @@ namespace GrepExcel.ViewModel
         private Queue _msgNotify;
         private int _totalKeySearch;
         private int _totalResultSearch;
+        private int _searchPercent;
+        private int _currentResults;
         private ICommand _commandClose;
         private ICommand _commandAboutInfoOpen;
         private ICommand _commandSearchSettings;
@@ -182,6 +184,32 @@ namespace GrepExcel.ViewModel
                 if (value != _totalResultSearch)
                 {
                     _totalResultSearch = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public int SearchPercent
+        {
+            get { return _searchPercent; }
+            set
+            {
+                if(value != _searchPercent)
+                {
+                    _searchPercent = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public int CurrentResults
+        {
+            get { return _currentResults; }
+            set
+            {
+                if (value != _currentResults)
+                {
+                    _currentResults = value;
                     OnPropertyChanged();
                 }
             }
