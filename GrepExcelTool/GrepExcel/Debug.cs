@@ -3,16 +3,12 @@ using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
- 
 
 namespace GrepExcel
 {
-
     public static class F
-
     {
         // This method returns the callers filename and line number
-
         public static string FL([CallerFilePath] string file = "", [CallerLineNumber] int line = 0)
 
         {
@@ -38,7 +34,6 @@ namespace GrepExcel
             DateTime time = DateTime.Now;
             // Remove path leaving only filename
             while (file.IndexOf("\\") >= 0)
-
                 file = file.Substring(file.IndexOf("\\") + 1);
             return String.Format("{0} {1} {2} {3}:", time.ToString(), file, line, member);
         }
@@ -66,11 +61,8 @@ namespace GrepExcel
                     Trace.WriteLine("GREP EXCEL INFOMATION LOG -- START DEBUG LOG");
                     fisrtDebug++;
                 }
-
                 string message = String.Format(format, parms);
-
                 Debug.WriteLine("{0} {1}", fileLine, message);
-
             }
 #endif
         }
@@ -81,11 +73,8 @@ namespace GrepExcel
 #if MYDEBUG
             if (flag == true)
             {
-
                 string message = String.Format(format, parms);
-
                 Debug.WriteLine("ERROR: {0} {1}", fileLine, message);
-
             }
 #endif
         }

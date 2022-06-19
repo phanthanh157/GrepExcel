@@ -3,6 +3,7 @@ using System.Windows.Controls;
 
 namespace GrepExcel.ViewModel
 {
+
     public class TabControl : BaseModel
     {
         private string _tabName;
