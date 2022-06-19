@@ -33,7 +33,7 @@
             <Label Grid.Row="0" Grid.Column="0" Content="Grep Excel Tools" FontSize="16" FontWeight="Bold" Foreground="#5e4474"/>
             <Label Grid.Row="1" Grid.Column="0" Content="Version 0.0.1"/>
             <Label Grid.Row="1" Grid.Column="1" Content="©2021 PCT"/>
-            <Label Grid.Row="2" Grid.Column="0" Content="Contact phanthanh157@gmail.com"/>
+            <Label Grid.Row="2" Grid.Column="0" Content="Contact: thanhpc7@fsoft.com.vn"/>
         </Grid>
         <Grid Grid.Row="1" Background="LightGray" Opacity="0.7">
             <TextBox x:Name="txtContent"  TextWrapping="Wrap" AcceptsReturn="True" Margin="10" />

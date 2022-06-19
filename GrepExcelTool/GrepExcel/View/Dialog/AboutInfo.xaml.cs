@@ -25,10 +25,9 @@ namespace GrepExcel.View.Dialog
 
             txtContent.Text = "" +
                "Tool Grep Excel is free and open-source, help search many file excel.\n\n" +
-               "Link: https://github.com/phanthanh157/GrepExcel \n\n" +
 
                "Potable distribution.";
-          
+     
         }
 
         private void btnOK_Click(object sender, RoutedEventArgs e)

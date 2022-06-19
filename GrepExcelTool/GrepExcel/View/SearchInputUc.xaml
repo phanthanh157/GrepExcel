@@ -29,14 +29,21 @@
         <DataTemplate x:Key="searchTemplate">
             <Border Padding="5">
                 <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
-                        <RowDefinition/>
                     </Grid.RowDefinitions>
+
+                    <materialDesign:PackIcon Width="18" Height="20" Kind="Clock" Foreground="Gray" Grid.Column="0"/>
+
                     <TextBlock Text="{Binding Path=Search}"
-                               Grid.Row="0"
+                               Grid.Column="1"
                                FontFamily="Segoe UI"
-                               VerticalAlignment="Bottom"/>
+                               VerticalAlignment="Bottom" 
+                               Margin="5 0 0 0"/>
                     <!--<TextBlock Text="{Binding Path=Id, StringFormat='Id: {0}'}"
                                FontStyle="Italic"
                                Grid.Row="1"

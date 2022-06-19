@@ -35,6 +35,7 @@ namespace GrepExcel.ViewModel
         private ICommand _goToDocument;
         private ICommand _commandFocusFind;
         private ICommand _copyFullPath;
+        private ICommand _copyResult;
         private ICommand _commandCloseTab;
         private ICommand _commandDelete;
         public SearchResultVm()
@@ -46,9 +47,9 @@ namespace GrepExcel.ViewModel
 
         private void InitClass()
         {
-            OptionFilters.Add(new OptionFilter { Color = "Green", Value = "Result" });
-            OptionFilters.Add(new OptionFilter { Color = "Red", Value = "FileName" });
-            OptionFilters.Add(new OptionFilter { Color = "Blue", Value = "Sheet" });
+            OptionFilters.Add(new OptionFilter { Color = "Black", Value = "Result" });
+            OptionFilters.Add(new OptionFilter { Color = "Black", Value = "FileName" });
+            OptionFilters.Add(new OptionFilter { Color = "Black", Value = "Sheet" });
         }
 
         public void LoadDataFromDatabase()
@@ -192,6 +193,8 @@ namespace GrepExcel.ViewModel
             var mainVm = MainViewModel.Instance;
             var excelStore = ExcelStoreManager.Instance;
             var grep = new Grep();
+
+           
             var searchInfo = excelStore.GetSearchInfoById(SearchId);
 
             if (searchInfo == null)
@@ -208,11 +211,29 @@ namespace GrepExcel.ViewModel
             }
             mainVm.NotifyTaskRunning(searchInfo.Search);
 
+            grep.GrepEvent += Grep_GrepEvent;
+
             await grep.GrepAsync(searchInfo);
+
+            grep.GrepEvent -= Grep_GrepEvent;
 
             LoadDataFromDatabase();
 
             mainVm.NotifyTaskRunning(searchInfo.Search, false);
+        }
+
+        private void Grep_GrepEvent(object sender, GrepInfoArgs e)
+        {
+            if(e is null)
+            {
+                return;
+            }
+
+            var mainVm = MainViewModel.Instance;
+
+            int percent = e.CurrentFileIndex * 100 / e.TotalFiles;
+            mainVm.SearchPercent = percent;
+            mainVm.CurrentResults = e.CurrentMatch;
         }
 
         public ICommand CommandSearchResult
@@ -285,8 +306,10 @@ namespace GrepExcel.ViewModel
             if (sender == null)
             {
                 ShowDebug.Msg(F.FLMD(), "sender is null");
+                MessageBox.Show("You have not selected any items yet?\nPlease select one item.", "Go to document", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;
             }
+
             var resultInfo = sender as ResultInfo;
             var grep = new Grep();
 
@@ -348,6 +371,33 @@ namespace GrepExcel.ViewModel
             var searchResult = sender as ResultInfo;
 
             Clipboard.SetText(searchResult.FileName);
+        }
+
+        public ICommand CopyResult
+        {
+            get
+            {
+                if (_copyResult == null)
+                {
+                    _copyResult = new RelayCommand(x => CopyResultHandler(x));
+                }
+                return _copyResult;
+            }
+        }
+
+        private void CopyResultHandler(object sender)
+        {
+            if (sender is null)
+            {
+                ShowDebug.MsgErr(F.FLMD(), "sender is null");
+                return;
+            }
+
+            var searchResult = sender as ResultInfo;
+
+            
+
+            Clipboard.SetText(searchResult.Result);
         }
 
 

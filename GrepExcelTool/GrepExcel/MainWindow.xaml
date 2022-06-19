@@ -16,6 +16,7 @@
     <Window.InputBindings>
         <KeyBinding Key="G" Modifiers="Alt" Command="{Binding CommandSearchSettings}"/>
         <KeyBinding Key="F1" Command="{Binding CommandAboutOpen}"/>
+        <KeyBinding Key="F4" Modifiers="Alt" Command="{Binding CommandClose}"/>
     </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
@@ -32,6 +33,9 @@
                           InputGestureText="Alt+G" />
                 <MenuItem Header="_Manager Database" 
                           Command="{Binding CommandManagerDatabaseOpen}" />
+                <MenuItem Header="_Exit"
+                          Command="{Binding CommandClose}"
+                          InputGestureText="Alt+F4"/>
 
             </MenuItem>
             <MenuItem Header="_Help">
@@ -68,7 +72,7 @@
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="500"/>
+                                <ColumnDefinition Width="410"/>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
@@ -97,10 +101,18 @@
                     <TextBlock Text="{Binding CurrentResults,StringFormat='Matched : {0}', Mode=TwoWay}"/>
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="4" Margin="0,0,5,0">
-                    <TextBlock Text="{Binding TotalKeySearch,StringFormat='Search : {0}', Mode=TwoWay}"/>
+                    <StackPanel Orientation="Horizontal"  ToolTip="Search Keys">
+                        <materialDesign:PackIcon Width="20" Height="20" Kind="TextSearch"/>
+                        <TextBlock Text="{Binding TotalKeySearch, Mode=TwoWay}"
+                                   VerticalAlignment="Center" Margin="3 0 0 0"/>
+                    </StackPanel>
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="5" Margin="0,0,20,0">
-                    <TextBlock Text="{Binding TotalResultSearch,StringFormat='Results : {0}', Mode=TwoWay}"/>
+                    <StackPanel Orientation="Horizontal" ToolTip="Total Matched">
+                        <materialDesign:PackIcon Width="20" Height="20" Kind="Summation"/>
+                        <TextBlock Text="{Binding TotalResultSearch, Mode=TwoWay}"
+                                   VerticalAlignment="Center" Margin="3 0 0 0"/>
+                    </StackPanel>
                 </StatusBarItem>
             </StatusBar>
         </DockPanel>

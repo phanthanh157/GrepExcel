@@ -20,25 +20,27 @@
         <DockPanel>
             <ToolBarTray DockPanel.Dock="Top">
                 <ToolBar>
-                    <Button Command="{Binding CommandRefresh}" ToolTip="Refresh data search result.">
-                        <Image Source="../Image/refresh.png" Width="20" Height="20" />
+                    <Button Command="{Binding CommandRefresh}" ToolTip="Refresh data search result. (F5)">
+                        <!--<Image Source="../Image/refresh.png" Width="20" Height="20" />-->
+                        <materialDesign:PackIcon Width="20" Height="20" Kind="Refresh"/>
                     </Button>
                 </ToolBar>
                 <ToolBar>
                     <Button Command="{Binding CommandGotoDocument}" 
                             CommandParameter="{Binding SelectedItem, ElementName=lvSearchResults}"
                             ToolTip="Go to document.">
-                        <Image Source="../Image/excel.png" Width="20" Height="20" />
+                        <!--<Image Source="../Image/excel.png" Width="20" Height="20" />-->
+                        <materialDesign:PackIcon Width="20" Height="20" Kind="FileExcel"/>
                     </Button>
                 </ToolBar>
                 <ToolBar>
-                    <TextBox x:Name="txtFilter" Width="200"  KeyDown="txtFilter_KeyDown" TextChanged="txtFilter_TextChanged">
+                    <TextBox x:Name="txtFilter" Width="400"  KeyDown="txtFilter_KeyDown" TextChanged="txtFilter_TextChanged">
                         <TextBox.Style>
                             <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
                                 <Style.Resources>
                                     <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
                                         <VisualBrush.Visual>
-                                            <Label Content="Filter data here" Foreground="Gray" />
+                                            <Label Content="Search in result here" Foreground="Gray" />
                                         </VisualBrush.Visual>
                                     </VisualBrush>
                                 </Style.Resources>
@@ -72,18 +74,20 @@
                                 <Binding ElementName="txtFilter" Path="Text" />
                             </MultiBinding>
                         </Button.Visibility>
-                        <materialDesign:PackIcon Width="20" Height="20" Kind="CloseCircle"/>
+                        <materialDesign:PackIcon Width="20" Height="20" Kind="FilterRemove" Foreground="Gray"/>
                     </Button>
                     <ComboBox x:Name="cobOptionFilter"
                               ItemsSource="{Binding OptionFilters}"
                               SelectedValuePath="Value"
                               IsReadOnly="True"
-                              SelectedIndex="0">
+                              SelectedIndex="0"
+                              Width="100">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Image Width="20" Height="20"  Source="../Image/filter.png" />
-                                    <TextBlock Foreground="{Binding Color}" Text="{Binding Value}"/>
+                                    <!--<Image Width="20" Height="20"  Source="../Image/filter.png" />-->
+                                    <materialDesign:PackIcon Width="20" Height="20" Kind="Filter"/>
+                                    <TextBlock Foreground="{Binding Color}" Text="{Binding Value}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
@@ -93,7 +97,7 @@
                     <TextBlock x:Name="tbRowLoad" 
                                FontFamily="Segoe UI"
                                VerticalAlignment="Center"
-                               Text="{Binding Path=ResultInfos.Count,StringFormat='Total rows loaded: {0}'}"/>
+                               Text="{Binding Path=ResultInfos.Count,StringFormat='Total rows loaded:  {0}'}"/>
                 </ToolBar>
             </ToolBarTray>
         </DockPanel>
@@ -142,7 +146,7 @@
                               Icon="{materialDesign:PackIcon Kind=Search}"
                               Command="{Binding CommandGotoDocument}"
                               CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
-                              InputGestureText="Ctrl+G"/>
+                              InputGestureText="G"/>
 
                         <MenuItem Header="Copy Path to ClipBoard"
                                   Icon="{materialDesign:PackIcon Kind=LocationPath}"
@@ -150,7 +154,10 @@
                                   CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
                                   InputGestureText="Ctrl+C"/>
                         <MenuItem Header="Copy Result to ClipBoard"
-                                  Click="CopyResult_Click"/>
+                                  Icon="{materialDesign:PackIcon Kind=ContentCopy}"
+                                  Command="{Binding CopyResult}"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
+                                  InputGestureText="Ctrl+R"/>
                     </ContextMenu>
                 </ListView.ContextMenu>
             </ListView>
@@ -164,9 +171,12 @@
                     CommandParameter="{Binding ElementName=txtFilter}"/>
         <KeyBinding Command="{Binding CommandGotoDocument}"
                     CommandParameter="{Binding SelectedItem, ElementName=lvSearchResults}"
-                    Key="G" Modifiers="Ctrl"/>
+                    Key="G"/>
         <KeyBinding Command="{Binding CopyFullPath}"
                     CommandParameter="{Binding SelectedItem, ElementName=lvSearchResults}"
                     Key="C" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding CopyResult}"
+                    CommandParameter="{Binding SelectedItem, ElementName=lvSearchResults}"
+                    Key="R" Modifiers="Ctrl"/>
     </UserControl.InputBindings>
 </UserControl>
