@@ -1,26 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GrepExcel.Excel
 {
     public class ExcelStoreManager
     {
-        private static ExcelStoreManager _instance = null;
-        public ExcelStoreManager()
+        private static readonly Lazy<ExcelStoreManager> lazy_ = new Lazy<ExcelStoreManager>(() => new ExcelStoreManager());
+        private ExcelStoreManager()
         {
             CreateTable();
             // DropTable();
         }
-
-
-        public static ExcelStoreManager Instance
-        {
-            get
-            {
-                if (_instance == null)
-                    _instance = new ExcelStoreManager();
-                return _instance;
-            }
-        }
+        public static ExcelStoreManager Instance => lazy_.Value;
 
 
         /// <summary>
@@ -32,7 +23,6 @@ namespace GrepExcel.Excel
             {
                 if (SqlResult.CreateTableFailed == searchInfo.CreateTable())
                 {
-                    ShowDebug.Msg(F.FLMD(), "table pct_tblResult -- create failed");
                     return SqlResult.CreateTableFailed;
                 }
             }
@@ -41,7 +31,6 @@ namespace GrepExcel.Excel
             {
                 if (SqlResult.CreateTableFailed == resultInfo.CreateTable())
                 {
-                    ShowDebug.Msg(F.FLMD(), "table pct_tblSearch --  create failed ");
                     return SqlResult.CreateTableFailed;
                 }
             }
@@ -58,7 +47,6 @@ namespace GrepExcel.Excel
             {
                 if (SqlResult.DeleteTableFailed == resultInfo.DropTable())
                 {
-                    ShowDebug.Msg(F.FLMD(), "table pct_tblResult -- delete failed");
                     return SqlResult.DeleteTableFailed;
                 }
             }
@@ -67,7 +55,6 @@ namespace GrepExcel.Excel
             {
                 if (SqlResult.DeleteTableFailed == searchInfo.DropTable())
                 {
-                    ShowDebug.Msg(F.FLMD(), "table pct_tblSearch -- delete failed");
                     return SqlResult.DeleteTableFailed;
                 }
             }
@@ -218,7 +205,7 @@ namespace GrepExcel.Excel
         {
             using (var searchInfo = new SearchStore())
             {
-                return searchInfo.CountSearchInfo();
+                return searchInfo.Count();
             }
         }
 
@@ -242,7 +229,7 @@ namespace GrepExcel.Excel
         {
             using (var resultInfo = new ResultStore())
             {
-                return resultInfo.CountResultInfoBySearchId(searchId);
+                return resultInfo.CountWithBySerachId(searchId);
             }
         }
 

@@ -7,42 +7,41 @@ namespace GrepExcel.Excel
 
     public class SqlLiteImp : IDisposable
     {
-        private readonly string DatabaseName = Define.Database;
+        private static readonly log4net.ILog log_ = LogHelper.GetLogger();
+        private readonly string dbName_ = Define.Database;
         private string _databaseName;
-        protected SqliteConnection _sqlConnection = null;
-        private bool _dispose = false;
+        protected SqliteConnection sqlConn_ = null;
+        private bool dispose_ = false;
         public SqlLiteImp()
         {
-
+            
         }
-
         ~SqlLiteImp() => Dispose(false);
 
-        protected SqlLiteImp(string databaseName = "", SqliteOpenMode sqliteOpenMode = SqliteOpenMode.ReadWriteCreate, SqliteCacheMode sqliteCacheMode = SqliteCacheMode.Shared)
+        protected SqlLiteImp(string databaseName, SqliteOpenMode sqliteOpenMode = SqliteOpenMode.ReadWriteCreate, SqliteCacheMode sqliteCacheMode = SqliteCacheMode.Shared)
         {
             if (string.IsNullOrEmpty(databaseName))
             {
-                _databaseName = DatabaseName;
+                _databaseName = dbName_;
             }
             else
             {
                 _databaseName = databaseName;
             }
-            ConnectionSpec(sqliteOpenMode, sqliteCacheMode);
+            Connection(sqliteOpenMode, sqliteCacheMode);
         }
 
 
         /// <summary>
-        /// Check connection.
+        /// Connection database
         /// </summary>
         /// <param name="sqliteOpenMode"></param>
         /// <param name="password"></param>
         /// <param name="cache"></param>
         /// <returns></returns>
-        private bool ConnectionSpec(SqliteOpenMode sqliteOpenMode, SqliteCacheMode cache, string password = "12345678")
+        private bool Connection(SqliteOpenMode sqliteOpenMode, SqliteCacheMode cache)
         {
-            bool res = false;
-
+            bool res;
             try
             {
                 //connect string Data Source=spec.db|Mode|Password|Cache.
@@ -50,20 +49,18 @@ namespace GrepExcel.Excel
                 var connectString = new SqliteConnectionStringBuilder(dataBase)
                 {
                     Mode = sqliteOpenMode,
-                    //Password = password,
                     Cache = cache
                 };
 
                 //Khong su dung using de thoat connect- giai phong dispose doi tuong.
-                _sqlConnection = new SqliteConnection(connectString.ToString());
-                _sqlConnection.Open();
+                sqlConn_ = new SqliteConnection(connectString.ToString());
+                sqlConn_.Open();
                 res = true;
-
             }
             catch (SqliteException ex)
             {
-                ShowDebug.MsgErr(F.FLMD(), ex.Message);
-                throw;
+                log_.Error(ex.Message);
+                res = false;
             }
             return res;
         }
@@ -78,35 +75,27 @@ namespace GrepExcel.Excel
             bool res = false;
 
             if (string.IsNullOrEmpty(table))
-            {
-                ShowDebug.MsgErr(F.FLMD(), "sql connection faile = null");
                 return false;
-            }
 
-            if (_sqlConnection == null)
-            {
-                ShowDebug.MsgErr(F.FLMD(), "sql connection faile = null");
+            if (sqlConn_ is null)
                 return false;
-            }
 
             try
             {
-                using (var command = _sqlConnection.CreateCommand())
+                using (var command = sqlConn_.CreateCommand())
                 {
                     command.CommandText = "SELECT name FROM sqlite_master WHERE name=$table";
                     command.Parameters.AddWithValue("$table", table);
                     var name = command.ExecuteScalar();
 
                     if (name != null && name.ToString() == table)
-                    {
                         res = true;
-                    }
                 }
             }
             catch (SqliteException ex)
             {
-                ShowDebug.MsgErr(F.FLMD(), ex.Message);
-                throw;
+                log_.Error(ex.Message);
+                res = false;
             }
             return res;
         }
@@ -123,19 +112,13 @@ namespace GrepExcel.Excel
         /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)
         {
-            if (_dispose)
-            {
+            if (dispose_)
                 return;
-            }
 
             if (disposing)
-            {
-                //handle manager tai nguyen.
-                ShowDebug.Msg(F.FLMD(), "release memory database");
-                _sqlConnection.Dispose();
-            }
+                sqlConn_.Dispose();
 
-            _dispose = true;
+            dispose_ = true;
         }
     }
 

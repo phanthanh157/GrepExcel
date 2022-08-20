@@ -80,4 +80,24 @@ namespace GrepExcel
         }
 
     }
+
+
+
+    public static class Base
+    {
+        private static readonly log4net.ILog log_ = LogHelper.GetLogger();
+        public static void Check(object obj)
+        {
+            if(obj is null)
+            {
+                log_.ErrorFormat("Backtrace: {0}", Environment.StackTrace);
+                throw new Exception(Environment.StackTrace);
+            }
+        }
+
+
+
+    }
+
+
 }

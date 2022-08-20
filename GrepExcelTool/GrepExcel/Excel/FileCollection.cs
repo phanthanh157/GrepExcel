@@ -6,20 +6,19 @@ namespace GrepExcel.Excel
 {
     public class FileCollection : IEnumerable
     {
-        private List<string> _files = new List<string>();
-        private TypeMethod _typeMethod;
-        private int _maxFile = int.Parse(Config.ReadSetting("MAX_FILE"));
+        private static readonly log4net.ILog log_ = LogHelper.GetLogger();
+        private List<string> files_ = new List<string>();
+        private TypeMethod typeMode_;
+        private int maxFile_ = int.Parse(Config.ReadSetting("MAX_FILE"));
         public FileCollection(string path, TypeMethod method)
         {
-            _typeMethod = method;
+            typeMode_ = method;
             if (!string.IsNullOrEmpty(path) && Directory.Exists(path))
                 GetFiles(path);
         }
 
         private void GetFiles(string path)
         {
-            ShowDebug.Msg(F.FLMD(), " Get List File");
-
             if (File.Exists(path))
             {
                 // This path is a file
@@ -32,9 +31,8 @@ namespace GrepExcel.Excel
             }
             else
             {
-                ShowDebug.Msg(F.FLMD(), "{0} is not a valid file or directory.", path);
+               log_.DebugFormat("{0} is not a valid file or directory.", path);
             }
-
         }
 
         private void ProcessDirectory(string targetDirectory)
@@ -44,7 +42,7 @@ namespace GrepExcel.Excel
             foreach (string fileName in fileEntries)
                 ProcessFile(fileName);
 
-            if (TypeMethod.SubFolder == _typeMethod)
+            if (TypeMethod.SubFolder == typeMode_)
             {
                 // Recurse into subdirectories of this directory.
                 string[] subdirectoryEntries = Directory.GetDirectories(targetDirectory);
@@ -57,19 +55,21 @@ namespace GrepExcel.Excel
         {
             // Show.Msg(F.FLMD(), "Processed file '{0}'.", path);
             string ext = Path.GetExtension(path);
-            if (ext == Define.EXTENSION_FILE_XLSM || ext == Define.EXTENSION_FILE_XLSX || ext == Define.EXTENSION_FILE_XLS)
+            if (ext == Define.EXTENSION_FILE_XLSM ||
+                ext == Define.EXTENSION_FILE_XLSX ||
+                ext == Define.EXTENSION_FILE_XLS)
             {
                 //kiem soat so luong file them vao
-                if (_maxFile > _files.Count)
+                if (maxFile_ > files_.Count)
                 {
-                    _files.Add(path);
+                    files_.Add(path);
                 }
             }
         }
 
         public IEnumerator GetEnumerator()
         {
-            return _files.GetEnumerator();
+            return files_.GetEnumerator();
         }
     }
 }

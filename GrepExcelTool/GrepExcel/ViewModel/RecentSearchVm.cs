@@ -1,8 +1,8 @@
-﻿using GrepExcel.Excel;
-using GrepExcel.View;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using GrepExcel.Excel;
+using GrepExcel.View;
 
 namespace GrepExcel.ViewModel
 {
@@ -10,21 +10,25 @@ namespace GrepExcel.ViewModel
     {
         public SearchInfo Info { get; set; }
         public int Total { get; set; }
-
         public string Type { get; set; }
 
-        public ShowInfo SetData(SearchInfo searchInfo)
+        public ShowInfo(SearchInfo info, int total, string type)
         {
-            ShowInfo showInfo = new ShowInfo();
-
-            if (searchInfo == null) return showInfo;
-            showInfo.Info = searchInfo;
-            showInfo.Total = ExcelStoreManager.Instance.CountResultInfoBySearchId(searchInfo.Id);
-            showInfo.Type = SubOption(searchInfo);
-            return showInfo;
+            Info = info;
+            Total = total;
+            Type = type;
         }
 
-        public string SubOption(SearchInfo searchInfo)
+        public static ShowInfo Create(SearchInfo searchInfo)
+        {
+            Base.Check(searchInfo);
+            return new ShowInfo(
+                searchInfo,
+                ExcelStoreManager.Instance.CountResultInfoBySearchId(searchInfo.Id),
+                SubOption(searchInfo));
+        }
+
+        public static string SubOption(SearchInfo searchInfo)
         {
             string res = string.Empty;
             // Mehod/Target/MatchCase/MatchWhole
@@ -42,70 +46,39 @@ namespace GrepExcel.ViewModel
             return res;
         }
 
-        private string SubOptionMethod(SearchInfo searchInfo)
+        private static string SubOptionMethod(SearchInfo searchInfo)
         {
-            string res = string.Empty;
-            if (searchInfo.Method == TypeMethod.Folder)
-            {
-                res = "F";
-            }
-            else
-            {
-                res = "S";
-            }
-            return res;
+           return searchInfo.Method == TypeMethod.Folder ? "F" : "S";
         }
 
-        private string SubOptionTarget(SearchInfo searchInfo)
+        private static string SubOptionTarget(SearchInfo searchInfo)
         {
-            string res = string.Empty;
             if (searchInfo.Target == TypeTarget.Comment)
-            {
-                res = "C";
-            }
+                return "C";
             else if (searchInfo.Target == TypeTarget.Fomular)
-            {
-                res = "F";
-            }
+                return "F";
             else
-            {
-                res = "V";
-            }
-            return res;
+                return "V";
         }
 
-        private string SubOptionMathCase(SearchInfo searchInfo)
+        private static string SubOptionMathCase(SearchInfo searchInfo)
         {
-            string res = string.Empty;
-            if (searchInfo.IsMatchCase == true)
-            {
-                res = "C";
-            }
-            return res;
+            return searchInfo.IsMatchCase ? "C" : string.Empty;
         }
 
-        private string SubOptionMathWhole(SearchInfo searchInfo)
+        private static string SubOptionMathWhole(SearchInfo searchInfo)
         {
-            string res = string.Empty;
-            if (searchInfo.IsLowerOrUper == true)
-            {
-                res = "W";
-            }
-            return res;
+            return searchInfo.IsLowerOrUper ? "W" : string.Empty;
         }
-
-
     }
 
 
     public class RecentSearchVm : BaseModel
     {
         #region Fields
-        private static RecentSearchVm _instance = null;
-        // private ObservableCollection<ShowInfo> _recents;
-        private SettingVm _settings = null;
-        private int _numberOfRecents;
-
+        private static readonly Lazy<RecentSearchVm> lazy_ = new Lazy<RecentSearchVm>(() => new RecentSearchVm());
+        private SettingVm settings_ = null;
+        private int numberOfRecent_;
         #endregion 
 
 
@@ -116,20 +89,9 @@ namespace GrepExcel.ViewModel
             LoadRecents();
         }
 
-
         #region Properties
 
-        public static RecentSearchVm Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new RecentSearchVm();
-                }
-                return _instance;
-            }
-        }
+        public static RecentSearchVm Instance => lazy_.Value;
 
         public ObservableCollection<ShowInfo> Recents
         {
@@ -145,21 +107,21 @@ namespace GrepExcel.ViewModel
         {
             try
             {
-                _numberOfRecents = int.Parse(Config.ReadSetting("NUMBER_RECENTS"));
+                numberOfRecent_ = int.Parse(Config.ReadSetting("NUMBER_RECENTS"));
 
-                _settings = SettingVm.Instance;
-                _settings.SettingChanged += SettingChange;
+                settings_ = SettingVm.Instance;
+                settings_.SettingChanged += SettingChange;
             }
             catch
             {
-                _numberOfRecents = 10;
+                numberOfRecent_ = 10;
             }
         }
 
         private void SettingChange(object sender, EventArgs e)
         {
             var settingArgs = e as SettingArgs;
-            _numberOfRecents = settingArgs.NumberRecent;
+            numberOfRecent_ = settingArgs.NumberRecent;
 
             LoadRecents();
         }
@@ -169,21 +131,21 @@ namespace GrepExcel.ViewModel
             var storeManager = ExcelStoreManager.Instance;
 
             var listInfo = storeManager.GetSearchInfoAll();
-
-            if (listInfo == null)
-            {
+           
+            //no data in db
+            if (listInfo is null)
                 return;
-            }
-
+           
             listInfo.Reverse();
-            var filter = listInfo.Take(_numberOfRecents)
+
+            var filter = listInfo.Take(numberOfRecent_)
                                  .OrderByDescending(x => x.Id)
                                  .ToList();
             Recents.Clear();
 
             foreach (var item in filter)
             {
-                Recents.Add(new ShowInfo().SetData(item));
+                Recents.Add(ShowInfo.Create(item));
             }
 
         }

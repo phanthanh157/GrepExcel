@@ -17,19 +17,20 @@ namespace GrepExcel.Excel
 
     public class Grep
     {
-        private int m_totalFiles;
-        private int m_currentMatch;
+        private static readonly log4net.ILog log_ = LogHelper.GetLogger();
+        private int totalFiles_;
+        private int currentMatch_;
 
         public event EventHandler<GrepInfoArgs> GrepEvent;
         public Grep()
         {
-            this.m_totalFiles = 0;
-            this.m_currentMatch = 0;
+            totalFiles_ = 0;
+            currentMatch_ = 0;
         }
 
         private void OnGrepEvent(GrepInfoArgs e)
         {
-            this.GrepEvent?.Invoke(this, e);
+            GrepEvent?.Invoke(this, e);
         }
 
         public async Task OpenFileAsync(ResultInfo resultInfo)
@@ -92,7 +93,7 @@ namespace GrepExcel.Excel
         {
             if (searchInfo == null)
             {
-                ShowDebug.Msg(F.FLMD(), "Search info is NULL");
+                log_.Error("Search info is NULL");
                 return;
             }
             // Open appiliction excel
@@ -104,7 +105,7 @@ namespace GrepExcel.Excel
 
             if (xlApp == null)
             {
-                ShowDebug.Msg(F.FLMD(), "Application excel is NULL");
+                log_.Warn("Application excel is NULL");
                 return;
             }
 
@@ -150,12 +151,12 @@ namespace GrepExcel.Excel
                     countFile++;
                 }
 
-                this.m_totalFiles = countFile;
+                this.totalFiles_ = countFile;
 
                 countFile = 1;
                 foreach (string file in files)
                 {
-                    ShowDebug.Msg(F.FLMD(), "Open File:  '{0}'.", file);
+                    log_.DebugFormat("Open File:  '{0}'.", file);
                     await Task.Run(() => ItemGrep(searchInfo,
                                          file,
                                          xlApp,
@@ -178,8 +179,7 @@ namespace GrepExcel.Excel
             }
             catch (Exception ex)
             {
-                ShowDebug.MsgErr(F.FLMD(), ex.Message);
-                //MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                log_.Error(ex.Message);
             }
             finally
             {
@@ -241,13 +241,13 @@ namespace GrepExcel.Excel
 
                     string fisrtAddressFind = currentFind.Address;
                     _noMatches++;
-                    this.m_currentMatch++;
+                    this.currentMatch_++;
 
                     //ShowDebug.Msg(F.FLMD(), "search : {0} ; NoMatches: {1}", searchInfo.Search, _noMatches);
                     //so luong toi da tim kiem
                     if (_noMatches > _maxSearch)
                     {
-                        ShowDebug.Msg(F.FLMD(), "Maximum result search");
+                        log_.Debug("Reach maximum result search");
                         xlWorkbook.Close(false, Type.Missing, Type.Missing);
                         return;
                     }
@@ -270,13 +270,12 @@ namespace GrepExcel.Excel
                             break;
                         }
                         _noMatches++;
-                        this.m_currentMatch++;
+                        this.currentMatch_++;
 
                         //so luong toi da tim kiem
-                        //ShowDebug.Msg(F.FLMD(), "search : {0} ; NoMatches: {1}", searchInfo.Search, _noMatches);
                         if (_noMatches > _maxSearch)
                         {
-                            ShowDebug.Msg(F.FLMD(), "Maximum result search");
+                            log_.Debug("Maximum result search");
                             xlWorkbook.Close(false, Type.Missing, Type.Missing);
                             return;
                         }
@@ -286,23 +285,21 @@ namespace GrepExcel.Excel
                         //notify result
                         GrepInfoArgs grepInfo = new GrepInfoArgs();
                         grepInfo.SearchText = searchInfo.Search;
-                        grepInfo.TotalFiles = this.m_totalFiles;
+                        grepInfo.TotalFiles = this.totalFiles_;
                         grepInfo.CurrentFile = file;
-                        grepInfo.CurrentMatch = this.m_currentMatch;
+                        grepInfo.CurrentMatch = this.currentMatch_;
                         grepInfo.CurrentFileIndex = countFile;
 
                         OnGrepEvent(grepInfo);
 
                     }
                 }
-                // ShowDebug.Msg(F.FLMD(), "Close File when end");
                 xlWorkbook.Close(false, Type.Missing, Type.Missing);
 
             }
             catch (Exception ex)
             {
-                //MessageBox.Show("File "+ file + " Error: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                ShowDebug.MsgErr(F.FLMD(), ex.Message);
+                log_.Error(ex.Message);
             }
         }
 
@@ -310,7 +307,7 @@ namespace GrepExcel.Excel
         {
             var excelStore = ExcelStoreManager.Instance;
             ResultInfo searchResult = new ResultInfo();
-            searchResult.SearchInfoID = searchInfo.Id;
+            searchResult.SearchId = searchInfo.Id;
             searchResult.FileName = fileName;
             searchResult.Sheet = sheetName;
             searchResult.Cell = Regex.Replace(range.Address, @"[$]", string.Empty);
@@ -357,11 +354,11 @@ namespace GrepExcel.Excel
             }
             catch (Exception ex)
             {
-                ShowDebug.MsgErr(F.FLMD(), ex.Message);
+                log_.Error(ex.Message);
             }
 
             //Insert database result search
-            ShowDebug.Msg(F.FLMD(), "Insert database - search: {0}", searchInfo.Search);
+            log_.DebugFormat("Insert database - search: {0}", searchInfo.Search);
             excelStore.InsertResultInfo(searchResult);
 
         }

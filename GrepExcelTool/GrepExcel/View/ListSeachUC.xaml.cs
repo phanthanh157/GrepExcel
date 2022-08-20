@@ -11,35 +11,29 @@ namespace GrepExcel.View
     /// </summary>
     public partial class ListSeachUC : UserControl
     {
-        private ListSearchVm _lstSearchVm = null;
+        private ListSearchVm listSearchVm_ = null;
         public ListSeachUC()
         {
             InitializeComponent();
-            _lstSearchVm = ListSearchVm.Instance;
-            this.DataContext = _lstSearchVm;
-            lstSearch.ItemsSource = _lstSearchVm.SearchInfos;
+            listSearchVm_ = ListSearchVm.Instance;
+
+            Base.Check(listSearchVm_);
+
+            this.DataContext = listSearchVm_;
+            lstSearch.ItemsSource = listSearchVm_.SearchInfos;
         }
 
         private void lstSearch_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var searchResult = (ShowInfo) lstSearch.SelectedItem;
 
-            //if (searchResult == null)
-            //{
-            //    ShowDebug.MsgErr(F.FLMD(), "Select search result is null");
-            //    return;
-            //}
-
-            _lstSearchVm.ShowTabSearchResult(searchResult);
+            listSearchVm_.ShowTab(searchResult);
         }
 
         private void btnDelSerachResult_Click(object sender, RoutedEventArgs e)
         {
             var showInfo = (ShowInfo) lstSearch.SelectedItem ;
-
-            ShowDebug.MsgErr(F.FLMD(), "Delete id = {0}", showInfo.Info.Id);
-
-            _lstSearchVm.DelSearchResult(showInfo);
+            listSearchVm_.DelSearchResult(showInfo);
 
             lstSearch.UpdateLayout();
         }

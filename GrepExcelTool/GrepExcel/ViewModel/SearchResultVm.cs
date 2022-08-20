@@ -38,8 +38,9 @@ namespace GrepExcel.ViewModel
         private ICommand _copyResult;
         private ICommand _commandCloseTab;
         private ICommand _commandDelete;
-        public SearchResultVm()
+        public SearchResultVm(UserControl userControl, string tabName, int searchId) : base(userControl,tabName)
         {
+            SearchId = searchId;
             ResultInfos = new ObservableCollection<ResultInfo>();
             OptionFilters = new ObservableCollection<OptionFilter>();
             InitClass();
@@ -57,12 +58,12 @@ namespace GrepExcel.ViewModel
             var excelStore = ExcelStoreManager.Instance;
             var listResult = excelStore.GetResultInfoBySearchId(SearchId);
 
+            if (listResult is null)
+                return;
+
             //Clear before load again.
             ResultInfos.Clear();
-            foreach (var result in listResult)
-            {
-                ResultInfos.Add(result);
-            }
+            listResult.ForEach(x => ResultInfos.Add(x));
         }
 
         public int SearchId { get; set; }
@@ -131,7 +132,7 @@ namespace GrepExcel.ViewModel
                         {
                             for (int idx = tabActive - 1; idx > -1; idx--)
                             {
-                                var resultVm = mainVm.GetSearchResultVm(idx);
+                                var resultVm = mainVm.GetTabContent(idx);
                                 if (resultVm == null) return;
                                 var searchInfo = excelStore.GetSearchInfoById(resultVm.SearchId);
 
@@ -151,7 +152,7 @@ namespace GrepExcel.ViewModel
                     case TypeCloseTab.CloseToRight:
                         for (int idx = mainVm.Tabs.Count - 1; idx > tabActive; idx--)
                         {
-                            var resultVm = mainVm.GetSearchResultVm(idx);
+                            var resultVm = mainVm.GetTabContent(idx);
                             if (resultVm == null) return;
                             var searchInfo = excelStore.GetSearchInfoById(resultVm.SearchId);
 
@@ -423,7 +424,7 @@ namespace GrepExcel.ViewModel
             if (resultVm == null) return;
             var searchInfo = excelStore.GetSearchInfoById(resultVm.SearchId);
 
-            listSearchVm.DelSearchResult(new ShowInfo().SetData(searchInfo));
+            listSearchVm.DelSearchResult(ShowInfo.Create(searchInfo));
 
 
         }

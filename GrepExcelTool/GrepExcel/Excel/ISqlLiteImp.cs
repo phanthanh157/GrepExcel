@@ -21,13 +21,9 @@
     {
         SqlResult CreateTable();
         SqlResult DropTable();
-
         SqlResult Insert(object data);
-
         SqlResult Update(object data);
-
         SqlResult Delete(object data);
-
         int LastIndex();
 
     }

@@ -6,8 +6,9 @@ namespace GrepExcel.Excel
 {
     public class ResultStore : SqlLiteImp, ISqlLiteImp
     {
-        private bool _dispose = false;
-        public ResultStore(string databaseName = "", SqliteOpenMode sqliteOpenMode = SqliteOpenMode.ReadWriteCreate, SqliteCacheMode sqliteCacheMode = SqliteCacheMode.Shared)
+        private static readonly log4net.ILog log_ = LogHelper.GetLogger();
+        private bool dispose_ = false;
+        public ResultStore(string databaseName = null, SqliteOpenMode sqliteOpenMode = SqliteOpenMode.ReadWriteCreate, SqliteCacheMode sqliteCacheMode = SqliteCacheMode.Shared)
             : base(databaseName, sqliteOpenMode, sqliteCacheMode)
         {
 
@@ -15,17 +16,12 @@ namespace GrepExcel.Excel
 
         public SqlResult CreateTable()
         {
+            Base.Check(sqlConn_);
             SqlResult res = SqlResult.CreateTableFailed;
-
-            if (_sqlConnection == null)
-            {
-                ShowDebug.Msg(F.FLMD(), "sql connection faile = null");
-                return res;
-            }
 
             try
             {
-                using (var command = _sqlConnection.CreateCommand())
+                using (var command = sqlConn_.CreateCommand())
                 {
                     command.CommandText = @"CREATE TABLE IF NOT EXISTS pct_tblResult (
                                         result_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -49,7 +45,7 @@ namespace GrepExcel.Excel
             }
             catch (SqliteException ex)
             {
-                ShowDebug.Msg(F.FLMD(), ex.Message);
+                log_.Error(ex.Message);
             }
 
             return res;
@@ -59,28 +55,19 @@ namespace GrepExcel.Excel
         {
             SqlResult res = SqlResult.DeleteFailed;
 
-            if (_sqlConnection == null)
-            {
-                ShowDebug.Msg(F.FLMD(), "sql connection faile = null");
-                return res;
-            }
-
-            if (data == null)
-            {
-                ShowDebug.Msg(F.FLMD(), "data = null");
-                return res;
-            }
+            Base.Check(sqlConn_);
+            if (data is null)  return res;
 
             try
             {
 
-                using (var transaction = _sqlConnection.BeginTransaction())
+                using (var transaction = sqlConn_.BeginTransaction())
                 {
-                    using (var command = _sqlConnection.CreateCommand())
+                    using (var command = sqlConn_.CreateCommand())
                     {
                         var resultInfo = data as ResultInfo;
                         command.CommandText = "DELETE FROM pct_tblResult WHERE result_id = $result_id ";
-                        command.Parameters.AddWithValue("$result_id", resultInfo.ResultID);
+                        command.Parameters.AddWithValue("$result_id", resultInfo.ResultId);
                         command.ExecuteNonQuery();
                     }
                     transaction.Commit();
@@ -89,7 +76,7 @@ namespace GrepExcel.Excel
             }
             catch (SqliteException ex)
             {
-                ShowDebug.Msg(F.FLMD(), ex.Message);
+                log_.Error(ex.Message);
             }
 
             return res;
@@ -99,25 +86,15 @@ namespace GrepExcel.Excel
         public SqlResult DeleteBySearchId(object data)
         {
             SqlResult res = SqlResult.DeleteFailed;
-
-            if (_sqlConnection == null)
-            {
-                ShowDebug.Msg(F.FLMD(), "sql connection faile = null");
-                return res;
-            }
-
-            if (data == null)
-            {
-                ShowDebug.Msg(F.FLMD(), "data = null");
-                return res;
-            }
+            Base.Check(sqlConn_);
+            if (data is null) return res;
 
             try
             {
 
-                using (var transaction = _sqlConnection.BeginTransaction())
+                using (var transaction = sqlConn_.BeginTransaction())
                 {
-                    using (var command = _sqlConnection.CreateCommand())
+                    using (var command = sqlConn_.CreateCommand())
                     {
                         var searchInfo = data as SearchInfo;
                         command.CommandText = "DELETE FROM pct_tblResult WHERE search_id = $search_id ";
@@ -130,26 +107,19 @@ namespace GrepExcel.Excel
             }
             catch (SqliteException ex)
             {
-                ShowDebug.Msg(F.FLMD(), ex.Message);
+                log_.Error(ex.Message);
             }
-
             return res;
-
         }
 
         public SqlResult DropTable()
         {
             SqlResult res = SqlResult.DeleteTableFailed;
-
-            if (_sqlConnection == null)
-            {
-                ShowDebug.Msg(F.FLMD(), "sql connection faile = null");
-                return res;
-            }
+            Base.Check(sqlConn_);
 
             try
             {
-                using (var command = _sqlConnection.CreateCommand())
+                using (var command = sqlConn_.CreateCommand())
                 {
                     command.CommandText = @"DROP TABLE IF EXISTS pct_tblResult";
                     command.ExecuteNonQuery();
@@ -158,7 +128,7 @@ namespace GrepExcel.Excel
             }
             catch (SqliteException ex)
             {
-                ShowDebug.Msg(F.FLMD(), ex.Message);
+                log_.Error(ex.Message);
             }
 
             return res;
@@ -167,25 +137,15 @@ namespace GrepExcel.Excel
         public SqlResult Insert(object data)
         {
             SqlResult res = SqlResult.InsertFailed;
-
-            if (_sqlConnection == null)
-            {
-                ShowDebug.Msg(F.FLMD(), "sql connection faile = null");
-                return res;
-            }
-
-            if (data == null)
-            {
-                ShowDebug.Msg(F.FLMD(), "data = null");
-                return res;
-            }
+            Base.Check(sqlConn_);
+            if (data is null) return res;
 
             try
             {
 
-                using (var transaction = _sqlConnection.BeginTransaction())
+                using (var transaction = sqlConn_.BeginTransaction())
                 {
-                    using (var command = _sqlConnection.CreateCommand())
+                    using (var command = sqlConn_.CreateCommand())
                     {
                         command.CommandText = @"CREATE TABLE IF NOT EXISTS pct_tblResult (
                                         result_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -198,7 +158,7 @@ namespace GrepExcel.Excel
                         var resultInfo = data as ResultInfo;
                         command.CommandText = "INSERT INTO pct_tblResult (search_id,result,filename,sheet,cell)" +
                                               " VALUES($search_id,$result,$filename,$sheet,$cell)";
-                        command.Parameters.AddWithValue("$search_id", resultInfo.SearchInfoID);
+                        command.Parameters.AddWithValue("$search_id", resultInfo.SearchId);
                         command.Parameters.AddWithValue("$result", resultInfo.Result);
                         command.Parameters.AddWithValue("$filename", resultInfo.FileName);
                         command.Parameters.AddWithValue("$sheet", resultInfo.Sheet);
@@ -211,7 +171,7 @@ namespace GrepExcel.Excel
             }
             catch (SqliteException ex)
             {
-                ShowDebug.Msg(F.FLMD(), ex.Message);
+                log_.Error(ex.Message);
             }
             return res;
         }
@@ -219,57 +179,36 @@ namespace GrepExcel.Excel
         public int LastIndex()
         {
             int index = -1;
-            if (base._sqlConnection == null)
-            {
-                ShowDebug.Msg(F.FLMD(), "Sql connection faile = null");
-                return index;
-            }
-
+            Base.Check(sqlConn_);
             try
             {
-
-                using (var transaction = _sqlConnection.BeginTransaction())
+                using (var transaction = sqlConn_.BeginTransaction())
                 {
-                    using (var command = _sqlConnection.CreateCommand())
+                    using (var command = sqlConn_.CreateCommand())
                     {
                         command.CommandText = "SELECT SEQ FROM sqlite_sequence WHERE name = 'pct_tblResult'";
-
                         index = Convert.ToInt32(command.ExecuteScalar());
-
                     }
                 }
             }
             catch (SqliteException ex)
             {
-                ShowDebug.Msg(F.FLMD(), ex.Message);
-                throw;
+                log_.Error(ex.Message);
             }
-
             return index;
         }
 
         public SqlResult Update(object data)
         {
             SqlResult res = SqlResult.InsertFailed;
-
-            if (_sqlConnection == null)
-            {
-                ShowDebug.Msg(F.FLMD(), "sql connection faile = null");
-                return res;
-            }
-
-            if (data == null)
-            {
-                ShowDebug.Msg(F.FLMD(), "data = null");
-                return res;
-            }
-
+            Base.Check(sqlConn_);
+            if (data is null) return res;
+           
             try
             {
-
-                using (var transaction = _sqlConnection.BeginTransaction())
+                using (var transaction = sqlConn_.BeginTransaction())
                 {
-                    using (var command = _sqlConnection.CreateCommand())
+                    using (var command = sqlConn_.CreateCommand())
                     {
                         var searchInfo = data as SearchInfo;
                         command.CommandText = "UPDATE pct_tblResult SET  " +
@@ -295,7 +234,7 @@ namespace GrepExcel.Excel
             }
             catch (SqliteException ex)
             {
-                ShowDebug.Msg(F.FLMD(), ex.Message);
+                log_.Error(ex.Message);
             }
             return res;
         }
@@ -306,44 +245,31 @@ namespace GrepExcel.Excel
         /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
-            if (_dispose)
-            {
+            if (dispose_)
                 return;
-            }
 
             if (disposing)
             {
                 //Hande
             }
 
-            _dispose = true;
+            dispose_ = true;
             base.Dispose(disposing);
-
         }
 
 
 
         public List<ResultInfo> GetResultInfoBySearchId(int searchId)
         {
-
-            if (_sqlConnection == null)
-            {
-                ShowDebug.Msg(F.FLMD(), "sql connection faile = null");
-                return null;
-            }
-
+            Base.Check(sqlConn_);
             if (searchId <= 0)
-            {
-                ShowDebug.Msg(F.FLMD(), "search id < 0");
                 return null;
-            }
-            List<ResultInfo> lst = new List<ResultInfo>();
 
+            List<ResultInfo> lst = new List<ResultInfo>();
             try
             {
-
                 // create command text.
-                using (var command = _sqlConnection.CreateCommand())
+                using (var command = sqlConn_.CreateCommand())
                 {
                     var sqlString = "SELECT * FROM pct_tblResult WHERE search_id = $search_id";
                     command.CommandText = sqlString;
@@ -355,12 +281,12 @@ namespace GrepExcel.Excel
                         {
                             // them vao doi tuong.
                             ResultInfo resultInfo = new ResultInfo();
-                            resultInfo.ResultID = reader.GetInt32(0);
+                            resultInfo.ResultId = reader.GetInt32(0);
                             resultInfo.Result = reader.GetString(1);
                             resultInfo.FileName = reader.GetString(2);
                             resultInfo.Sheet = reader.GetString(3);
                             resultInfo.Cell = reader.GetString(4);
-                            resultInfo.SearchInfoID = reader.GetInt32(5);
+                            resultInfo.SearchId = reader.GetInt32(5);
 
                             lst.Add(resultInfo);
                         }
@@ -369,30 +295,20 @@ namespace GrepExcel.Excel
             }
             catch (SqliteException ex)
             {
-                ShowDebug.Msg(F.FLMD(), ex.Message);
+                log_.Error(ex.Message);
             }
-
             return lst;
-
         }
 
 
         public List<ResultInfo> GetResultInfoAll()
         {
-
-            if (_sqlConnection == null)
-            {
-                ShowDebug.Msg(F.FLMD(), "sql connection faile = null");
-                return null;
-            }
-
+            Base.Check(sqlConn_);
             List<ResultInfo> lst = new List<ResultInfo>();
-
             try
             {
-
                 // create command text.
-                using (var command = _sqlConnection.CreateCommand())
+                using (var command = sqlConn_.CreateCommand())
                 {
                     var sqlString = "SELECT * FROM pct_tblResult";
                     command.CommandText = sqlString;
@@ -402,12 +318,12 @@ namespace GrepExcel.Excel
                         {
                             // them vao doi tuong.
                             ResultInfo resultInfo = new ResultInfo();
-                            resultInfo.ResultID = reader.GetInt32(0);
+                            resultInfo.ResultId = reader.GetInt32(0);
                             resultInfo.Result = reader.GetString(1);
                             resultInfo.FileName = reader.GetString(2);
                             resultInfo.Sheet = reader.GetString(3);
                             resultInfo.Cell = reader.GetString(4);
-                            resultInfo.SearchInfoID = reader.GetInt32(5);
+                            resultInfo.SearchId = reader.GetInt32(5);
 
                             lst.Add(resultInfo);
                         }
@@ -416,7 +332,7 @@ namespace GrepExcel.Excel
             }
             catch (SqliteException ex)
             {
-                ShowDebug.Msg(F.FLMD(), ex.Message);
+                log_.Error(ex.Message);
             }
 
             return lst;
@@ -426,22 +342,14 @@ namespace GrepExcel.Excel
 
         public int CountResultInfo()
         {
-
-            if (_sqlConnection == null)
-            {
-                ShowDebug.Msg(F.FLMD(), "sql connection faile = null");
-                return 0;
-            }
-
+            Base.Check(sqlConn_);
             try
             {
-
                 // create command text.
-                using (var command = _sqlConnection.CreateCommand())
+                using (var command = sqlConn_.CreateCommand())
                 {
                     var sqlString = "SELECT COUNT(*) FROM pct_tblResult";
                     command.CommandText = sqlString;
-
                     int count = Convert.ToInt32(command.ExecuteScalar());
 
                     return count;
@@ -449,27 +357,18 @@ namespace GrepExcel.Excel
             }
             catch (SqliteException ex)
             {
-                ShowDebug.Msg(F.FLMD(), ex.Message);
+                log_.Error(ex.Message);
             }
-
             return 0;
-
         }
 
-        public int CountResultInfoBySearchId(int searchId)
+        public int CountWithBySerachId(int searchId)
         {
-
-            if (_sqlConnection == null)
-            {
-                ShowDebug.Msg(F.FLMD(), "sql connection faile = null");
-                return 0;
-            }
-
+            Base.Check(sqlConn_);
             try
             {
-
                 // create command text.
-                using (var command = _sqlConnection.CreateCommand())
+                using (var command = sqlConn_.CreateCommand())
                 {
                     var sqlString = "SELECT COUNT(*) FROM pct_tblResult WHERE search_id = $search_id";
                     command.CommandText = sqlString;
@@ -481,11 +380,9 @@ namespace GrepExcel.Excel
             }
             catch (SqliteException ex)
             {
-                ShowDebug.Msg(F.FLMD(), ex.Message);
+                log_.Error(ex.Message);
             }
-
             return 0;
-
         }
 
     }

@@ -29,25 +29,17 @@
         public int Id { get; set; }
         public string Search { get; set; }
         public string Folder { get; set; }
-
         public TypeMethod Method { get; set; }
-
         public TypeTarget Target { get; set; }
-
         public bool IsMatchCase { get; set; }
-
         public bool IsLowerOrUper { get; set; }
-
         public bool IsTabActive { get; set; }
-
         public static bool operator ==(SearchInfo left, SearchInfo right)
         {
             if (right is null)
             {
                 if (left is null)
-                {
                     return true;
-                }
                 return false;
             }
             return ((left.Search == right.Search) &&
@@ -79,9 +71,8 @@
 
         public override int GetHashCode()
         {
-
-            return Search.GetHashCode() ^ Method.GetHashCode() ^ Target.GetHashCode() ^ IsMatchCase.GetHashCode() ^ IsLowerOrUper.GetHashCode();
-
+            return Search.GetHashCode() ^ Method.GetHashCode() ^ Target.GetHashCode() ^
+                         IsMatchCase.GetHashCode() ^ IsLowerOrUper.GetHashCode();
         }
 
     }

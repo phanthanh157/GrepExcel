@@ -8,10 +8,9 @@ namespace GrepExcel.ViewModel
     public class ListSearchVm : BaseModel
     {
         #region Fields
-        private static ListSearchVm _instance = null;
-        private ObservableCollection<ShowInfo> _searchInfos;
-        private SettingVm _settings = null;
-
+        private static readonly Lazy<ListSearchVm> lazy_ = new Lazy<ListSearchVm>(() => new ListSearchVm());
+        private ObservableCollection<ShowInfo> searchInfos_ = new ObservableCollection<ShowInfo>();
+        private SettingVm settings_ = null;
         #endregion 
 
         #region Properties
@@ -19,13 +18,13 @@ namespace GrepExcel.ViewModel
         {
             get
             {
-                return _searchInfos;
+                return searchInfos_;
             }
             set
             {
-                if (value != _searchInfos)
+                if (value != searchInfos_)
                 {
-                    _searchInfos = value;
+                    searchInfos_ = value;
                 }
                 OnPropertyChanged();
             }
@@ -36,10 +35,8 @@ namespace GrepExcel.ViewModel
         #endregion //Properties
 
 
-        public ListSearchVm()
+        private ListSearchVm()
         {
-            SearchInfos = new ObservableCollection<ShowInfo>();
-
             InitClass();
 
             LoadData();
@@ -47,9 +44,9 @@ namespace GrepExcel.ViewModel
 
         private void InitClass()
         {
-            _settings = SettingVm.Instance;
+            settings_ = SettingVm.Instance;
 
-            _settings.SettingChanged += SettingChange;
+            settings_.SettingChanged += SettingChange;
 
         }
 
@@ -63,43 +60,32 @@ namespace GrepExcel.ViewModel
         {
             get
             {
-                if (_instance == null)
-                {
-                    _instance = new ListSearchVm();
-                }
-                return _instance;
+                return lazy_.Value;
             }
         }
 
 
         #region Method
 
-        public void ShowTabSearchResult(ShowInfo showInfo)
+        public void ShowTab(ShowInfo showInfo)
         {
-            //if (showInfo == null)
-            //{
-            //    ShowDebug.MsgErr(F.FLMD(), "Search info is null");
-            //    return;
-            //}
             var mainVm = MainViewModel.Instance;
             var excelStore = ExcelStoreManager.Instance;
 
             //update tabactive
             showInfo.Info.IsTabActive = true;
-            excelStore.UpdateSearchInfo(showInfo.Info);
-
-            excelStore.GetResultInfoBySearchId(showInfo.Info.Id);
+            excelStore.UpdateSearchInfo(showInfo.Info); //update tabactive 
 
             //check tab is open
             int indexTab = -1;
-            bool isTabOpen = mainVm.isTabOpen(showInfo.Info, ref indexTab);
-            if (isTabOpen == true)
+            bool isOpen = mainVm.IsTabOpen(showInfo.Info, ref indexTab);
+            if (isOpen)
             {
                 //Check data change and load again data if change
                 var listResult = excelStore.GetResultInfoBySearchId(showInfo.Info.Id);
                 if (listResult != null)
                 {
-                    var resultVm = mainVm.GetSearchResultVm(indexTab);
+                    var resultVm = mainVm.GetTabContent(indexTab);
                     if (resultVm != null)
                     {
                         if (listResult.Count > resultVm.ResultInfos.Count)
@@ -110,18 +96,19 @@ namespace GrepExcel.ViewModel
                 }
 
                 mainVm.ActionTabIndexActive(indexTab);
-                return;
             }
+            else
+            {
+                //Display result add new tab
+                var tabResult = new SearchResultVm(
+                    new SearchResultUc(),
+                    showInfo.Info.Search,
+                    showInfo.Info.Id);
 
-            //Display result add new tab
-            SearchResultVm tabResult = new SearchResultVm();
-            tabResult.Control = new SearchResultUc();
-            tabResult.TabName = showInfo.Info.Search;
-            tabResult.SearchId = showInfo.Info.Id;
-            tabResult.LoadDataFromDatabase(); //load du lieu tu database
+                tabResult.LoadDataFromDatabase(); //load du lieu tu database
 
-            mainVm.AddTabControl(tabResult);
-
+                mainVm.AddTabControl(tabResult);
+            }
         }
 
         private void LoadData()
@@ -137,7 +124,7 @@ namespace GrepExcel.ViewModel
 
             foreach (var item in listInfo)
             {
-                SearchInfos.Add(new ShowInfo().SetData(item));
+                SearchInfos.Add(ShowInfo.Create(item));
             }
         }
 
@@ -155,7 +142,7 @@ namespace GrepExcel.ViewModel
 
             //remove tab if tab opening
             int indexTab = -1;
-            if (mainVm.isTabOpen(showInfo.Info, ref indexTab))
+            if (mainVm.IsTabOpen(showInfo.Info, ref indexTab))
             {
                 mainVm.RemoveTabControl(indexTab);
             }
@@ -179,7 +166,6 @@ namespace GrepExcel.ViewModel
             recent.LoadRecents();
 
         }
-
 
         private void RemoveList(int id)
         {

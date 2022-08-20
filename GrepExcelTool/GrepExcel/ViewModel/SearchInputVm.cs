@@ -12,7 +12,6 @@ namespace GrepExcel.ViewModel
     {
         public string Icon { get; set; }
         public TypeMethod Method { get; set; }
-
         public string Name { get; set; }
     }
 
@@ -25,8 +24,9 @@ namespace GrepExcel.ViewModel
 
     public class SearchInputVm
     {
-        private ICommand _commandSearch = null;
-
+        private static readonly log4net.ILog log_ = LogHelper.GetLogger();
+        private readonly MainViewModel mainVm_= MainViewModel.Instance;
+        private ICommand cmdSearch_ = null;
         public ObservableCollection<MethodView> Methods { get; set; }
         public ObservableCollection<TargetView> Targets { get; set; }
 
@@ -37,42 +37,39 @@ namespace GrepExcel.ViewModel
             LoadItem();
         }
 
-
         public ICommand CommandSearch
         {
             get
             {
-                if (_commandSearch == null)
+                if (cmdSearch_ == null)
                 {
-                    _commandSearch = new Commands.AsyncRelayCommand(sender => CommandSeachHander(sender));
+                    cmdSearch_ = new Commands.AsyncRelayCommand(sender => CommandSeachHander(sender));
                 }
-                return _commandSearch;
+                return cmdSearch_;
             }
         }
 
         private async Task CommandSeachHander(object sender)
         {
-            ShowDebug.Msg(F.FLMD(), "Handler");
             if (sender == null)
             {
-                ShowDebug.Msg(F.FLMD(), "Sender is null");
+                log_.Error("Sender is null");
                 return;
             }
+
             var inputInfo = sender as SearchInfo;
             var mainVm = MainViewModel.Instance;
             var excelStore = ExcelStoreManager.Instance;
-            var listSearch = ListSearchVm.Instance;
-            var listRecent = RecentSearchVm.Instance;
+            var listSearchVm = ListSearchVm.Instance;
+            var listRecentVm = RecentSearchVm.Instance;
 
             //check exits database
-            int searchIdFirst = -1;
-            if (CheckExitsSearchInfo(inputInfo, ref searchIdFirst))
+            SearchInfo searchInfoFirst = null;
+            if (CheckExitsSearchInfo(inputInfo, out searchInfoFirst))
             {
-                MessageBox.Show("Search keyword is exits on database", "Searching", MessageBoxButton.OK, MessageBoxImage.Information);
-                inputInfo.Id = searchIdFirst;
+                MessageBox.Show("Search keyword is exits on database", "Searching...", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                listSearch.ShowTabSearchResult(new ShowInfo().SetData(inputInfo));
-                ShowDebug.Msg(F.FLMD(), "Search info is exits, searchId= {0}", searchIdFirst);
+                listSearchVm.ShowTab(ShowInfo.Create(searchInfoFirst));
                 return;
             }
 
@@ -81,9 +78,9 @@ namespace GrepExcel.ViewModel
 
             //Insert input info to database
             SqlResult sqlResult = excelStore.InsertSearchInfo(inputInfo);
+
             if (SqlResult.InsertSucess == sqlResult)
             {
-                ShowDebug.Msg(F.FLMD(), "Insert Search info success");
                 inputInfo.Id = excelStore.LastIndexSearch();// add id 
 
                 //Search process
@@ -94,65 +91,46 @@ namespace GrepExcel.ViewModel
 
                 grep.GrepEvent -= Grep_GrepEvent;
 
-                //Display result
-                int tabIndex = -1;
-                bool isTabOpen = mainVm.isTabOpen(inputInfo, ref tabIndex);
-                if (!isTabOpen)
-                {
-                    SearchResultVm tabResult = new SearchResultVm();
-                    tabResult.Control = new SearchResultUc();
-                    tabResult.TabName = inputInfo.Search;
-                    tabResult.SearchId = inputInfo.Id;
-                    tabResult.LoadDataFromDatabase();
-                    mainVm.AddTabControl(tabResult);
-                }
-                else // Tab is open and load again data
-                {
-                    if (tabIndex != -1)
-                    {
-                        var resultVm = mainVm.GetSearchResultVm(tabIndex);
-                        if (resultVm != null)
-                        {
-                            resultVm.LoadDataFromDatabase();
-                        }
-                    }
-                }
-
-                mainVm.NotifyTaskRunning(inputInfo.Search, false);
+                //Display result when finish search
+                listSearchVm.ShowTab(ShowInfo.Create(inputInfo));
+             
                 //add observer list serach
-                listSearch.SearchInfos.Add(new ShowInfo().SetData(inputInfo));
-                listRecent.LoadRecents();
+                listSearchVm.SearchInfos.Add(ShowInfo.Create(inputInfo));
+
+                //add first list recent
+                listRecentVm.Recents.Insert(0, ShowInfo.Create(inputInfo));
             }
+
+            mainVm.NotifyTaskRunning(inputInfo.Search, false);
         }
 
         private void Grep_GrepEvent(object sender, GrepInfoArgs e)
         {
-            if(e is null)
-            {
+            if (e is null)
                 return;
-            }
-
-            ShowDebug.Msg(F.FLMD(), "Search {0} ,Total File {1} , Current File {2}, Index {3}, Count Result {4} ", e.SearchText,e.TotalFiles,e.CurrentFile,e.CurrentFileIndex ,e.CurrentMatch);
-            var mainVm = MainViewModel.Instance;
-
             int percent = e.CurrentFileIndex * 100 / e.TotalFiles;
-            mainVm.SearchPercent = percent;
-            mainVm.CurrentResults = e.CurrentMatch;
+            mainVm_.ShowPercentSearching(percent, e.CurrentMatch);
 
-            ShowDebug.Msg(F.FLMD(), "Search Percent: {0}", percent);
+            //log_.DebugFormat("Search Percent: {0}", percent);
         }
 
-        private bool CheckExitsSearchInfo(SearchInfo searchInfo, ref int searchId)
+        private bool CheckExitsSearchInfo(SearchInfo searchInfo, out SearchInfo outSearchInfo)
         {
+            outSearchInfo = null;
+
             var excelStore = ExcelStoreManager.Instance;
 
-            var list = excelStore.GetSearchInfoAll();
+            var dataSearch = excelStore.GetSearchInfoAll();
 
-            var filter = list.Where(res => res == searchInfo);
+            if (dataSearch is null)
+                return false;
+
+            var filter = dataSearch.Where(res => res == searchInfo);
 
             if (filter.Count() > 0)
             {
-                searchId = filter.First().Id;
+                //searchId = filter.First().Id;
+                outSearchInfo = filter.First();
                 return true;
             }
             return false;

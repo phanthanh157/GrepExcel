@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Windows;
-using GrepExcel.ViewModel;
 using System.IO;
+using System.Windows;
 using GrepExcel.Excel;
-using System.Windows.Controls;
+using GrepExcel.ViewModel;
 
+[assembly: log4net.Config.XmlConfigurator(Watch = true)]
 namespace GrepExcel
 {
     /// <summary>
@@ -12,10 +12,12 @@ namespace GrepExcel
     /// </summary>
     public partial class App : Application
     {
-
+        private static readonly log4net.ILog log_ = LogHelper.GetLogger();
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+            log_.Info("EXCEL APPLICATION START");
+
             MainWindow window = new MainWindow();
             //load config.
             Config config = new Config();
@@ -31,7 +33,8 @@ namespace GrepExcel
                 window.Close();
             };
 
-            window.Closed += (object wcl, EventArgs ev1) => {
+            window.Closed += (object wcl, EventArgs ev1) =>
+            {
                 Config.AddUpdateAppSettings("TAB_CURRENT_ACTIVE", mainVm.TabActive.ToString());
             };
 
@@ -46,6 +49,6 @@ namespace GrepExcel
             window.Show();
         }
 
-    
+
     }
 }

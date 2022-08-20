@@ -12,7 +12,7 @@ using System.Windows.Input;
 namespace GrepExcel.ViewModel
 {
 
-    public class MainViewModel : TabControl
+    public class MainViewModel : BaseModel
     {
         #region Fileds
         private static MainViewModel _instance = null;
@@ -407,7 +407,7 @@ namespace GrepExcel.ViewModel
             return null;
         }
 
-        public SearchResultVm GetSearchResultVm(int tabIndex)
+        public SearchResultVm GetTabContent(int tabIndex)
         {
             if (Tabs.Count >= tabIndex)
             {
@@ -465,10 +465,10 @@ namespace GrepExcel.ViewModel
             {
                 var results = excelStore.GetResultInfoBySearchId(tabActive.Id);
 
-                SearchResultVm tabControl = new SearchResultVm();
-                tabControl.Control = new SearchResultUc();
-                tabControl.TabName = tabActive.Search;
-                tabControl.SearchId = tabActive.Id;
+                var tabControl = new SearchResultVm(
+                 new SearchResultUc(),
+                 tabActive.Search,
+                 tabActive.Id);
 
                 results.ForEach(x => tabControl.ResultInfos.Add(x));
 
@@ -513,13 +513,10 @@ namespace GrepExcel.ViewModel
             return false;
         }
 
-        public bool isTabOpen(SearchInfo searchInfo, ref int index)
+        public bool IsTabOpen(SearchInfo searchInfo, ref int index)
         {
             if (Tabs.Count == 0)
-            {
-                ShowDebug.Msg(F.FLMD(), "All TabControl close");
                 return false;
-            }
 
             int cnt = 0;
             foreach (var tab in Tabs)
@@ -533,7 +530,6 @@ namespace GrepExcel.ViewModel
                         index = cnt;
                         return true;
                     }
-
                 }
                 cnt++;
             }
@@ -542,12 +538,16 @@ namespace GrepExcel.ViewModel
         }
 
 
-
-
         public void UpdateStatusBar()
         {
             TotalKeySearch = _excelStore.CountSearchInfo();
             TotalResultSearch = _excelStore.CountResultInfo();
+        }
+
+        public void ShowPercentSearching(int percent, int match)
+        {
+            this.SearchPercent = percent;
+            this.CurrentResults = match;
         }
 
         #endregion

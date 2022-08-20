@@ -29,7 +29,6 @@ namespace GrepExcel.View
         {
             cobMethod.SelectedIndex = 1;
             cobTarget.SelectedIndex = 0;
-            //txtSearch.Text = "thanh";
 
             var lstSearchInfo = ExcelStoreManager.Instance.GetSearchInfoByLimit(10);
             if(lstSearchInfo != null)
@@ -40,7 +39,6 @@ namespace GrepExcel.View
                     txtFolder.Text = searchInfo.Folder;
                 }
             }
-            //txtFolder.Text = @"D:\VBA-Excel";//test tam
         }
 
         public bool Validate()

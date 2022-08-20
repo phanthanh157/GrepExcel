@@ -7,10 +7,6 @@
              xmlns:vm="clr-namespace:GrepExcel.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.DataContext>
-        <vm:ListSearchVm/>
-    </UserControl.DataContext>
-    
     <UserControl.Resources>
         <Style x:Key="{x:Type ListBox}"
        TargetType="ListBox">
