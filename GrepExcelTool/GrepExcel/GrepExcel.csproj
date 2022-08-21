@@ -124,6 +124,7 @@
     <Compile Include="LogHelper.cs" />
     <Compile Include="Properties\Resources.Designer.cs" />
     <Compile Include="Properties\Settings.Designer.cs" />
+    <Compile Include="Version.cs" />
     <Compile Include="ViewModel\BaseModel.cs" />
     <Compile Include="ViewModel\Folder\CustomTemplateSelector.cs" />
     <Compile Include="ViewModel\Folder\FileIconConverter.cs" />
