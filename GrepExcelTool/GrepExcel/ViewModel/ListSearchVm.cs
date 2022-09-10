@@ -1,11 +1,11 @@
-﻿using GrepExcel.Excel;
-using GrepExcel.View;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using GrepExcel.Excel;
+using GrepExcel.View;
 
 namespace GrepExcel.ViewModel
 {
@@ -24,7 +24,7 @@ namespace GrepExcel.ViewModel
     public class ListSearchVm : BaseModel
     {
         #region Fields
-        private static readonly log4net.ILog log_ = LogHelper.GetLogger();
+        //private static readonly log4net.ILog log_ = LogHelper.GetLogger();
         private static readonly Lazy<ListSearchVm> lazy_ = new Lazy<ListSearchVm>(() => new ListSearchVm());
         private ObservableCollection<ShowInfo> searchInfos_ = new ObservableCollection<ShowInfo>();
         private readonly MainViewModel mainVm_ = MainViewModel.Instance;
@@ -143,10 +143,10 @@ namespace GrepExcel.ViewModel
                 searchResultVm = mainVm_.GetTabContent(mainVm_.TabActive + 1);
                 tabIndex = mainVm_.TabActive + 1;
             }
-                                                
-                                           
+
+
             //add tab failed.
-            if (tabIndex == -1)
+            if (searchResultVm is null || tabIndex == -1)
                 return;
 
             var tokenSource = new CancellationTokenSource();
@@ -158,18 +158,18 @@ namespace GrepExcel.ViewModel
 
             TokenStores.Add(new TokenStore(tabIndex, tokenSource, grep));
             await Task.Run(() =>
-            {              
-                grep.GrepAsync(showInfo.Info, tabIndex, ct, new Action<bool> ((stopLoading) =>
-                {
-                    if(stopLoading)
-                        searchResultVm.IsLoading = false;
-                }));
+            {
+                grep.GrepAsync(showInfo.Info, tabIndex, ct, new Action<bool>((stopLoading) =>
+               {
+                   if (stopLoading)
+                       searchResultVm.IsLoading = false;
+               }));
             });
 
             grep.EventGrepResult -= Grep_EventGrepResult;
         }
 
-   
+
         private void Grep_EventGrepResult(object sender, GrepInfoArgs e)
         {
             if (e is null)
@@ -181,7 +181,7 @@ namespace GrepExcel.ViewModel
             //render result 
             var searchResultVm = mainVm_.GetTabContent(e.TabIndex);
 
-            if(searchResultVm != null)
+            if (searchResultVm != null)
                 searchResultVm.AddResult(e.Result);
         }
 
@@ -209,7 +209,7 @@ namespace GrepExcel.ViewModel
 
             CancellationTokenSource ct = tokenStore.TokenSource;
 
-            if(ct != null)
+            if (ct != null)
             {
                 ct.Cancel();
 
@@ -259,24 +259,6 @@ namespace GrepExcel.ViewModel
 
         }
 
-        private void RemoveList(int id)
-        {
-            int cnt = 0;
-            int idxDelete = 0;
-            foreach (var item in SearchInfos)
-            {
-                if (item.Info.Id == id)
-                {
-                    idxDelete = cnt;
-                    break;
-                }
-                cnt++;
-            }
-            ShowDebug.MsgErr(F.FLMD(), "Collection RemoveAt = {0}, CountBefore = {1}", idxDelete, SearchInfos.Count);
-
-            SearchInfos.RemoveAt(idxDelete);
-            ShowDebug.MsgErr(F.FLMD(), "Collection RemoveAt = {0}, CountAfter = {1}", idxDelete, SearchInfos.Count);
-        }
         #endregion //Method
     }
 }

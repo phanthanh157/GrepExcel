@@ -49,10 +49,12 @@
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Height="21" Width="Auto">
                         <theme:LoadingSpinner Cap="Triangle"
-                                           Diameter="20"
+                                           Diameter="17"
                                            IsLoading="{Binding IsLoading}"
-                                           Thickness="1"/>
-                        <TextBlock Width="Auto" Text="{Binding Path=TabName}">
+                                           Thickness="1"
+                                           Margin="0 3 0 0"/>
+                        <TextBlock Width="Auto" Text="{Binding Path=TabName}" 
+                                   Margin="0 3 0 0">
                             <TextBlock.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem Header="Close"

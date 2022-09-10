@@ -12,7 +12,5 @@ namespace GrepExcel
         public const string EXTENSION_FILE_XLSM = ".xlsm";
         public const string EXTENSION_FILE_XLSX = ".xlsx";
         public const string EXTENSION_FILE_XLS = ".xls";
-
-
     }
 }

@@ -51,8 +51,6 @@ namespace GrepExcel
 
                 if (appSettings.Count == 0)
                 {
-                    ShowDebug.Msg(F.FLMD(), "AppSettings is empty.");
-                    ShowDebug.Msg(F.FLMD(), "AppSettings set loading...");
                     foreach (ConfigTable configTable in configs)
                     {
                         AddUpdateAppSettings(configTable.Key, configTable.Value);
@@ -63,13 +61,12 @@ namespace GrepExcel
                     foreach (var key in appSettings.AllKeys)
                     {
                         _configTables.Add(new ConfigTable(key, appSettings[key]));
-                        ShowDebug.Msg(F.FLMD(), "Key: {0} Value: {1}", key, appSettings[key]);
                     }
                 }
             }
             catch (ConfigurationErrorsException)
             {
-                ShowDebug.Msg(F.FLMD(), "Error reading app settings");
+
             }
         }
 
@@ -80,11 +77,9 @@ namespace GrepExcel
             {
                 var appSettings = ConfigurationManager.AppSettings;
                 result = appSettings[key];
-                ShowDebug.Msg(F.FLMD(), "Read Setting Config: {0}", result);
             }
             catch (ConfigurationErrorsException)
             {
-                ShowDebug.Msg(F.FLMD(), "Error reading app settings");
             }
             return result;
         }
@@ -108,7 +103,7 @@ namespace GrepExcel
             }
             catch (ConfigurationErrorsException)
             {
-                ShowDebug.Msg(F.FLMD(), "Error writing app settings");
+
             }
         }
     }

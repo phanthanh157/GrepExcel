@@ -1,6 +1,4 @@
-﻿using GrepExcel.Commands;
-using GrepExcel.Excel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -9,6 +7,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using GrepExcel.Commands;
+using GrepExcel.Excel;
 
 
 namespace GrepExcel.ViewModel
@@ -39,7 +39,7 @@ namespace GrepExcel.ViewModel
             get { return resultInfos_; }
             set
             {
-                if(resultInfos_ != value)
+                if (resultInfos_ != value)
                 {
                     resultInfos_ = value;
                     BindingOperations.EnableCollectionSynchronization(resultInfos_, resultLock_);
@@ -60,7 +60,7 @@ namespace GrepExcel.ViewModel
         private ICommand _copyResult;
         private ICommand _commandCloseTab;
         private ICommand _commandDelete;
-        public SearchResultVm(UserControl userControl, string tabName, int searchId) : base(userControl,tabName)
+        public SearchResultVm(UserControl userControl, string tabName, int searchId) : base(userControl, tabName)
         {
             SearchId = searchId;
             ResultInfos = new ObservableCollection<ResultInfo>();
@@ -94,12 +94,12 @@ namespace GrepExcel.ViewModel
 
         public ResultInfo SelectedItem { get; set; }
 
-        public bool IsLoading 
-        { 
+        public bool IsLoading
+        {
             get { return isLoading_; }
             set
             {
-                if(isLoading_ != value)
+                if (isLoading_ != value)
                 {
                     isLoading_ = value;
                     OnPropertyChanged();
@@ -205,11 +205,8 @@ namespace GrepExcel.ViewModel
                         break;
                     default:
                         break;
-
                 }
-
             }
-
         }
 
 
@@ -227,7 +224,6 @@ namespace GrepExcel.ViewModel
 
         private async Task CommandRefeshHandler(object sender)
         {
-            var mainVm = MainViewModel.Instance;
             var excelStore = ExcelStoreManager.Instance;
 
             var searchInfo = excelStore.GetSearchInfoById(SearchId);
@@ -247,11 +243,8 @@ namespace GrepExcel.ViewModel
 
             ResultInfos.Clear();
 
-            //mainVm.NotifyTaskRunning(searchInfo.Search);
-
             await ListSearchVm.Instance.ShowTab(ShowInfo.Create(searchInfo), true);
 
-            //mainVm.NotifyTaskRunning(searchInfo.Search, false);
         }
 
         public ICommand CommandStopLoading
@@ -443,8 +436,6 @@ namespace GrepExcel.ViewModel
 
             var searchResult = sender as ResultInfo;
 
-            
-
             Clipboard.SetText(searchResult.Result);
         }
 
@@ -479,13 +470,10 @@ namespace GrepExcel.ViewModel
 
         public void AddResult(ResultInfo resultInfo)
         {
-         
-           lock (resultLock_)
-           {
+            lock (resultLock_)
+            {
                 ResultInfos.Add(resultInfo);
-           }
+            }
         }
-
-
     }
 }

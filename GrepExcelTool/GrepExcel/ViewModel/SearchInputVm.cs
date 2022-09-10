@@ -1,11 +1,10 @@
-﻿using GrepExcel.Excel;
-using GrepExcel.View;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using GrepExcel.Excel;
 
 namespace GrepExcel.ViewModel
 {
@@ -26,7 +25,7 @@ namespace GrepExcel.ViewModel
     public class SearchInputVm
     {
         private static readonly log4net.ILog log_ = LogHelper.GetLogger();
-       
+
         private ICommand cmdSearch_ = null;
         public ObservableCollection<MethodView> Methods { get; set; }
         public ObservableCollection<TargetView> Targets { get; set; }
@@ -44,7 +43,7 @@ namespace GrepExcel.ViewModel
             {
                 if (cmdSearch_ == null)
                 {
-                    cmdSearch_ = new Commands.AsyncRelayCommand((sender) => CommandSeachHander(sender),ex => SearchException(ex));
+                    cmdSearch_ = new Commands.AsyncRelayCommand((sender) => CommandSeachHander(sender), ex => SearchException(ex));
                 }
                 return cmdSearch_;
             }
@@ -66,7 +65,6 @@ namespace GrepExcel.ViewModel
             }
 
             var inputInfo = sender as SearchInfo;
-            var mainVm = MainViewModel.Instance;
             var excelStore = ExcelStoreManager.Instance;
             var listSearchVm = ListSearchVm.Instance;
             var listRecentVm = RecentSearchVm.Instance;
@@ -93,7 +91,7 @@ namespace GrepExcel.ViewModel
 
                 //Display result when finish search
                 await listSearchVm.ShowTab(ShowInfo.Create(inputInfo), false);
-             
+
                 //add observer list serach
                 listSearchVm.SearchInfos.Add(ShowInfo.Create(inputInfo));
 
@@ -104,7 +102,7 @@ namespace GrepExcel.ViewModel
             //mainVm.NotifyTaskRunning(inputInfo.Search, false);
         }
 
-      
+
         private bool CheckExitsSearchInfo(SearchInfo searchInfo, out SearchInfo outSearchInfo)
         {
             outSearchInfo = null;

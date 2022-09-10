@@ -156,7 +156,7 @@ namespace GrepExcel.Excel
                 countFile = 1;
                 foreach (string file in files)
                 {
-                    log_.DebugFormat("Open File:  '{0}'.", file);
+                    //log_.DebugFormat("Open File:  '{0}'.", file);
                     ItemGrep(
                             tabIndex,
                             searchInfo,
@@ -171,7 +171,7 @@ namespace GrepExcel.Excel
                     //cancle token
                     if (ct.IsCancellationRequested)
                     {
-                        log_.Debug("Cancle searching ...");
+                        //log_.Debug("Cancle searching ...");
                         ct.ThrowIfCancellationRequested();
                     }
                 }
@@ -247,7 +247,7 @@ namespace GrepExcel.Excel
                     //so luong toi da tim kiem
                     if (_noMatches > _maxSearch)
                     {
-                        log_.Debug("Reach maximum result search");
+                        //log_.Debug("Reach maximum result search");
                         xlWorkbook.Close(false, Type.Missing, Type.Missing);
                         return;
                     }
@@ -287,7 +287,7 @@ namespace GrepExcel.Excel
                         //so luong toi da tim kiem
                         if (_noMatches > _maxSearch)
                         {
-                            log_.Debug("Maximum result search");
+                            //log_.Debug("Maximum result search");
                             xlWorkbook.Close(false, Type.Missing, Type.Missing);
                             return;
                         }
