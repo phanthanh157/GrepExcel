@@ -247,11 +247,11 @@ namespace GrepExcel.ViewModel
 
             ResultInfos.Clear();
 
-            mainVm.NotifyTaskRunning(searchInfo.Search);
+            //mainVm.NotifyTaskRunning(searchInfo.Search);
 
             await ListSearchVm.Instance.ShowTab(ShowInfo.Create(searchInfo), true);
 
-            mainVm.NotifyTaskRunning(searchInfo.Search, false);
+            //mainVm.NotifyTaskRunning(searchInfo.Search, false);
         }
 
         public ICommand CommandStopLoading

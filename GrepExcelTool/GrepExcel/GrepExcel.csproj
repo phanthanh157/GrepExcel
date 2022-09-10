@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{6EEF37D7-9B89-4EA8-92B5-90E86B82B760}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>GrepExcel</RootNamespace>
     <AssemblyName>GrepExcel</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>

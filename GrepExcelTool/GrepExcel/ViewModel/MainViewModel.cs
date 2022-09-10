@@ -410,7 +410,7 @@ namespace GrepExcel.ViewModel
 
         public SearchResultVm GetTabContent(int tabIndex)
         {
-            if (Tabs.Count >= tabIndex)
+            if (Tabs.Count >= tabIndex && tabIndex >1)
             {
                 return (SearchResultVm) Tabs[tabIndex-1];
             }

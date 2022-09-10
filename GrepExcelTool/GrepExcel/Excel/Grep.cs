@@ -67,8 +67,6 @@ namespace GrepExcel.Excel
 
                 xlWorksheet.Activate();
                 wsFind.Activate();
-                xlApp.ScreenUpdating = true;
-                xlApp.DisplayAlerts = true;
             }
             catch (Exception ex)
             {
@@ -79,10 +77,6 @@ namespace GrepExcel.Excel
                 //Release memory.
                 xlApp.ScreenUpdating = true;
                 xlApp.DisplayAlerts = true;
-
-                xlApp.Application.Quit();
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
             }
 
 

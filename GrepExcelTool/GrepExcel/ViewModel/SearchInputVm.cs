@@ -82,7 +82,7 @@ namespace GrepExcel.ViewModel
             }
 
             // await Task.Delay(1000);
-            mainVm.NotifyTaskRunning(inputInfo.Search);
+            //mainVm.NotifyTaskRunning(inputInfo.Search);
 
             //Insert input info to database
             SqlResult sqlResult = excelStore.InsertSearchInfo(inputInfo);
@@ -101,7 +101,7 @@ namespace GrepExcel.ViewModel
                 listRecentVm.Recents.Insert(0, ShowInfo.Create(inputInfo));
             }
 
-            mainVm.NotifyTaskRunning(inputInfo.Search, false);
+            //mainVm.NotifyTaskRunning(inputInfo.Search, false);
         }
 
       

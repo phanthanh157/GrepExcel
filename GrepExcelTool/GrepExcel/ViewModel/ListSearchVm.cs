@@ -175,8 +175,8 @@ namespace GrepExcel.ViewModel
             if (e is null)
                 return;
             //update status percent and match count
-            int percent = e.CurrentFileIndex * 100 / e.TotalFiles; 
-            mainVm_.ShowPercentSearching(percent, e.CurrentMatch);
+            //int percent = e.CurrentFileIndex * 100 / e.TotalFiles; 
+            //mainVm_.ShowPercentSearching(percent, e.CurrentMatch);
 
             //render result 
             var searchResultVm = mainVm_.GetTabContent(e.TabIndex);
