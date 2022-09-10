@@ -93,6 +93,8 @@ namespace GrepExcel.ViewModel
 
         public static RecentSearchVm Instance => lazy_.Value;
 
+        public ShowInfo SelectedItem { get; set; }
+
         public ObservableCollection<ShowInfo> Recents
         {
             get; set;

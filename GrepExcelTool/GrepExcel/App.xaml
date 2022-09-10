@@ -219,6 +219,8 @@
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Themes/SearchResultThemes.xaml"/>
+                <ResourceDictionary Source="Themes/LoadingSpinderTheme.xaml"/>
+                <ResourceDictionary Source="Themes/StopLoadingTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>

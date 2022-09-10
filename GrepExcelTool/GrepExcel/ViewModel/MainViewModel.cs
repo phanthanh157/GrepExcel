@@ -15,6 +15,7 @@ namespace GrepExcel.ViewModel
     public class MainViewModel : BaseModel
     {
         #region Fileds
+        private static readonly log4net.ILog log_ = LogHelper.GetLogger();
         private static MainViewModel _instance = null;
         private ExcelStoreManager _excelStore = null;
         private string _notifyString;
@@ -366,18 +367,18 @@ namespace GrepExcel.ViewModel
 
 
         #region Method
-        public void AddTabControl(TabControl tabControl)
+        public int AddTabControl(TabControl tabControl)
         {
-            if (tabControl == null)
-            {
-                ShowDebug.Msg(F.FLMD(), "tabcontrol is null");
-                return;
-            }
-            ShowDebug.Msg(F.FLMD(), "add new tabcontrol : {0}", tabControl.TabName);
+            if (tabControl is null)
+                return -1;
+
+            log_.ErrorFormat("Add new tabcontrol : {0}", tabControl.TabName);
 
             this.Tabs.Add(tabControl);
 
             UpdateStatusBar();
+
+            return Tabs.Count;
         }
 
         public TabControl SearchTabControl(string tabName)
@@ -411,7 +412,7 @@ namespace GrepExcel.ViewModel
         {
             if (Tabs.Count >= tabIndex)
             {
-                return (SearchResultVm)Tabs[tabIndex];
+                return (SearchResultVm) Tabs[tabIndex-1];
             }
             return null;
         }
@@ -479,7 +480,7 @@ namespace GrepExcel.ViewModel
         }
 
 
-        public void ActionTabIndexActive(int index)
+        public void ActiveTabWithIndex(int index)
         {
             if (index != -1 && index < Tabs.Count())
                 OnTabIndexActive(index);
@@ -546,8 +547,10 @@ namespace GrepExcel.ViewModel
 
         public void ShowPercentSearching(int percent, int match)
         {
+            //log_.InfoFormat("grep percent: {0}", percent);
+
             this.SearchPercent = percent;
-            this.CurrentResults = match;
+            this.CurrentResults = match;   
         }
 
         #endregion

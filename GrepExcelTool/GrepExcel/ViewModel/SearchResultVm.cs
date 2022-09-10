@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 
 
@@ -27,10 +28,31 @@ namespace GrepExcel.ViewModel
 
     public class SearchResultVm : TabControl
     {
-        public ObservableCollection<ResultInfo> ResultInfos { get; set; }
+        private static readonly log4net.ILog log_ = LogHelper.GetLogger();
+        private ObservableCollection<ResultInfo> resultInfos_;
+        private readonly object resultLock_ = new object();
+        private bool isLoading_ = false;
+
+
+        public ObservableCollection<ResultInfo> ResultInfos
+        {
+            get { return resultInfos_; }
+            set
+            {
+                if(resultInfos_ != value)
+                {
+                    resultInfos_ = value;
+                    BindingOperations.EnableCollectionSynchronization(resultInfos_, resultLock_);
+                }
+            }
+        }
+
+
+
         public ObservableCollection<OptionFilter> OptionFilters { get; set; }
 
         private ICommand _commandRefresh;
+        private ICommand _commandStopLoading;
         private ICommand _searchResult;
         private ICommand _goToDocument;
         private ICommand _commandFocusFind;
@@ -51,6 +73,8 @@ namespace GrepExcel.ViewModel
             OptionFilters.Add(new OptionFilter { Color = "Black", Value = "Result" });
             OptionFilters.Add(new OptionFilter { Color = "Black", Value = "FileName" });
             OptionFilters.Add(new OptionFilter { Color = "Black", Value = "Sheet" });
+
+            LoadDataFromDatabase();
         }
 
         public void LoadDataFromDatabase()
@@ -70,9 +94,18 @@ namespace GrepExcel.ViewModel
 
         public ResultInfo SelectedItem { get; set; }
 
-
-
-
+        public bool IsLoading 
+        { 
+            get { return isLoading_; }
+            set
+            {
+                if(isLoading_ != value)
+                {
+                    isLoading_ = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public ICommand CommandCloseTab
         {
@@ -120,6 +153,7 @@ namespace GrepExcel.ViewModel
                                 }
                             }
                             mainVm.Tabs.RemoveAt(tabActive);
+                            CommandStopLoadingHandler(tabActive);
                         }
                         break;
                     case TypeCloseTab.CloseAllButThis:
@@ -145,6 +179,7 @@ namespace GrepExcel.ViewModel
                                     }
                                 }
                                 mainVm.Tabs.RemoveAt(idx);
+                                CommandStopLoadingHandler(idx);
                             }
 
                         }
@@ -165,6 +200,7 @@ namespace GrepExcel.ViewModel
                                 }
                             }
                             mainVm.Tabs.RemoveAt(idx);
+                            CommandStopLoadingHandler(idx);
                         }
                         break;
                     default:
@@ -183,7 +219,7 @@ namespace GrepExcel.ViewModel
             {
                 if (_commandRefresh == null)
                 {
-                    _commandRefresh = new Commands.AsyncRelayCommand((sender) => CommandRefeshHandler(sender));
+                    _commandRefresh = new AsyncRelayCommand((sender) => CommandRefeshHandler(sender));
                 }
                 return _commandRefresh;
             }
@@ -193,9 +229,7 @@ namespace GrepExcel.ViewModel
         {
             var mainVm = MainViewModel.Instance;
             var excelStore = ExcelStoreManager.Instance;
-            var grep = new Grep();
 
-           
             var searchInfo = excelStore.GetSearchInfoById(SearchId);
 
             if (searchInfo == null)
@@ -210,31 +244,44 @@ namespace GrepExcel.ViewModel
                 ShowDebug.Msg(F.FLMD(), "Delete result info fail");
                 return;
             }
+
+            ResultInfos.Clear();
+
             mainVm.NotifyTaskRunning(searchInfo.Search);
 
-            grep.GrepEvent += Grep_GrepEvent;
-
-            await grep.GrepAsync(searchInfo);
-
-            grep.GrepEvent -= Grep_GrepEvent;
-
-            LoadDataFromDatabase();
+            await ListSearchVm.Instance.ShowTab(ShowInfo.Create(searchInfo), true);
 
             mainVm.NotifyTaskRunning(searchInfo.Search, false);
         }
 
-        private void Grep_GrepEvent(object sender, GrepInfoArgs e)
+        public ICommand CommandStopLoading
         {
-            if(e is null)
+            get
             {
-                return;
+                if (_commandStopLoading == null)
+                {
+                    _commandStopLoading = new RelayCommand((sender) => CommandStopLoadingHandler(-2));
+                }
+                return _commandStopLoading;
             }
+        }
 
+        private void CommandStopLoadingHandler(int index)
+        {
             var mainVm = MainViewModel.Instance;
+            var listSearchResult = ListSearchVm.Instance;
+            int tabIndex;
 
-            int percent = e.CurrentFileIndex * 100 / e.TotalFiles;
-            mainVm.SearchPercent = percent;
-            mainVm.CurrentResults = e.CurrentMatch;
+            if (IsLoading)
+            {
+                if (index == -2)
+                    tabIndex = mainVm.TabActive + 1;
+                else
+                    tabIndex = index + 1;
+
+                listSearchResult.StopSearching(tabIndex);
+                IsLoading = false;
+            }
         }
 
         public ICommand CommandSearchResult
@@ -427,6 +474,16 @@ namespace GrepExcel.ViewModel
             listSearchVm.DelSearchResult(ShowInfo.Create(searchInfo));
 
 
+        }
+
+
+        public void AddResult(ResultInfo resultInfo)
+        {
+         
+           lock (resultLock_)
+           {
+                ResultInfos.Add(resultInfo);
+           }
         }
 
 

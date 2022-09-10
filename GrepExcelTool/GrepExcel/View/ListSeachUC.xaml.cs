@@ -1,5 +1,6 @@
 ﻿using GrepExcel.Excel;
 using GrepExcel.ViewModel;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -25,9 +26,11 @@ namespace GrepExcel.View
 
         private void lstSearch_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            
+
             var searchResult = (ShowInfo) lstSearch.SelectedItem;
 
-            listSearchVm_.ShowTab(searchResult);
+            Task.Run(() => listSearchVm_.ShowTab(searchResult,false));
         }
 
         private void btnDelSerachResult_Click(object sender, RoutedEventArgs e)

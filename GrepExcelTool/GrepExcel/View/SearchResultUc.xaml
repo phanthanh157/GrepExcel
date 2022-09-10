@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:stoploading="clr-namespace:GrepExcel.Themes"
              xmlns:local="clr-namespace:GrepExcel.View"
              xmlns:cvter="clr-namespace:GrepExcel.View.Converters"
              TextElement.FontSize="12"
@@ -20,10 +21,9 @@
         <DockPanel>
             <ToolBarTray DockPanel.Dock="Top">
                 <ToolBar>
-                    <Button Command="{Binding CommandRefresh}" ToolTip="Refresh data search result. (F5)">
-                        <!--<Image Source="../Image/refresh.png" Width="20" Height="20" />-->
-                        <materialDesign:PackIcon Width="20" Height="20" Kind="Refresh"/>
-                    </Button>
+                    <stoploading:StopLoading RefreshCommand="{Binding CommandRefresh}"
+                                             StopLoadingCommand="{Binding CommandStopLoading}"
+                                             IsLoading="{Binding IsLoading}"/>
                 </ToolBar>
                 <ToolBar>
                     <Button Command="{Binding CommandGotoDocument}" 
@@ -31,6 +31,7 @@
                             ToolTip="Go to document.">
                         <!--<Image Source="../Image/excel.png" Width="20" Height="20" />-->
                         <materialDesign:PackIcon Width="20" Height="20" Kind="FileExcel"/>
+                        
                     </Button>
                 </ToolBar>
                 <ToolBar>

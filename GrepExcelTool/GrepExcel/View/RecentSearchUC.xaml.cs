@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
 using GrepExcel.ViewModel;
 
@@ -21,19 +22,16 @@ namespace GrepExcel.View
             Base.Check(recentVm);
 
             this.DataContext = recentVm;
-            lstRecent.ItemsSource = recentVm.Recents;
-        }
-
-        private void ItemOnPreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-
+            //lstRecent.ItemsSource = recentVm.Recents;
         }
 
         private void lstRecent_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var showInfo = (ShowInfo)lstRecent.SelectedItem;
 
-            ListSearchVm.Instance.ShowTab(showInfo);
+            ListSearchVm.Instance.ShowTabSync(showInfo);
         }
+
+     
     }
 }
