@@ -79,6 +79,7 @@ namespace GrepExcel.ViewModel
         private static readonly Lazy<RecentSearchVm> lazy_ = new Lazy<RecentSearchVm>(() => new RecentSearchVm());
         private SettingVm settings_ = null;
         private int numberOfRecent_;
+        private readonly ExcelStoreManager excelStore_ = ExcelStoreManager.Instance;
         #endregion 
 
 
@@ -130,9 +131,9 @@ namespace GrepExcel.ViewModel
 
         public void LoadRecents()
         {
-            var storeManager = ExcelStoreManager.Instance;
+            Base.Check(excelStore_);
 
-            var listInfo = storeManager.GetSearchInfoAll();
+            var listInfo = excelStore_.GetSearchInfoAll();
            
             //no data in db
             if (listInfo is null)
@@ -150,6 +151,45 @@ namespace GrepExcel.ViewModel
                 Recents.Add(ShowInfo.Create(item));
             }
 
+        }
+
+        public void UpdateTotalMatch(ShowInfo showInfo)
+        {
+            int totalMatch = excelStore_.CountResultInfoBySearchId(showInfo.Info.Id);
+            bool recentsExits = false;
+
+            for(int idx = 0; idx < Recents.Count; idx++)
+            {
+                if(Recents[idx].Info == showInfo.Info)
+                {
+                    var temp = Recents[idx];
+                    temp.Total = totalMatch;
+
+                    Recents[idx] = temp;
+                    recentsExits = true;
+                    break;
+                }
+            }
+
+            //add new if recent not exits
+            if (!recentsExits)
+            {
+                showInfo.Total = totalMatch;
+                Recents.Insert(0, showInfo);
+            }
+
+        }
+
+        public bool IsExits(ShowInfo showInfo)
+        {
+            for (int idx = 0; idx < Recents.Count; idx++)
+            {
+                if (Recents[idx].Info == showInfo.Info)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         #endregion //Method
 

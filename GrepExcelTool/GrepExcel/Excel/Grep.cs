@@ -157,6 +157,13 @@ namespace GrepExcel.Excel
                 foreach (string file in files)
                 {
                     //log_.DebugFormat("Open File:  '{0}'.", file);
+                    //cancle token
+                    if (ct.IsCancellationRequested)
+                    {
+                        //log_.Debug("Cancle searching ...");
+                        ct.ThrowIfCancellationRequested();
+                    }
+
                     ItemGrep(
                             tabIndex,
                             searchInfo,
@@ -164,16 +171,12 @@ namespace GrepExcel.Excel
                             xlApp,
                             findExact,
                             targetCurrent,
-                            countFile
+                            countFile,
+                            ct
                             );
                     countFile++;
 
-                    //cancle token
-                    if (ct.IsCancellationRequested)
-                    {
-                        //log_.Debug("Cancle searching ...");
-                        ct.ThrowIfCancellationRequested();
-                    }
+                   
                 }
 
             }
@@ -202,7 +205,8 @@ namespace GrepExcel.Excel
                                  ExcelApp.Application xlApp,
                                  ExcelApp.XlLookAt findExact,
                                  ExcelApp.XlFindLookIn targetCurrent,
-                                 int countFile
+                                 int countFile,
+                                 CancellationToken ct
                                  )
         {
             ExcelApp.Workbook xlWorkbook;
@@ -251,6 +255,9 @@ namespace GrepExcel.Excel
                         xlWorkbook.Close(false, Type.Missing, Type.Missing);
                         return;
                     }
+
+                    if (ct.IsCancellationRequested)
+                        break;
                     //show result
                     ResultInfo result = DataGrep(searchInfo, currentFind, file, xlWorksheet.Name);
 
@@ -291,6 +298,10 @@ namespace GrepExcel.Excel
                             xlWorkbook.Close(false, Type.Missing, Type.Missing);
                             return;
                         }
+
+                        if (ct.IsCancellationRequested)
+                            break;
+
                         //show result next
                         result = DataGrep(searchInfo, currentFind, file, xlWorksheet.Name);
 
@@ -307,7 +318,10 @@ namespace GrepExcel.Excel
                         };
 
                         OnEventGrepResult(grepInfo);
+
+                     
                     }
+
                 }
                 xlWorkbook.Close(false, Type.Missing, Type.Missing);
 

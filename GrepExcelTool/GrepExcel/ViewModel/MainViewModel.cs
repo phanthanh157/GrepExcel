@@ -372,7 +372,7 @@ namespace GrepExcel.ViewModel
             if (tabControl is null)
                 return -1;
 
-            log_.ErrorFormat("Add new tabcontrol : {0}", tabControl.TabName);
+            log_.InfoFormat("Add new tabcontrol : {0}", tabControl.TabName);
 
             this.Tabs.Add(tabControl);
 
@@ -465,11 +465,13 @@ namespace GrepExcel.ViewModel
             foreach (var tabActive in listTabActive)
             {
                 var results = excelStore.GetResultInfoBySearchId(tabActive.Id);
+                var showInfo = ShowInfo.Create(tabActive);
 
                 var tabControl = new SearchResultVm(
                  new SearchResultUc(),
                  tabActive.Search,
-                 tabActive.Id);
+                 tabActive.Id,
+                 showInfo);
 
                 results.ForEach(x => tabControl.ResultInfos.Add(x));
 

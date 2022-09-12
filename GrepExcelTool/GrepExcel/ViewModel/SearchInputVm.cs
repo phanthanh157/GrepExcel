@@ -27,6 +27,7 @@ namespace GrepExcel.ViewModel
         private static readonly log4net.ILog log_ = LogHelper.GetLogger();
 
         private ICommand cmdSearch_ = null;
+        private ICommand cmdDeleteAllSerach_ = null;
         public ObservableCollection<MethodView> Methods { get; set; }
         public ObservableCollection<TargetView> Targets { get; set; }
 
@@ -35,6 +36,26 @@ namespace GrepExcel.ViewModel
             Methods = new ObservableCollection<MethodView>();
             Targets = new ObservableCollection<TargetView>();
             LoadItem();
+        }
+
+        public ICommand CommandDeleteAllSearch
+        {
+            get
+            {
+                if(cmdDeleteAllSerach_ is null)
+                {
+                    cmdDeleteAllSerach_ = new RelayCommand((sender) => CommandDeleteAllSearchHandler(sender));
+                }
+                return cmdDeleteAllSerach_;
+            }
+        }
+
+        private void CommandDeleteAllSearchHandler(object sender)
+        {
+            var managerDb = ManagerDatabaseVm.Instance;
+
+            managerDb.CommandResetDatabase.Execute(managerDb.DirDb);
+
         }
 
         public ICommand CommandSearch
@@ -69,13 +90,17 @@ namespace GrepExcel.ViewModel
             var listSearchVm = ListSearchVm.Instance;
             var listRecentVm = RecentSearchVm.Instance;
 
+         
             //check exits database
             SearchInfo searchInfoFirst;
             if (CheckExitsSearchInfo(inputInfo, out searchInfoFirst))
             {
                 MessageBox.Show("Search keyword is exits on database", "Searching...", MessageBoxButton.OK, MessageBoxImage.Information);
+                var showInfoFirst = ShowInfo.Create(searchInfoFirst);
 
-                await listSearchVm.ShowTab(ShowInfo.Create(searchInfoFirst), false);
+                listSearchVm.ShowTabExits(showInfoFirst);
+
+                listRecentVm.UpdateTotalMatch(showInfoFirst);
                 return;
             }
 
@@ -84,19 +109,22 @@ namespace GrepExcel.ViewModel
 
             //Insert input info to database
             SqlResult sqlResult = excelStore.InsertSearchInfo(inputInfo);
+            var showInfo = ShowInfo.Create(inputInfo);
 
             if (SqlResult.InsertSucess == sqlResult)
             {
                 inputInfo.Id = excelStore.LastIndexSearch();// add id 
-
+              
                 //Display result when finish search
-                await listSearchVm.ShowTab(ShowInfo.Create(inputInfo), false);
+                await listSearchVm.ShowTab(showInfo, false);
 
                 //add observer list serach
-                listSearchVm.SearchInfos.Add(ShowInfo.Create(inputInfo));
+                if(!listSearchVm.IsExits(showInfo))
+                    listSearchVm.SearchInfos.Add(showInfo);
 
                 //add first list recent
-                listRecentVm.Recents.Insert(0, ShowInfo.Create(inputInfo));
+                if(!listRecentVm.IsExits(showInfo))
+                    listRecentVm.Recents.Insert(0, showInfo);
             }
 
             //mainVm.NotifyTaskRunning(inputInfo.Search, false);

@@ -261,11 +261,15 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid  Margin="0,0,0,10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="SEARCH KEY MANAGER" FontWeight="Medium"/>
+                        <DockPanel>
+                            <TextBlock DockPanel.Dock="Left" Text="SEARCH KEY MANAGER" FontWeight="Medium"/>
+                            <Button DockPanel.Dock="Right" Width="25" 
+                                    HorizontalAlignment="Right" BorderThickness="0" Background="Transparent"
+                                    ToolTip="Delete all" 
+                                    Command="{Binding CommandDeleteAllSearch}">
+                                <materialDesign:PackIcon Width="25" Height="20" Kind="Delete"/>
+                            </Button>
+                        </DockPanel>
                     </Grid>
                     <local:ListSeachUC Grid.Row="1"/>
                 </Grid>

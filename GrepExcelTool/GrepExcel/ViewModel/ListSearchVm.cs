@@ -28,6 +28,7 @@ namespace GrepExcel.ViewModel
         private static readonly Lazy<ListSearchVm> lazy_ = new Lazy<ListSearchVm>(() => new ListSearchVm());
         private ObservableCollection<ShowInfo> searchInfos_ = new ObservableCollection<ShowInfo>();
         private readonly MainViewModel mainVm_ = MainViewModel.Instance;
+        private readonly ExcelStoreManager excelStore_ = ExcelStoreManager.Instance;
         private SettingVm settings_ = null;
         #endregion 
 
@@ -85,9 +86,8 @@ namespace GrepExcel.ViewModel
 
 
         #region Method
-        public void ShowTabSync(ShowInfo showInfo)
+        public void ShowTabExits(ShowInfo showInfo)
         {
-            var mainVm = MainViewModel.Instance;
             var excelStore = ExcelStoreManager.Instance;
 
             //update tab active
@@ -96,17 +96,18 @@ namespace GrepExcel.ViewModel
 
             //check tab is open
             int indexTab = -1;
-            bool isOpen = mainVm.IsTabOpen(showInfo.Info, ref indexTab);
+            bool isOpen = mainVm_.IsTabOpen(showInfo.Info, ref indexTab);
             if (isOpen)
             {
-                mainVm.ActiveTabWithIndex(indexTab);
+                mainVm_.ActiveTabWithIndex(indexTab);
             }
             else
             {
-                mainVm.AddTabControl(new SearchResultVm(
+                mainVm_.AddTabControl(new SearchResultVm(
                                                         new SearchResultUc(),
                                                         showInfo.Info.Search,
-                                                        showInfo.Info.Id));
+                                                        showInfo.Info.Id,
+                                                        showInfo));
             }
         }
 
@@ -135,7 +136,8 @@ namespace GrepExcel.ViewModel
                 searchResultVm = new SearchResultVm(
                                                     new SearchResultUc(),
                                                     showInfo.Info.Search,
-                                                    showInfo.Info.Id);
+                                                    showInfo.Info.Id,
+                                                    showInfo);
                 tabIndex = mainVm_.AddTabControl(searchResultVm);
             }
             else
@@ -216,8 +218,34 @@ namespace GrepExcel.ViewModel
                 tokenStore.GrepObj.EventGrepResult -= Grep_EventGrepResult;
 
                 TokenStores.Remove(tokenStore);
-
             }
+        }
+
+        public void UpdateTotalMatch(ShowInfo showInfo)
+        {
+            int totalMatch = excelStore_.CountResultInfoBySearchId(showInfo.Info.Id);
+            bool recentsExits = false;
+
+            for (int idx = 0; idx < SearchInfos.Count; idx++)
+            {
+                if (SearchInfos[idx].Info == showInfo.Info)
+                {
+                    var temp = SearchInfos[idx];
+                    temp.Total = totalMatch;
+
+                    SearchInfos[idx] = temp;
+                    recentsExits = true;
+                    break;
+                }
+            }
+
+            //add new if recent not exits
+            if (!recentsExits)
+            {
+                showInfo.Total = totalMatch;
+                SearchInfos.Add(showInfo);
+            }
+
         }
 
 
@@ -257,6 +285,18 @@ namespace GrepExcel.ViewModel
             //Update Recent list
             recent.LoadRecents();
 
+        }
+
+        public bool IsExits(ShowInfo showInfo)
+        {
+            for (int idx = 0; idx < SearchInfos.Count; idx++)
+            {
+                if (SearchInfos[idx].Info == showInfo.Info)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         #endregion //Method

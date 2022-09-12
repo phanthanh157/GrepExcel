@@ -29,7 +29,7 @@ namespace GrepExcel.View
         {
             var showInfo = (ShowInfo)lstRecent.SelectedItem;
 
-            ListSearchVm.Instance.ShowTabSync(showInfo);
+            ListSearchVm.Instance.ShowTabExits(showInfo);
         }
 
      

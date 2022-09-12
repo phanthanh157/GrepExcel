@@ -47,8 +47,6 @@ namespace GrepExcel.ViewModel
             }
         }
 
-
-
         public ObservableCollection<OptionFilter> OptionFilters { get; set; }
 
         private ICommand _commandRefresh;
@@ -60,11 +58,16 @@ namespace GrepExcel.ViewModel
         private ICommand _copyResult;
         private ICommand _commandCloseTab;
         private ICommand _commandDelete;
-        public SearchResultVm(UserControl userControl, string tabName, int searchId) : base(userControl, tabName)
+        public SearchResultVm(UserControl userControl,
+                              string tabName, 
+                              int searchId, 
+                              ShowInfo showInfo) 
+            : base(userControl, tabName)
         {
             SearchId = searchId;
             ResultInfos = new ObservableCollection<ResultInfo>();
             OptionFilters = new ObservableCollection<OptionFilter>();
+            SearchInfo = showInfo;
             InitClass();
         }
 
@@ -89,6 +92,8 @@ namespace GrepExcel.ViewModel
             ResultInfos.Clear();
             listResult.ForEach(x => ResultInfos.Add(x));
         }
+
+        public ShowInfo SearchInfo { get; set; }
 
         public int SearchId { get; set; }
 
@@ -123,11 +128,7 @@ namespace GrepExcel.ViewModel
 
         private void CommandCloseTabHandler(object sender)
         {
-            if (sender == null)
-            {
-                ShowDebug.Msg(F.FLMD(), "sender is null");
-                return;
-            }
+            Base.Check(sender);
 
             var mainVm = MainViewModel.Instance;
             var excelStore = ExcelStoreManager.Instance;
@@ -139,7 +140,7 @@ namespace GrepExcel.ViewModel
                 {
                     case TypeCloseTab.Close:
                         {
-                            ShowDebug.Msg(F.FLMD(), "Close tab: index = {0}", tabActive);
+                            log_.DebugFormat("Close tab: index = {0}", tabActive);
                             var resultVm = mainVm.GetActiveSearchResultVm();
                             if (resultVm == null) return;
                             var searchInfo = excelStore.GetSearchInfoById(resultVm.SearchId);
@@ -149,7 +150,7 @@ namespace GrepExcel.ViewModel
                                 searchInfo.IsTabActive = false;
                                 if (SqlResult.UpdateSuccess != excelStore.UpdateSearchInfo(searchInfo))
                                 {
-                                    ShowDebug.Msg(F.FLMD(), "Update field 'tabIndex' in database is fail");
+                                    log_.Error("Update field 'tabIndex' in database is fail");
                                 }
                             }
                             mainVm.Tabs.RemoveAt(tabActive);
@@ -175,7 +176,7 @@ namespace GrepExcel.ViewModel
                                     searchInfo.IsTabActive = false;
                                     if (SqlResult.UpdateSuccess != excelStore.UpdateSearchInfo(searchInfo))
                                     {
-                                        ShowDebug.Msg(F.FLMD(), "Update field 'tabIndex' in database is fail");
+                                        log_.Error("Update field 'tabIndex' in database is fail");
                                     }
                                 }
                                 mainVm.Tabs.RemoveAt(idx);
@@ -196,7 +197,7 @@ namespace GrepExcel.ViewModel
                                 searchInfo.IsTabActive = false;
                                 if (SqlResult.UpdateSuccess != excelStore.UpdateSearchInfo(searchInfo))
                                 {
-                                    ShowDebug.Msg(F.FLMD(), "Update field 'tabIndex' in database is fail");
+                                    log_.Error("Update field 'tabIndex' in database is fail");
                                 }
                             }
                             mainVm.Tabs.RemoveAt(idx);
@@ -230,14 +231,14 @@ namespace GrepExcel.ViewModel
 
             if (searchInfo == null)
             {
-                ShowDebug.Msg(F.FLMD(), "search info is null");
+                log_.Error("search info is null");
                 return;
             }
 
             //Delete result info old
             if (SqlResult.DeleteSuccess != excelStore.DeleteResultInfoBySearchId(searchInfo))
             {
-                ShowDebug.Msg(F.FLMD(), "Delete result info fail");
+                log_.Error("Delete result info fail");
                 return;
             }
 
@@ -263,6 +264,7 @@ namespace GrepExcel.ViewModel
         {
             var mainVm = MainViewModel.Instance;
             var listSearchResult = ListSearchVm.Instance;
+            var recentSearchVm = RecentSearchVm.Instance;
             int tabIndex;
 
             if (IsLoading)
@@ -273,6 +275,10 @@ namespace GrepExcel.ViewModel
                     tabIndex = index + 1;
 
                 listSearchResult.StopSearching(tabIndex);
+
+                recentSearchVm.UpdateTotalMatch(SearchInfo);
+                listSearchResult.UpdateTotalMatch(SearchInfo);
+              
                 IsLoading = false;
             }
         }
