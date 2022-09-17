@@ -119,12 +119,10 @@ namespace GrepExcel.ViewModel
                 await listSearchVm.ShowTab(showInfo, false);
 
                 //add observer list serach
-                if(!listSearchVm.IsExits(showInfo))
-                    listSearchVm.SearchInfos.Add(showInfo);
+                listSearchVm.UpdateTotalMatch(showInfo);
 
                 //add first list recent
-                if(!listRecentVm.IsExits(showInfo))
-                    listRecentVm.Recents.Insert(0, showInfo);
+                listRecentVm.UpdateTotalMatch(showInfo);
             }
 
             //mainVm.NotifyTaskRunning(inputInfo.Search, false);

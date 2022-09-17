@@ -10,6 +10,8 @@ namespace GrepExcel.View
     /// </summary>
     public partial class RecentSearchUC : UserControl
     {
+        private readonly RecentSearchVm recentVm_ = RecentSearchVm.Instance;
+        private readonly ListSearchVm listSearchVm_ = ListSearchVm.Instance;
         public RecentSearchUC()
         {
             InitializeComponent();
@@ -18,10 +20,8 @@ namespace GrepExcel.View
 
         private void Init()
         {
-            var recentVm = RecentSearchVm.Instance;
-            Base.Check(recentVm);
-
-            this.DataContext = recentVm;
+            Base.Check(recentVm_);
+            this.DataContext = recentVm_;
             //lstRecent.ItemsSource = recentVm.Recents;
         }
 
@@ -29,7 +29,8 @@ namespace GrepExcel.View
         {
             var showInfo = (ShowInfo)lstRecent.SelectedItem;
 
-            ListSearchVm.Instance.ShowTabExits(showInfo);
+            if(listSearchVm_ != null)
+                listSearchVm_.ShowTabExits(showInfo);
         }
 
      

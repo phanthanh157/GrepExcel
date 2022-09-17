@@ -29,6 +29,7 @@ namespace GrepExcel.ViewModel
     public class SearchResultVm : TabControl
     {
         private static readonly log4net.ILog log_ = LogHelper.GetLogger();
+        private readonly ExcelStoreManager excelStore_ = ExcelStoreManager.Instance;
         private ObservableCollection<ResultInfo> resultInfos_;
         private readonly object resultLock_ = new object();
         private bool isLoading_ = false;
@@ -37,7 +38,7 @@ namespace GrepExcel.ViewModel
         public ObservableCollection<ResultInfo> ResultInfos
         {
             get { return resultInfos_; }
-            set
+            private set
             {
                 if (resultInfos_ != value)
                 {
@@ -82,8 +83,7 @@ namespace GrepExcel.ViewModel
 
         public void LoadDataFromDatabase()
         {
-            var excelStore = ExcelStoreManager.Instance;
-            var listResult = excelStore.GetResultInfoBySearchId(SearchId);
+            var listResult = excelStore_.GetResultInfoBySearchId(SearchId);
 
             if (listResult is null)
                 return;
@@ -131,7 +131,6 @@ namespace GrepExcel.ViewModel
             Base.Check(sender);
 
             var mainVm = MainViewModel.Instance;
-            var excelStore = ExcelStoreManager.Instance;
             var typeClose = (TypeCloseTab)sender;
             int tabActive = mainVm.TabActive;
             if (mainVm.Tabs.Count != 0 && tabActive != -1)
@@ -143,12 +142,12 @@ namespace GrepExcel.ViewModel
                             log_.DebugFormat("Close tab: index = {0}", tabActive);
                             var resultVm = mainVm.GetActiveSearchResultVm();
                             if (resultVm == null) return;
-                            var searchInfo = excelStore.GetSearchInfoById(resultVm.SearchId);
+                            var searchInfo = excelStore_.GetSearchInfoById(resultVm.SearchId);
 
                             if (searchInfo != null)
                             {
                                 searchInfo.IsTabActive = false;
-                                if (SqlResult.UpdateSuccess != excelStore.UpdateSearchInfo(searchInfo))
+                                if (SqlResult.UpdateSuccess != excelStore_.UpdateSearchInfo(searchInfo))
                                 {
                                     log_.Error("Update field 'tabIndex' in database is fail");
                                 }
@@ -169,12 +168,12 @@ namespace GrepExcel.ViewModel
                             {
                                 var resultVm = mainVm.GetTabContent(idx);
                                 if (resultVm == null) return;
-                                var searchInfo = excelStore.GetSearchInfoById(resultVm.SearchId);
+                                var searchInfo = excelStore_.GetSearchInfoById(resultVm.SearchId);
 
                                 if (searchInfo != null)
                                 {
                                     searchInfo.IsTabActive = false;
-                                    if (SqlResult.UpdateSuccess != excelStore.UpdateSearchInfo(searchInfo))
+                                    if (SqlResult.UpdateSuccess != excelStore_.UpdateSearchInfo(searchInfo))
                                     {
                                         log_.Error("Update field 'tabIndex' in database is fail");
                                     }
@@ -190,12 +189,12 @@ namespace GrepExcel.ViewModel
                         {
                             var resultVm = mainVm.GetTabContent(idx);
                             if (resultVm == null) return;
-                            var searchInfo = excelStore.GetSearchInfoById(resultVm.SearchId);
+                            var searchInfo = excelStore_.GetSearchInfoById(resultVm.SearchId);
 
                             if (searchInfo != null)
                             {
                                 searchInfo.IsTabActive = false;
-                                if (SqlResult.UpdateSuccess != excelStore.UpdateSearchInfo(searchInfo))
+                                if (SqlResult.UpdateSuccess != excelStore_.UpdateSearchInfo(searchInfo))
                                 {
                                     log_.Error("Update field 'tabIndex' in database is fail");
                                 }
@@ -225,9 +224,7 @@ namespace GrepExcel.ViewModel
 
         private async Task CommandRefeshHandler(object sender)
         {
-            var excelStore = ExcelStoreManager.Instance;
-
-            var searchInfo = excelStore.GetSearchInfoById(SearchId);
+            var searchInfo = excelStore_.GetSearchInfoById(SearchId);
 
             if (searchInfo == null)
             {
@@ -236,7 +233,7 @@ namespace GrepExcel.ViewModel
             }
 
             //Delete result info old
-            if (SqlResult.DeleteSuccess != excelStore.DeleteResultInfoBySearchId(searchInfo))
+            if (SqlResult.DeleteSuccess != excelStore_.DeleteResultInfoBySearchId(searchInfo))
             {
                 log_.Error("Delete result info fail");
                 return;
@@ -306,7 +303,7 @@ namespace GrepExcel.ViewModel
             string keySearch = sender.GetType().GetProperty("Search").GetValue(sender, null).ToString();
             string optionFilter = sender.GetType().GetProperty("OptionFilter").GetValue(sender, null).ToString();
 
-            List<ResultInfo> resultInfos = ExcelStoreManager.Instance.GetResultInfoBySearchId(SearchId);
+            List<ResultInfo> resultInfos = excelStore_.GetResultInfoBySearchId(SearchId);
 
             if (resultInfos != null)
             {
@@ -352,7 +349,7 @@ namespace GrepExcel.ViewModel
         {
             if (sender == null)
             {
-                ShowDebug.Msg(F.FLMD(), "sender is null");
+                log_.Error("sender is null");
                 MessageBox.Show("You have not selected any items yet?\nPlease select one item.", "Go to document", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;
             }
@@ -383,7 +380,7 @@ namespace GrepExcel.ViewModel
         {
             if (sender is null)
             {
-                ShowDebug.MsgErr(F.FLMD(), "sender is null");
+                log_.Error("sender is null");
                 return;
             }
 
@@ -411,7 +408,7 @@ namespace GrepExcel.ViewModel
         {
             if (sender is null)
             {
-                ShowDebug.MsgErr(F.FLMD(), "sender is null");
+                log_.Error("sender is null");
                 return;
             }
 
@@ -436,7 +433,7 @@ namespace GrepExcel.ViewModel
         {
             if (sender is null)
             {
-                ShowDebug.MsgErr(F.FLMD(), "sender is null");
+                log_.Error("sender is null");
                 return;
             }
 

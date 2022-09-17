@@ -5,7 +5,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:GrepExcel.View"
     xmlns:vm="clr-namespace:GrepExcel.ViewModel"
-    xmlns:vmfolder="clr-namespace:GrepExcel.ViewModel.Folder"
     xmlns:vmsearch="clr-namespace:GrepExcel.ViewModel.Search"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:wpf="http://wpfcontrols.com/"

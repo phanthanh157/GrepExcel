@@ -30,7 +30,7 @@ namespace GrepExcel.ViewModel
 
         public static string SubOption(SearchInfo searchInfo)
         {
-            string res = string.Empty;
+            string res;
             // Mehod/Target/MatchCase/MatchWhole
             res = SubOptionMethod(searchInfo)
                    + '/' + SubOptionTarget(searchInfo);

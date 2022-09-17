@@ -12,12 +12,10 @@ namespace GrepExcel.View
     /// </summary>
     public partial class ListSeachUC : UserControl
     {
-        private ListSearchVm listSearchVm_ = null;
+        private readonly ListSearchVm listSearchVm_ = ListSearchVm.Instance;
         public ListSeachUC()
         {
             InitializeComponent();
-            listSearchVm_ = ListSearchVm.Instance;
-
             Base.Check(listSearchVm_);
 
             this.DataContext = listSearchVm_;

@@ -5,15 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GrepExcel.View.Dialog"
         mc:Ignorable="d"
-        MinHeight="300"
-        MaxHeight="500"
+        MinHeight="200"
+        MaxHeight="300"
         MinWidth="600"
         MaxWidth="700"
         SizeToContent="WidthAndHeight"
         ResizeMode="NoResize"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
-        Title="Manager Database">
+        Title="Manage Database">
     <Window.Resources>
         <Style x:Key="{x:Type Label}" TargetType="Label">
             <Setter Property="Margin" Value="5"/>
@@ -134,7 +134,6 @@
                 CommandParameter="{Binding ElementName=txtDirDb,Path=Text}"
                 Content="Reset Database"
                 />
-
         <Label  Grid.Row="1"  Grid.Column="0" Content="Size: "/>
         <TextBox x:Name="txtSizeDb"
                  Text="{Binding SizeDb,Mode=TwoWay}"
