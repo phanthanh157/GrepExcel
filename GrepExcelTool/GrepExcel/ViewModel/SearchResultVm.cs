@@ -33,6 +33,7 @@ namespace GrepExcel.ViewModel
         private ObservableCollection<ResultInfo> resultInfos_;
         private readonly object resultLock_ = new object();
         private bool isLoading_ = false;
+        private string columnNumbers_ = string.Empty;
 
 
         public ObservableCollection<ResultInfo> ResultInfos
@@ -107,6 +108,19 @@ namespace GrepExcel.ViewModel
                 if (isLoading_ != value)
                 {
                     isLoading_ = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public string ColumnNumbers
+        {
+            get { return columnNumbers_; }
+            set
+            {
+                if (columnNumbers_ != value)
+                {
+                    columnNumbers_ = value;
                     OnPropertyChanged();
                 }
             }

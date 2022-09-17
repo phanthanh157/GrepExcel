@@ -121,6 +121,12 @@
     <Compile Include="Excel\SearchInfo.cs" />
     <Compile Include="Excel\SearchStore.cs" />
     <Compile Include="Excel\SqlLiteImp.cs" />
+    <Compile Include="Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Themes\ListViewBehavior.cs" />
     <Compile Include="Themes\LoadingSpinder.cs" />
     <Compile Include="LogHelper.cs" />
     <Compile Include="Properties\Resources.Designer.cs" />
@@ -135,6 +141,7 @@
     <Compile Include="ViewModel\ListSearchVm.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ManagerDatabaseVm.cs" />
+    <Compile Include="ViewModel\MenuItemModel.cs" />
     <Compile Include="ViewModel\RecentSearchVm.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\SearchInputVm.cs" />
@@ -148,6 +155,7 @@
     <Compile Include="View\Converters\DiameterAndThicknessToStrokeDashArrayConverter.cs" />
     <Compile Include="View\Converters\FileNameConverter.cs" />
     <Compile Include="View\Converters\HasAllTextConverter.cs" />
+    <Compile Include="View\Converters\ImageConverter.cs" />
     <Compile Include="View\Converters\IndexConverter.cs" />
     <Compile Include="View\Converters\PathNameConverter.cs" />
     <Compile Include="View\Converters\SortAdorner.cs" />
@@ -241,6 +249,10 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="ClassDiagram.cd" />
     <None Include="packages.config" />

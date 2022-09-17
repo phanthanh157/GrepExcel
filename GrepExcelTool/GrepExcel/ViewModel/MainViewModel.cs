@@ -1,13 +1,14 @@
-﻿using GrepExcel.Excel;
-using GrepExcel.View;
-using GrepExcel.View.Dialog;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
+using GrepExcel.Excel;
+using GrepExcel.View;
+using GrepExcel.View.Dialog;
 
 namespace GrepExcel.ViewModel
 {
@@ -46,7 +47,22 @@ namespace GrepExcel.ViewModel
 
         public void InitClass()
         {
+
             Tabs = new ObservableCollection<TabControl>();
+
+            MenuShowHideCollumns = new ObservableCollection<MenuItemModel>();
+            var columnsStr = Config.ReadSetting("COLUMNS_HIDE");
+            foreach (string s in columnsStr.Split(','))
+            {
+                var item = s.Split(':');
+
+                int column = int.Parse(item[1]);
+                bool isShow = (int.Parse(item[2]) == 1) ? true : false;
+
+                MenuItemModel menuItemModel = new MenuItemModel() { Header = item[0], Column = column, IsShow = isShow };
+                MenuShowHideCollumns.Add(menuItemModel);
+            }
+
             _excelStore = ExcelStoreManager.Instance;
             _msgNotify = new Queue();
             _totalKeySearch = 0;
@@ -74,6 +90,7 @@ namespace GrepExcel.ViewModel
 
         #region Property
         public ObservableCollection<TabControl> Tabs { get; set; }
+        public ObservableCollection<MenuItemModel> MenuShowHideCollumns { get; set; }
 
         public static MainViewModel Instance
         {
@@ -195,7 +212,7 @@ namespace GrepExcel.ViewModel
             get { return _searchPercent; }
             set
             {
-                if(value != _searchPercent)
+                if (value != _searchPercent)
                 {
                     _searchPercent = value;
                     OnPropertyChanged();
@@ -329,6 +346,28 @@ namespace GrepExcel.ViewModel
         }
 
 
+        private string GetColumnHideToString()
+        {
+            StringBuilder column = new StringBuilder();
+            for (int i = 0; i < MenuShowHideCollumns.Count; i++)
+            {
+                if (MenuShowHideCollumns[i].IsShow == false)
+                {
+                    if (i != MenuShowHideCollumns.Count - 1)
+                    {
+                        column.Append(MenuShowHideCollumns[i].Column);
+                        column.Append(",");
+                    }
+                    else
+                    {
+                        column.Append(MenuShowHideCollumns[i].Column);
+                    }
+                }
+            }
+            return column.ToString();
+        }
+
+
         public ICommand CommandManagerDatabaseOpen
         {
             get
@@ -412,7 +451,7 @@ namespace GrepExcel.ViewModel
         {
             if (Tabs.Count >= tabIndex && tabIndex > 0)
             {
-                return (SearchResultVm) Tabs[tabIndex-1];
+                return (SearchResultVm)Tabs[tabIndex - 1];
             }
             return null;
         }
@@ -430,7 +469,7 @@ namespace GrepExcel.ViewModel
             {
                 _msgNotify.Enqueue(taskName);
 
-                NotifyString =  _msgNotify.Count.ToString();
+                NotifyString = _msgNotify.Count.ToString();
 
             }
             else
@@ -472,6 +511,8 @@ namespace GrepExcel.ViewModel
                  tabActive.Search,
                  tabActive.Id,
                  showInfo);
+
+                tabControl.ColumnNumbers = GetColumnHideToString();
 
                 results.ForEach(x => tabControl.ResultInfos.Add(x));
 
@@ -552,7 +593,39 @@ namespace GrepExcel.ViewModel
             //log_.InfoFormat("grep percent: {0}", percent);
 
             this.SearchPercent = percent;
-            this.CurrentResults = match;   
+            this.CurrentResults = match;
+        }
+
+        public void UpdateShowHideColumnSearch()
+        {
+            foreach (var tab in Tabs)
+            {
+                if (tab is SearchResultVm)
+                {
+                    var searchVm = tab as SearchResultVm;
+
+                    searchVm.ColumnNumbers = GetColumnHideToString();
+                }
+            }
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < MenuShowHideCollumns.Count; i++)
+            {
+                string header = MenuShowHideCollumns[i].Header;
+                int column = MenuShowHideCollumns[i].Column;
+                int isShow = MenuShowHideCollumns[i].IsShow ? 1 : 0;
+
+                if (i < MenuShowHideCollumns.Count - 1)
+                {
+                    sb.Append(header).Append(":").Append(column).Append(":").Append(isShow).Append(",");
+                }
+                else
+                {
+                    sb.Append(header).Append(":").Append(column).Append(":").Append(isShow);
+                }
+            }
+
+            Config.AddUpdateAppSettings("COLUMNS_HIDE", sb.ToString());
         }
 
         #endregion

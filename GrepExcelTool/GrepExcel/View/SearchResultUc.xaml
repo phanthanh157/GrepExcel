@@ -7,6 +7,7 @@
              xmlns:stoploading="clr-namespace:GrepExcel.Themes"
              xmlns:local="clr-namespace:GrepExcel.View"
              xmlns:cvter="clr-namespace:GrepExcel.View.Converters"
+             xmlns:theme="clr-namespace:GrepExcel.Themes"
              TextElement.FontSize="12"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -106,7 +107,8 @@
             <ListView x:Name="lvSearchResults" 
                           ItemsSource="{Binding ResultInfos}"
                           SelectedItem="{Binding SelectedItem}"
-                          SelectionChanged="lvSearchResults_SelectionChanged">
+                          SelectionChanged="lvSearchResults_SelectionChanged"
+                          theme:ListViewBehavior.HideColumns="{Binding ColumnNumbers}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Width="40" CellTemplate="{StaticResource templateCell_Id}">
