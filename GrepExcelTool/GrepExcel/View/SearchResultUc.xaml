@@ -96,6 +96,12 @@
                     </ComboBox>
                 </ToolBar>
                 <ToolBar>
+                    <Button Command="{Binding CommandExport}" 
+                            ToolTip="Export to file.">
+                        <materialDesign:PackIcon Width="20" Height="20" Kind="Export"/>
+                    </Button>
+                </ToolBar>
+                <ToolBar>
                     <TextBlock x:Name="tbRowLoad" 
                                FontFamily="Segoe UI"
                                VerticalAlignment="Center"

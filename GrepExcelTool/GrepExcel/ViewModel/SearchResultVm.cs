@@ -9,7 +9,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using GrepExcel.Commands;
 using GrepExcel.Excel;
-
+using Microsoft.Win32;
 
 namespace GrepExcel.ViewModel
 {
@@ -60,6 +60,7 @@ namespace GrepExcel.ViewModel
         private ICommand _copyResult;
         private ICommand _commandCloseTab;
         private ICommand _commandDelete;
+        private ICommand _commandExport;
         public SearchResultVm(UserControl userControl,
                               string tabName, 
                               int searchId, 
@@ -484,6 +485,45 @@ namespace GrepExcel.ViewModel
 
         }
 
+        public ICommand CommandExport
+        {
+            get
+            {
+                if (_commandExport == null)
+                {
+                    _commandExport = new RelayCommand(x => CommandExportHandler());
+                }
+                return _commandExport;
+            }
+        }
+
+        private void CommandExportHandler()
+        {
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+
+            saveFileDialog.Filter = "files (*.csv)|*.csv";
+            saveFileDialog.Title = "Export file search result";
+            saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            saveFileDialog.FileName = SearchInfo.Info.Search;
+            bool? openDialog = saveFileDialog.ShowDialog();
+
+            if (saveFileDialog.FileName != "")
+            {
+                if (openDialog != null && openDialog == true)
+                {
+                    string directorySave = saveFileDialog.FileName;
+
+                    ////write file.
+                    CsvManager.WriteDataToCsv<ResultInfo>(directorySave, ResultInfos.ToList());
+
+                }
+
+
+            }
+
+
+        }
 
         public void AddResult(ResultInfo resultInfo)
         {
