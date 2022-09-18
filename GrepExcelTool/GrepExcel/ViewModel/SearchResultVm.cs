@@ -379,13 +379,20 @@ namespace GrepExcel.ViewModel
             {
                 if (_goToDocument == null)
                 {
-                    _goToDocument = new AsyncRelayCommand((sender) => CommandGotoDocumentHander(sender));
+                    _goToDocument = new RelayCommand((sender) => CommandGotoDocumentHander(sender),(cancel) => CommandGoToDoccumentCancel());
                 }
                 return _goToDocument;
             }
         }
 
-        private async Task CommandGotoDocumentHander(object sender)
+        private bool CommandGoToDoccumentCancel()
+        {
+            if (SelectedItem is null)
+                return false;
+            return true;
+        }
+
+        private void CommandGotoDocumentHander(object sender)
         {
             if (sender == null)
             {
@@ -397,8 +404,8 @@ namespace GrepExcel.ViewModel
             var resultInfo = sender as ResultInfo;
             var grep = new Grep();
 
-            await grep.OpenFileAsync(resultInfo);
-
+            Task.Run(async () => await grep.OpenFileAsync(resultInfo));
+ 
         }
 
 
