@@ -34,7 +34,14 @@ namespace GrepExcel.ViewModel
         private readonly object resultLock_ = new object();
         private bool isLoading_ = false;
         private string columnNumbers_ = string.Empty;
+        private const int MAX_WIDTH_LISTVIEW = 1080;
 
+        private double wId_;
+        private double wResult_;
+        private double wFileName_;
+        private double wPathName_;
+        private double wSheet_;
+        private double wCell_;
 
         public ObservableCollection<ResultInfo> ResultInfos
         {
@@ -81,6 +88,15 @@ namespace GrepExcel.ViewModel
             OptionFilters.Add(new OptionFilter { Color = "Black", Value = "Sheet" });
 
             LoadDataFromDatabase();
+
+   
+            
+            WId = 40;
+            WResult = 380;
+            WFileName = 230;
+            WPathName = 230;
+            WSheet = 130;
+            WCell = 50;
         }
 
         public void LoadDataFromDatabase()
@@ -123,9 +139,18 @@ namespace GrepExcel.ViewModel
                 {
                     columnNumbers_ = value;
                     OnPropertyChanged();
+                    OnShowHideComlumnChanged(columnNumbers_);
                 }
             }
         }
+
+
+        public double WId { get { return wId_; } set{ if (wId_ != value){  wId_ = value;  OnPropertyChanged();  }}}
+        public double WResult { get { return wResult_; } set{ if (wResult_ != value){ wResult_ = value;  OnPropertyChanged();  }}}
+        public double WFileName { get { return wFileName_; } set{ if (wFileName_ != value){ wFileName_ = value;  OnPropertyChanged();  }}}
+        public double WPathName { get { return wPathName_; } set{ if (wPathName_ != value){ wPathName_ = value;  OnPropertyChanged();  }}}
+        public double WSheet { get { return wSheet_; } set{ if (wSheet_ != value){ wSheet_ = value;  OnPropertyChanged();  }}}
+        public double WCell { get { return wCell_; } set{ if (wCell_ != value){ wCell_ = value;  OnPropertyChanged();  }}}
 
         public ICommand CommandCloseTab
         {
@@ -518,11 +543,7 @@ namespace GrepExcel.ViewModel
                     CsvManager.WriteDataToCsv<ResultInfo>(directorySave, ResultInfos.ToList());
 
                 }
-
-
             }
-
-
         }
 
         public void AddResult(ResultInfo resultInfo)
@@ -531,6 +552,69 @@ namespace GrepExcel.ViewModel
             {
                 ResultInfos.Add(resultInfo);
             }
+        }
+
+        private void OnShowHideComlumnChanged(string columnNumbers)
+        {
+            if (string.IsNullOrEmpty(columnNumbers))
+                return;
+
+            double w = Control.ActualWidth;
+
+            if (w == 0)
+                w = MAX_WIDTH_LISTVIEW;
+
+            switch(columnNumbers)
+            {
+                case "3": // PathName Hide
+                    WId = w * 5 / 100;
+                    WResult = w * 45 / 100;
+                    WFileName = w * 20 / 100;
+                    WSheet = w * 20 / 100;
+                    WCell = w * 10 / 100;
+                    break;
+                case "3,4": //PathName, Sheet 
+                    WId = w * 5 / 100;
+                    WResult = w * 60 / 100;
+                    WFileName = w * 25 / 100;
+                    WCell = w * 10 / 100;
+                    break;
+                case "3,4,5"://PathName, Sheet , Cell
+                    WId = w * 5 / 100;
+                    WResult = w * 65 / 100;
+                    WFileName = w * 30 / 100;
+                    break;
+                case "4": // Sheet
+                    WId = w * 5 / 100;
+                    WResult = w * 45 / 100;
+                    WFileName = w * 20 / 100;
+                    WPathName = w * 20 / 100;
+                    WCell = w * 10 / 100;
+                    break;
+                case "4,5": //Sheet,Cell
+                    WId = w * 5 / 100;
+                    WResult = w * 50 / 100;
+                    WFileName = w * 25 / 100;
+                    WPathName = w * 20 / 100;
+                    break;
+                case "5": //Cell
+                    WId = w * 5 / 100;
+                    WResult = w * 45 / 100;
+                    WFileName = w * 20 / 100;
+                    WPathName = w * 15 / 100;
+                    WSheet = w * 15 / 100;
+                    break;
+                case "3,5": //PathName, Cell
+                    WId = w * 5 / 100;
+                    WResult = w * 55 / 100;
+                    WFileName = w * 20 / 100;
+                    WSheet = w * 20 / 100;
+                    break;
+                default:
+                    break;
+            }
+
+
         }
     }
 }

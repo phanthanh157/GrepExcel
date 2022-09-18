@@ -46,7 +46,7 @@
 
             </MenuItem>
             <MenuItem Header="_View">
-                <MenuItem Header="Show/Hide Column" ItemsSource="{Binding MenuShowHideCollumns}">
+                <MenuItem Header="Show Search Column" ItemsSource="{Binding MenuShowHideCollumns}">
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="{x:Type MenuItem}">
                             <Setter Property="Command" Value="{Binding Command}" />

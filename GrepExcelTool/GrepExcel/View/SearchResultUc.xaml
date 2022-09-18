@@ -10,7 +10,7 @@
              xmlns:theme="clr-namespace:GrepExcel.Themes"
              TextElement.FontSize="12"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="900">
     <UserControl.Resources>
         <cvter:HasAllTextConverter x:Key="HasAllTextConverter"/>
     </UserControl.Resources>
@@ -111,38 +111,38 @@
         </DockPanel>
         <Grid Grid.Row="1">
             <ListView x:Name="lvSearchResults" 
-                          ItemsSource="{Binding ResultInfos}"
-                          SelectedItem="{Binding SelectedItem}"
-                          SelectionChanged="lvSearchResults_SelectionChanged"
-                          theme:ListViewBehavior.HideColumns="{Binding ColumnNumbers}">
+                    ItemsSource="{Binding ResultInfos}"
+                    SelectedItem="{Binding SelectedItem}"
+                    SelectionChanged="lvSearchResults_SelectionChanged"
+                    theme:ListViewBehavior.HideColumns="{Binding ColumnNumbers}">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Width="40" CellTemplate="{StaticResource templateCell_Id}">
+                        <GridViewColumn Width="{Binding WId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CellTemplate="{StaticResource templateCell_Id}">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Tag="ResultID" Click="lvSearchResultsColumnHeader_Click">Id</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
-                        <GridViewColumn Width="380" CellTemplate="{StaticResource templateCell_Result}">
+                        <GridViewColumn Width="{Binding WResult, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CellTemplate="{StaticResource templateCell_Result}">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Tag="Result" Click="lvSearchResultsColumnHeader_Click">Result</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
-                        <GridViewColumn Width="230" CellTemplate="{StaticResource templateCell_FileName}">
+                        <GridViewColumn Width="{Binding WFileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CellTemplate="{StaticResource templateCell_FileName}">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Tag="FileName" Click="lvSearchResultsColumnHeader_Click">File</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
-                        <GridViewColumn Width="230" CellTemplate="{StaticResource templateCell_PathName}">
+                        <GridViewColumn Width="{Binding WPathName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CellTemplate="{StaticResource templateCell_PathName}">
                             <GridViewColumn.Header>
-                                <GridViewColumnHeader Tag="FileName" Click="lvSearchResultsColumnHeader_Click">Path</GridViewColumnHeader>
+                                <GridViewColumnHeader Tag="PathName" Click="lvSearchResultsColumnHeader_Click">Path</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
-                        <GridViewColumn Width="140" CellTemplate="{StaticResource templateCell_Sheet}">
+                        <GridViewColumn Width="{Binding WSheet, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CellTemplate="{StaticResource templateCell_Sheet}">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Tag="Sheet" Click="lvSearchResultsColumnHeader_Click">Sheet</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
-                        <GridViewColumn Width="50" CellTemplate="{StaticResource templateCell_Cell}">
+                        <GridViewColumn Width="{Binding WCell, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CellTemplate="{StaticResource templateCell_Cell}">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Tag="Cell" Click="lvSearchResultsColumnHeader_Click">Cell</GridViewColumnHeader>
                             </GridViewColumn.Header>

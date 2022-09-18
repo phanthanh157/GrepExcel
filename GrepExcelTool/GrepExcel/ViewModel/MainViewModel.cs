@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -348,23 +349,16 @@ namespace GrepExcel.ViewModel
 
         private string GetColumnHideToString()
         {
-            StringBuilder column = new StringBuilder();
+            List<int> columnHide = new List<int>();
             for (int i = 0; i < MenuShowHideCollumns.Count; i++)
             {
                 if (MenuShowHideCollumns[i].IsShow == false)
                 {
-                    if (i != MenuShowHideCollumns.Count - 1)
-                    {
-                        column.Append(MenuShowHideCollumns[i].Column);
-                        column.Append(",");
-                    }
-                    else
-                    {
-                        column.Append(MenuShowHideCollumns[i].Column);
-                    }
+                    columnHide.Add(MenuShowHideCollumns[i].Column);
                 }
             }
-            return column.ToString();
+
+            return string.Join(",", columnHide);
         }
 
 

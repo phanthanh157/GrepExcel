@@ -131,7 +131,7 @@ namespace GrepExcel.ViewModel
                 listRecent.Recents.Clear();
 
                 InitClass();
-                MessageBox.Show("Database reset successfull", "Notification", MessageBoxButton.OK, MessageBoxImage.Information);
+                //MessageBox.Show("Database reset successfull", "Notification", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
