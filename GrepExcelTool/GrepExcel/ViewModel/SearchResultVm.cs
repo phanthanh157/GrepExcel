@@ -311,7 +311,7 @@ namespace GrepExcel.ViewModel
         {
             if (sender == null)
             {
-                ShowDebug.Msg(F.FLMD(), "sender is null");
+                log_.Warn("sender is null");
                 return;
             }
             // var mainVm = MainViewModel.Instance;OptionFilter

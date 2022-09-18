@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace GrepExcel.Excel
 {
@@ -8,7 +9,10 @@ namespace GrepExcel.Excel
         private static readonly Lazy<ExcelStoreManager> lazy_ = new Lazy<ExcelStoreManager>(() => new ExcelStoreManager());
         private ExcelStoreManager()
         {
-            CreateTable();
+            if (!File.Exists(Define.Database))
+            {
+                CreateTable();
+            }
             // DropTable();
         }
         public static ExcelStoreManager Instance => lazy_.Value;

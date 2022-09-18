@@ -24,7 +24,7 @@ namespace GrepExcel.ViewModel
     public class ListSearchVm : BaseModel
     {
         #region Fields
-        //private static readonly log4net.ILog log_ = LogHelper.GetLogger();
+        private static readonly log4net.ILog log_ = LogHelper.GetLogger();
         private static readonly Lazy<ListSearchVm> lazy_ = new Lazy<ListSearchVm>(() => new ListSearchVm());
         private ObservableCollection<ShowInfo> searchInfos_ = new ObservableCollection<ShowInfo>();
         private readonly MainViewModel mainVm_ = MainViewModel.Instance;
@@ -259,11 +259,11 @@ namespace GrepExcel.ViewModel
             var res = excelStore_.DeleteBySearchId(showInfo.Info);
             if (SqlResult.DeleteSuccess == res)
             {
-                ShowDebug.MsgErr(F.FLMD(), "Delete search info success");
+                log_.Info("Delete search info success");
             }
             else
             {
-                ShowDebug.MsgErr(F.FLMD(), "Delete search info false");
+                log_.Error("Delete search info false");
             }
 
             mainVm_.UpdateStatusBar();

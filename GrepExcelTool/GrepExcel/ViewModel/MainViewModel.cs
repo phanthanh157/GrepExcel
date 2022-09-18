@@ -424,7 +424,7 @@ namespace GrepExcel.ViewModel
         {
             if (string.IsNullOrEmpty(tabName))
             {
-                ShowDebug.Msg(F.FLMD(), "name is null");
+                log_.Warn("name is null");
                 return null;
             }
 
@@ -435,7 +435,7 @@ namespace GrepExcel.ViewModel
         {
             if (Tabs.Count > 0 && Tabs.Count > tabIndex)
             {
-                ShowDebug.Msg(F.FLMD(), "remove tabcontrol from list {0}", tabIndex);
+                log_.InfoFormat("remove tabcontrol from list {0}", tabIndex);
                 Tabs.RemoveAt(tabIndex);
             }
         }
@@ -534,7 +534,7 @@ namespace GrepExcel.ViewModel
         {
             if (Tabs.Count == 0)
             {
-                ShowDebug.Msg(F.FLMD(), "All TabControl close");
+                log_.Info( "All TabControl close");
                 return false;
             }
 

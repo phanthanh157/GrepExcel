@@ -26,10 +26,6 @@ namespace GrepExcel.Excel
                 }
                 fs.Close();
             }
-            catch
-            {
-
-            }
             finally
             {
                 if (fs != null)

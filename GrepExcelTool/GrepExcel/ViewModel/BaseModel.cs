@@ -12,7 +12,6 @@ namespace GrepExcel.View
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            //ShowDebug.Msg(F.FLMD(), "Property Change [{0}]", name);
         }
 
         protected virtual void OnClose(EventArgs e)

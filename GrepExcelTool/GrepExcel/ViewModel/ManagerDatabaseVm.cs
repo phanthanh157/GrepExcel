@@ -94,10 +94,7 @@ namespace GrepExcel.ViewModel
         private void CommandResetDatabaseHandler(object sender)
         {
             if (sender == null)
-            {
-                ShowDebug.MsgErr(F.FLMD(), "sender is null");
                 return;
-            }
 
             var isReset = MessageBox.Show("Do you want to reset database ?", "Reset Database", MessageBoxButton.YesNo);
 
