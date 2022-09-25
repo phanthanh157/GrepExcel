@@ -3,8 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:GrepExcel"
+        xmlns:viewmodel="clr-namespace:GrepExcel.ViewModel"
         xmlns:view="clr-namespace:GrepExcel.View"
+        xmlns:conv="clr-namespace:GrepExcel.View.Converters"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.FontWeight="Regular"
@@ -13,6 +14,12 @@
         TextOptions.TextRenderingMode="Auto"
         Title="Grep Excel" 
         WindowState="Maximized">
+    <Window.Resources>
+        <conv:ImageConverter x:Key="imageConverter"/>
+        <ItemsPanelTemplate x:Key="MenuItemPanelTemplate">
+            <StackPanel Margin="-20,0,0,0" Background="Red"/>
+        </ItemsPanelTemplate>
+    </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Key="G" Modifiers="Alt" Command="{Binding CommandSearchSettings}"/>
         <KeyBinding Key="F1" Command="{Binding CommandAboutOpen}"/>
@@ -37,6 +44,31 @@
                           Command="{Binding CommandClose}"
                           InputGestureText="Alt+F4"/>
 
+            </MenuItem>
+            <MenuItem Header="_View">
+                <MenuItem Header="Show Search Column" ItemsSource="{Binding MenuShowHideCollumns}">
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="{x:Type MenuItem}">
+                            <Setter Property="Command" Value="{Binding Command}" />
+                            <Setter Property="ItemsPanel" Value="{StaticResource MenuItemPanelTemplate}"/>
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                    <MenuItem.ItemTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type viewmodel:MenuItemModel}" ItemsSource="{Binding Path=MenuItems}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <materialDesign:PackIcon Grid.Column="0" Margin="0 0 5 0" 
+                                                         Kind="Tick" 
+                                                         Visibility="{Binding IsShow,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged, Converter={StaticResource imageConverter}}"/>
+                                <TextBlock Grid.Column="1"  Text="{Binding Header}"/>
+                            </Grid>
+
+                        </HierarchicalDataTemplate>
+                    </MenuItem.ItemTemplate>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="_About Grep Excel" 

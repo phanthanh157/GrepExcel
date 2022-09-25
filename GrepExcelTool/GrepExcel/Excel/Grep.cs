@@ -1,37 +1,42 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using GrepExcel.ViewModel;
 using ExcelApp = Microsoft.Office.Interop.Excel;
 
 namespace GrepExcel.Excel
 {
     public class GrepInfoArgs : EventArgs
     {
+        public int TabIndex { get; set; }
         public string SearchText { get; set; }
         public int TotalFiles { get; set; }
         public string CurrentFile { get; set; }
         public int CurrentFileIndex { get; set; }
         public int CurrentMatch { get; set; }
-
+        public ResultInfo Result { get; set; }
     }
+
 
     public class Grep
     {
         private static readonly log4net.ILog log_ = LogHelper.GetLogger();
         private int totalFiles_;
         private int currentMatch_;
-
-        public event EventHandler<GrepInfoArgs> GrepEvent;
+        public event EventHandler<GrepInfoArgs> EventGrepResult;
         public Grep()
         {
             totalFiles_ = 0;
             currentMatch_ = 0;
         }
 
-        private void OnGrepEvent(GrepInfoArgs e)
+        private void OnEventGrepResult(GrepInfoArgs e)
         {
-            GrepEvent?.Invoke(this, e);
+            EventGrepResult?.Invoke(this, e);
         }
+
 
         public async Task OpenFileAsync(ResultInfo resultInfo)
         {
@@ -62,40 +67,35 @@ namespace GrepExcel.Excel
 
                 xlWorksheet.Activate();
                 wsFind.Activate();
-                xlApp.ScreenUpdating = true;
-                xlApp.DisplayAlerts = true;
             }
             catch (Exception ex)
             {
-                ShowDebug.MsgErr(F.FLMD(), ex.Message);
+                log_.Error(ex.Message);
             }
             finally
             {
                 //Release memory.
-                //xlApp.ScreenUpdating = true;
-                //xlApp.DisplayAlerts = true;
-
-                //xlApp.Application.Quit();
-                //GC.Collect();
-                //GC.WaitForPendingFinalizers();
+                xlApp.ScreenUpdating = true;
+                xlApp.DisplayAlerts = true;
             }
 
 
         }
 
-        public async Task GrepAsync(SearchInfo searchInfo)
+        public void GrepAsync(SearchInfo searchInfo, int tabIndex, CancellationToken ct, Action<bool> action)
         {
             // await Task.Run(() => GrepSpeedNonTask(searchInfo));
-            await GrepSpeedNonTask(searchInfo);
+             GrepSpeedNonTask(searchInfo, tabIndex, ct ,action);
         }
 
-        public async Task GrepSpeedNonTask(SearchInfo searchInfo)
+        public void GrepSpeedNonTask(SearchInfo searchInfo, int tabIndex, CancellationToken ct, Action<bool> action)
         {
             if (searchInfo == null)
             {
                 log_.Error("Search info is NULL");
                 return;
             }
+           
             // Open appiliction excel
             ExcelApp.Application xlApp = new ExcelApp.Application()
             {
@@ -132,7 +132,7 @@ namespace GrepExcel.Excel
 
             //target current choise
             ExcelApp.XlLookAt findExact;
-            if (searchInfo.IsMatchCase == true)
+            if (searchInfo.IsMatchCase)
             {
                 findExact = ExcelApp.XlLookAt.xlWhole;
             }
@@ -151,30 +151,33 @@ namespace GrepExcel.Excel
                     countFile++;
                 }
 
-                this.totalFiles_ = countFile;
+                totalFiles_ = countFile;
 
                 countFile = 1;
                 foreach (string file in files)
                 {
-                    log_.DebugFormat("Open File:  '{0}'.", file);
-                    await Task.Run(() => ItemGrep(searchInfo,
-                                         file,
-                                         xlApp,
-                                         findExact,
-                                         targetCurrent,
-                                         countFile
-                                         ));
+                    //log_.DebugFormat("Open File:  '{0}'.", file);
+                    //cancle token
+                    if (ct.IsCancellationRequested)
+                    {
+                        //log_.Debug("Cancle searching ...");
+                        ct.ThrowIfCancellationRequested();
+                    }
+
+                    ItemGrep(
+                            tabIndex,
+                            searchInfo,
+                            file,
+                            xlApp,
+                            findExact,
+                            targetCurrent,
+                            countFile,
+                            ct
+                            );
                     countFile++;
+
+                   
                 }
-
-
-
-                xlApp.ScreenUpdating = true;
-                xlApp.DisplayAlerts = true;
-                xlApp.Application.Quit();
-
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
 
             }
             catch (Exception ex)
@@ -191,16 +194,19 @@ namespace GrepExcel.Excel
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
+                action(true);
             }
 
         }
 
-        private void ItemGrep(SearchInfo searchInfo,
+        private void ItemGrep(   int tabIndex,
+                                 SearchInfo searchInfo,
                                  string file,
                                  ExcelApp.Application xlApp,
                                  ExcelApp.XlLookAt findExact,
                                  ExcelApp.XlFindLookIn targetCurrent,
-                                 int countFile
+                                 int countFile,
+                                 CancellationToken ct
                                  )
         {
             ExcelApp.Workbook xlWorkbook;
@@ -217,9 +223,7 @@ namespace GrepExcel.Excel
 
                 xlWorkbook = xlApp.Workbooks.Open(file, false, true, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 1);
 
-                int TotalSheet = xlWorkbook.Worksheets.Count; //totaol sheet
-
-                for (int idx = 0; idx < TotalSheet; idx++)
+                for (int idx = 0; idx < xlWorkbook.Worksheets.Count; idx++)
                 {
                     xlWorksheet = (ExcelApp.Worksheet)xlWorkbook.Worksheets.get_Item(idx + 1);
 
@@ -233,7 +237,7 @@ namespace GrepExcel.Excel
                                              false, // ky tu byte kep
                                              misValue);//format
 
-                    if (currentFind == null)
+                    if (currentFind is null)
                     {
                         // Console.WriteLine("Current sheet find is not found");
                         continue;
@@ -241,18 +245,36 @@ namespace GrepExcel.Excel
 
                     string fisrtAddressFind = currentFind.Address;
                     _noMatches++;
-                    this.currentMatch_++;
+                    currentMatch_++;
 
                     //ShowDebug.Msg(F.FLMD(), "search : {0} ; NoMatches: {1}", searchInfo.Search, _noMatches);
                     //so luong toi da tim kiem
                     if (_noMatches > _maxSearch)
                     {
-                        log_.Debug("Reach maximum result search");
+                        //log_.Debug("Reach maximum result search");
                         xlWorkbook.Close(false, Type.Missing, Type.Missing);
                         return;
                     }
+
+                    if (ct.IsCancellationRequested)
+                        break;
                     //show result
-                    DataGrep(searchInfo, currentFind, file, xlWorksheet.Name);
+                    ResultInfo result = DataGrep(searchInfo, currentFind, file, xlWorksheet.Name);
+
+                    //notify result
+                    GrepInfoArgs grepInfo = new GrepInfoArgs
+                    {
+                        TabIndex = tabIndex,
+                        SearchText = searchInfo.Search,
+                        TotalFiles = totalFiles_,
+                        CurrentFile = file,
+                        CurrentMatch = currentMatch_,
+                        CurrentFileIndex = countFile,
+                        Result = result
+                    };
+
+                    OnEventGrepResult(grepInfo);
+
 
                     for (int jdx = 1; jdx < _maxSearch; jdx++)
                     {
@@ -261,38 +283,45 @@ namespace GrepExcel.Excel
 
                         // If you didn't move to a new range, you are done.
                         if (currentFind == null)
-                        {
                             break;
-                        }
 
                         if (currentFind.Address == fisrtAddressFind)
-                        {
                             break;
-                        }
+
                         _noMatches++;
-                        this.currentMatch_++;
+                        currentMatch_++;
 
                         //so luong toi da tim kiem
                         if (_noMatches > _maxSearch)
                         {
-                            log_.Debug("Maximum result search");
+                            //log_.Debug("Maximum result search");
                             xlWorkbook.Close(false, Type.Missing, Type.Missing);
                             return;
                         }
+
+                        if (ct.IsCancellationRequested)
+                            break;
+
                         //show result next
-                        this.DataGrep(searchInfo, currentFind, file, xlWorksheet.Name);
+                        result = DataGrep(searchInfo, currentFind, file, xlWorksheet.Name);
 
                         //notify result
-                        GrepInfoArgs grepInfo = new GrepInfoArgs();
-                        grepInfo.SearchText = searchInfo.Search;
-                        grepInfo.TotalFiles = this.totalFiles_;
-                        grepInfo.CurrentFile = file;
-                        grepInfo.CurrentMatch = this.currentMatch_;
-                        grepInfo.CurrentFileIndex = countFile;
+                        grepInfo = new GrepInfoArgs
+                        {
+                            TabIndex = tabIndex,
+                            SearchText = searchInfo.Search,
+                            TotalFiles = totalFiles_,
+                            CurrentFile = file,
+                            CurrentMatch = currentMatch_,
+                            CurrentFileIndex = countFile,
+                            Result = result
+                        };
 
-                        OnGrepEvent(grepInfo);
+                        OnEventGrepResult(grepInfo);
 
+                     
                     }
+
                 }
                 xlWorkbook.Close(false, Type.Missing, Type.Missing);
 
@@ -303,7 +332,7 @@ namespace GrepExcel.Excel
             }
         }
 
-        private void DataGrep(SearchInfo searchInfo, ExcelApp.Range range, string fileName, string sheetName)
+        private ResultInfo DataGrep(SearchInfo searchInfo, ExcelApp.Range range, string fileName, string sheetName)
         {
             var excelStore = ExcelStoreManager.Instance;
             ResultInfo searchResult = new ResultInfo();
@@ -358,9 +387,10 @@ namespace GrepExcel.Excel
             }
 
             //Insert database result search
-            log_.DebugFormat("Insert database - search: {0}", searchInfo.Search);
+            //log_.DebugFormat("Insert database - search: {0}", searchInfo.Search);
             excelStore.InsertResultInfo(searchResult);
 
+            return searchResult;
         }
 
     }

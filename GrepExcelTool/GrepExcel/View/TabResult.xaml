@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:GrepExcel.View"
+             xmlns:theme="clr-namespace:GrepExcel.Themes"
              xmlns:md="clr-namespace:GrepExcel.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -47,7 +48,13 @@
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Height="21" Width="Auto">
-                        <TextBlock Width="Auto" Text="{Binding Path=TabName}">
+                        <theme:LoadingSpinner Cap="Triangle"
+                                           Diameter="17"
+                                           IsLoading="{Binding IsLoading}"
+                                           Thickness="1"
+                                           Margin="0 3 0 0"/>
+                        <TextBlock Width="Auto" Text="{Binding Path=TabName}" 
+                                   Margin="0 3 0 0">
                             <TextBlock.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem Header="Close"
@@ -98,7 +105,7 @@
                                                         Stretch="UniformToFill" 
                                                         Width="10"
                                                         Height="10"
-                                                        Margin="5,0,-5,0"/>
+                                                        Margin="5,4,-5,0"/>
                                                         <ContentPresenter
                                                             Margin="{TemplateBinding Padding}"
                                                             HorizontalAlignment="Center"

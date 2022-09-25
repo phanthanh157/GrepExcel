@@ -1,5 +1,6 @@
 ﻿using GrepExcel.Excel;
 using GrepExcel.ViewModel;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -11,12 +12,10 @@ namespace GrepExcel.View
     /// </summary>
     public partial class ListSeachUC : UserControl
     {
-        private ListSearchVm listSearchVm_ = null;
+        private readonly ListSearchVm listSearchVm_ = ListSearchVm.Instance;
         public ListSeachUC()
         {
             InitializeComponent();
-            listSearchVm_ = ListSearchVm.Instance;
-
             Base.Check(listSearchVm_);
 
             this.DataContext = listSearchVm_;
@@ -25,9 +24,8 @@ namespace GrepExcel.View
 
         private void lstSearch_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var searchResult = (ShowInfo) lstSearch.SelectedItem;
-
-            listSearchVm_.ShowTab(searchResult);
+            var searchResult = (ShowInfo) lstSearch?.SelectedItem;
+            listSearchVm_.ShowTabExits(searchResult);
         }
 
         private void btnDelSerachResult_Click(object sender, RoutedEventArgs e)

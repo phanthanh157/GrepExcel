@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
 using GrepExcel.ViewModel;
 
@@ -9,6 +10,8 @@ namespace GrepExcel.View
     /// </summary>
     public partial class RecentSearchUC : UserControl
     {
+        private readonly RecentSearchVm recentVm_ = RecentSearchVm.Instance;
+        private readonly ListSearchVm listSearchVm_ = ListSearchVm.Instance;
         public RecentSearchUC()
         {
             InitializeComponent();
@@ -17,23 +20,19 @@ namespace GrepExcel.View
 
         private void Init()
         {
-            var recentVm = RecentSearchVm.Instance;
-            Base.Check(recentVm);
-
-            this.DataContext = recentVm;
-            lstRecent.ItemsSource = recentVm.Recents;
-        }
-
-        private void ItemOnPreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-
+            Base.Check(recentVm_);
+            this.DataContext = recentVm_;
+            //lstRecent.ItemsSource = recentVm.Recents;
         }
 
         private void lstRecent_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var showInfo = (ShowInfo)lstRecent.SelectedItem;
 
-            ListSearchVm.Instance.ShowTab(showInfo);
+            if(listSearchVm_ != null)
+                listSearchVm_.ShowTabExits(showInfo);
         }
+
+     
     }
 }

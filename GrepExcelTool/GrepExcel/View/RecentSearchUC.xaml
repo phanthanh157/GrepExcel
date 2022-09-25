@@ -68,13 +68,10 @@
             </Setter>
         </Style>
 
-        <Style x:Key="{x:Type ListBoxItem}"
-       TargetType="ListBoxItem">
-            <Setter Property="SnapsToDevicePixels"
-          Value="true" />
-            <Setter Property="OverridesDefaultStyle"
-          Value="true" />
-            <EventSetter Event="PreviewMouseDown" Handler="ItemOnPreviewMouseDown" />
+        <Style x:Key="{x:Type ListBoxItem}"  TargetType="ListBoxItem">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <!--<EventSetter Event="PreviewMouseDown" Handler="ItemOnPreviewMouseDown" />-->
             <Setter Property="Margin" Value="0"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -225,6 +222,7 @@
     </UserControl.Resources>
     <Grid>
         <ListBox Name="lstRecent" 
+                 ItemsSource="{Binding Recents}"
                  MouseDoubleClick="lstRecent_MouseDoubleClick"
                />
 

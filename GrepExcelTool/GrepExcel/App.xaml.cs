@@ -18,10 +18,12 @@ namespace GrepExcel
             base.OnStartup(e);
             log_.Info("EXCEL APPLICATION START");
 
-            MainWindow window = new MainWindow();
             //load config.
             Config config = new Config();
             config.Load();
+
+            MainWindow window = new MainWindow();
+       
             //Load instance and set datacontext
             var mainVm = MainViewModel.Instance;
             window.DataContext = mainVm;

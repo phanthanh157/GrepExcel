@@ -45,7 +45,6 @@ namespace GrepExcel.View
         {
             if (_mainVm.Tabs.Count != 0 && tabAction.SelectedIndex != -1)
             {
-                ShowDebug.Msg(F.FLMD(), "Close tab: index = {0}", tabAction.SelectedIndex);
                 //update tabactive
                 var resultVm = _mainVm.GetActiveSearchResultVm();
                 var excelStore = ExcelStoreManager.Instance;
@@ -55,11 +54,7 @@ namespace GrepExcel.View
                 if (searchInfo != null)
                 {
                     searchInfo.IsTabActive = false;
-                    SqlResult sqlResult = excelStore.UpdateSearchInfo(searchInfo);
-                    if (SqlResult.UpdateSuccess == sqlResult)
-                    {
-                        ShowDebug.Msg(F.FLMD(), "Update tabIndex = false success");
-                    }
+                    excelStore.UpdateSearchInfo(searchInfo);
                 }
 
                 _mainVm.Tabs.RemoveAt(tabAction.SelectedIndex);
@@ -75,7 +70,6 @@ namespace GrepExcel.View
         {
             if (_mainVm.Tabs.Count != 0 && tabAction.SelectedIndex != -1)
             {
-                ShowDebug.Msg(F.FLMD(), "Close tab: index = {0}", tabAction.SelectedIndex);
                 //update tabactive
                 var resultVm = _mainVm.GetActiveSearchResultVm();
                 var excelStore = ExcelStoreManager.Instance;
@@ -85,11 +79,7 @@ namespace GrepExcel.View
                 if (searchInfo != null)
                 {
                     searchInfo.IsTabActive = false;
-                    SqlResult sqlResult = excelStore.UpdateSearchInfo(searchInfo);
-                    if (SqlResult.UpdateSuccess == sqlResult)
-                    {
-                        ShowDebug.Msg(F.FLMD(), "Update tabIndex = false success");
-                    }
+                    excelStore.UpdateSearchInfo(searchInfo);
                 }
 
                 _mainVm.Tabs.RemoveAt(tabAction.SelectedIndex);

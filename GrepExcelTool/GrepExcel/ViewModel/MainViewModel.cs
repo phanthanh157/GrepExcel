@@ -1,13 +1,15 @@
-﻿using GrepExcel.Excel;
-using GrepExcel.View;
-using GrepExcel.View.Dialog;
-using System;
+﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
+using GrepExcel.Excel;
+using GrepExcel.View;
+using GrepExcel.View.Dialog;
 
 namespace GrepExcel.ViewModel
 {
@@ -15,6 +17,7 @@ namespace GrepExcel.ViewModel
     public class MainViewModel : BaseModel
     {
         #region Fileds
+        private static readonly log4net.ILog log_ = LogHelper.GetLogger();
         private static MainViewModel _instance = null;
         private ExcelStoreManager _excelStore = null;
         private string _notifyString;
@@ -45,7 +48,22 @@ namespace GrepExcel.ViewModel
 
         public void InitClass()
         {
+
             Tabs = new ObservableCollection<TabControl>();
+
+            MenuShowHideCollumns = new ObservableCollection<MenuItemModel>();
+            var columnsStr = Config.ReadSetting("COLUMNS_HIDE");
+            foreach (string s in columnsStr.Split(','))
+            {
+                var item = s.Split(':');
+
+                int column = int.Parse(item[1]);
+                bool isShow = (int.Parse(item[2]) == 1) ? true : false;
+
+                MenuItemModel menuItemModel = new MenuItemModel() { Header = item[0], Column = column, IsShow = isShow };
+                MenuShowHideCollumns.Add(menuItemModel);
+            }
+
             _excelStore = ExcelStoreManager.Instance;
             _msgNotify = new Queue();
             _totalKeySearch = 0;
@@ -73,6 +91,7 @@ namespace GrepExcel.ViewModel
 
         #region Property
         public ObservableCollection<TabControl> Tabs { get; set; }
+        public ObservableCollection<MenuItemModel> MenuShowHideCollumns { get; set; }
 
         public static MainViewModel Instance
         {
@@ -194,7 +213,7 @@ namespace GrepExcel.ViewModel
             get { return _searchPercent; }
             set
             {
-                if(value != _searchPercent)
+                if (value != _searchPercent)
                 {
                     _searchPercent = value;
                     OnPropertyChanged();
@@ -328,6 +347,21 @@ namespace GrepExcel.ViewModel
         }
 
 
+        private string GetColumnHideToString()
+        {
+            List<int> columnHide = new List<int>();
+            for (int i = 0; i < MenuShowHideCollumns.Count; i++)
+            {
+                if (MenuShowHideCollumns[i].IsShow == false)
+                {
+                    columnHide.Add(MenuShowHideCollumns[i].Column);
+                }
+            }
+
+            return string.Join(",", columnHide);
+        }
+
+
         public ICommand CommandManagerDatabaseOpen
         {
             get
@@ -366,25 +400,25 @@ namespace GrepExcel.ViewModel
 
 
         #region Method
-        public void AddTabControl(TabControl tabControl)
+        public int AddTabControl(TabControl tabControl)
         {
-            if (tabControl == null)
-            {
-                ShowDebug.Msg(F.FLMD(), "tabcontrol is null");
-                return;
-            }
-            ShowDebug.Msg(F.FLMD(), "add new tabcontrol : {0}", tabControl.TabName);
+            if (tabControl is null)
+                return -1;
+
+            log_.InfoFormat("Add new tabcontrol : {0}", tabControl.TabName);
 
             this.Tabs.Add(tabControl);
 
             UpdateStatusBar();
+
+            return Tabs.Count;
         }
 
         public TabControl SearchTabControl(string tabName)
         {
             if (string.IsNullOrEmpty(tabName))
             {
-                ShowDebug.Msg(F.FLMD(), "name is null");
+                log_.Warn("name is null");
                 return null;
             }
 
@@ -395,7 +429,7 @@ namespace GrepExcel.ViewModel
         {
             if (Tabs.Count > 0 && Tabs.Count > tabIndex)
             {
-                ShowDebug.Msg(F.FLMD(), "remove tabcontrol from list {0}", tabIndex);
+                log_.InfoFormat("remove tabcontrol from list {0}", tabIndex);
                 Tabs.RemoveAt(tabIndex);
             }
         }
@@ -409,9 +443,9 @@ namespace GrepExcel.ViewModel
 
         public SearchResultVm GetTabContent(int tabIndex)
         {
-            if (Tabs.Count >= tabIndex)
+            if (Tabs.Count >= tabIndex && tabIndex > 0)
             {
-                return (SearchResultVm)Tabs[tabIndex];
+                return (SearchResultVm)Tabs[tabIndex - 1];
             }
             return null;
         }
@@ -429,7 +463,7 @@ namespace GrepExcel.ViewModel
             {
                 _msgNotify.Enqueue(taskName);
 
-                NotifyString =  _msgNotify.Count.ToString();
+                NotifyString = _msgNotify.Count.ToString();
 
             }
             else
@@ -464,11 +498,15 @@ namespace GrepExcel.ViewModel
             foreach (var tabActive in listTabActive)
             {
                 var results = excelStore.GetResultInfoBySearchId(tabActive.Id);
+                var showInfo = ShowInfo.Create(tabActive);
 
                 var tabControl = new SearchResultVm(
                  new SearchResultUc(),
                  tabActive.Search,
-                 tabActive.Id);
+                 tabActive.Id,
+                 showInfo);
+
+                tabControl.ColumnNumbers = GetColumnHideToString();
 
                 results.ForEach(x => tabControl.ResultInfos.Add(x));
 
@@ -479,7 +517,7 @@ namespace GrepExcel.ViewModel
         }
 
 
-        public void ActionTabIndexActive(int index)
+        public void ActiveTabWithIndex(int index)
         {
             if (index != -1 && index < Tabs.Count())
                 OnTabIndexActive(index);
@@ -490,7 +528,7 @@ namespace GrepExcel.ViewModel
         {
             if (Tabs.Count == 0)
             {
-                ShowDebug.Msg(F.FLMD(), "All TabControl close");
+                log_.Info( "All TabControl close");
                 return false;
             }
 
@@ -546,8 +584,42 @@ namespace GrepExcel.ViewModel
 
         public void ShowPercentSearching(int percent, int match)
         {
+            //log_.InfoFormat("grep percent: {0}", percent);
+
             this.SearchPercent = percent;
             this.CurrentResults = match;
+        }
+
+        public void UpdateShowHideColumnSearch()
+        {
+            foreach (var tab in Tabs)
+            {
+                if (tab is SearchResultVm)
+                {
+                    var searchVm = tab as SearchResultVm;
+
+                    searchVm.ColumnNumbers = GetColumnHideToString();
+                }
+            }
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < MenuShowHideCollumns.Count; i++)
+            {
+                string header = MenuShowHideCollumns[i].Header;
+                int column = MenuShowHideCollumns[i].Column;
+                int isShow = MenuShowHideCollumns[i].IsShow ? 1 : 0;
+
+                if (i < MenuShowHideCollumns.Count - 1)
+                {
+                    sb.Append(header).Append(":").Append(column).Append(":").Append(isShow).Append(",");
+                }
+                else
+                {
+                    sb.Append(header).Append(":").Append(column).Append(":").Append(isShow);
+                }
+            }
+
+            Config.AddUpdateAppSettings("COLUMNS_HIDE", sb.ToString());
         }
 
         #endregion

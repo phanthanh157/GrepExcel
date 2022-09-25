@@ -1,10 +1,10 @@
-﻿using GrepExcel.Excel;
-using GrepExcel.View;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using GrepExcel.Excel;
 
 namespace GrepExcel.ViewModel
 {
@@ -25,8 +25,9 @@ namespace GrepExcel.ViewModel
     public class SearchInputVm
     {
         private static readonly log4net.ILog log_ = LogHelper.GetLogger();
-        private readonly MainViewModel mainVm_= MainViewModel.Instance;
+
         private ICommand cmdSearch_ = null;
+        private ICommand cmdDeleteAllSerach_ = null;
         public ObservableCollection<MethodView> Methods { get; set; }
         public ObservableCollection<TargetView> Targets { get; set; }
 
@@ -37,16 +38,43 @@ namespace GrepExcel.ViewModel
             LoadItem();
         }
 
+        public ICommand CommandDeleteAllSearch
+        {
+            get
+            {
+                if(cmdDeleteAllSerach_ is null)
+                {
+                    cmdDeleteAllSerach_ = new RelayCommand((sender) => CommandDeleteAllSearchHandler(sender));
+                }
+                return cmdDeleteAllSerach_;
+            }
+        }
+
+        private void CommandDeleteAllSearchHandler(object sender)
+        {
+            var managerDb = ManagerDatabaseVm.Instance;
+
+            managerDb.CommandResetDatabase.Execute(managerDb.DirDb);
+
+        }
+
         public ICommand CommandSearch
         {
             get
             {
                 if (cmdSearch_ == null)
                 {
-                    cmdSearch_ = new Commands.AsyncRelayCommand(sender => CommandSeachHander(sender));
+                    cmdSearch_ = new Commands.AsyncRelayCommand((sender) => CommandSeachHander(sender), ex => SearchException(ex));
                 }
                 return cmdSearch_;
             }
+        }
+
+        private void SearchException(Exception ex)
+        {
+
+            log_.DebugFormat("search exception", ex);
+
         }
 
         private async Task CommandSeachHander(object sender)
@@ -58,61 +86,65 @@ namespace GrepExcel.ViewModel
             }
 
             var inputInfo = sender as SearchInfo;
-            var mainVm = MainViewModel.Instance;
             var excelStore = ExcelStoreManager.Instance;
             var listSearchVm = ListSearchVm.Instance;
             var listRecentVm = RecentSearchVm.Instance;
 
+            
+            listSearchVm.TabCountLoading += 1;
+
+         
             //check exits database
-            SearchInfo searchInfoFirst = null;
+            SearchInfo searchInfoFirst;
             if (CheckExitsSearchInfo(inputInfo, out searchInfoFirst))
             {
                 MessageBox.Show("Search keyword is exits on database", "Searching...", MessageBoxButton.OK, MessageBoxImage.Information);
+                var showInfoFirst = ShowInfo.Create(searchInfoFirst);
 
-                listSearchVm.ShowTab(ShowInfo.Create(searchInfoFirst));
+                listSearchVm.ShowTabExits(showInfoFirst);
+
+                listRecentVm.UpdateTotalMatch(showInfoFirst);
+                listSearchVm.TabCountLoading -= 1;
                 return;
             }
 
             // await Task.Delay(1000);
-            mainVm.NotifyTaskRunning(inputInfo.Search);
+            //mainVm.NotifyTaskRunning(inputInfo.Search);
 
             //Insert input info to database
             SqlResult sqlResult = excelStore.InsertSearchInfo(inputInfo);
+            var showInfo = ShowInfo.Create(inputInfo);
 
-            if (SqlResult.InsertSucess == sqlResult)
+            if (SqlResult.InsertSucess != sqlResult)
             {
-                inputInfo.Id = excelStore.LastIndexSearch();// add id 
-
-                //Search process
-                var grep = new Grep();
-                grep.GrepEvent += Grep_GrepEvent;
-                //grep.GrepSpeedNonTask(inputInfo);
-                await grep.GrepAsync(inputInfo);
-
-                grep.GrepEvent -= Grep_GrepEvent;
-
-                //Display result when finish search
-                listSearchVm.ShowTab(ShowInfo.Create(inputInfo));
-             
-                //add observer list serach
-                listSearchVm.SearchInfos.Add(ShowInfo.Create(inputInfo));
-
-                //add first list recent
-                listRecentVm.Recents.Insert(0, ShowInfo.Create(inputInfo));
+                listSearchVm.TabCountLoading -= 1;
+                return;
             }
 
-            mainVm.NotifyTaskRunning(inputInfo.Search, false);
-        }
-
-        private void Grep_GrepEvent(object sender, GrepInfoArgs e)
-        {
-            if (e is null)
+            if(listSearchVm.TabCountLoading > Define.MAX_TAB_OPEN_LOADING)
+            {
+                MessageBox.Show("Tab open is loading greater than " + Define.MAX_TAB_OPEN_LOADING, "Searching",
+                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                listSearchVm.TabCountLoading -= 1;
                 return;
-            int percent = e.CurrentFileIndex * 100 / e.TotalFiles;
-            mainVm_.ShowPercentSearching(percent, e.CurrentMatch);
+            }
 
-            //log_.DebugFormat("Search Percent: {0}", percent);
+
+            inputInfo.Id = excelStore.LastIndexSearch();// add id 
+              
+            //Display result when finish search
+            await listSearchVm.ShowTab(showInfo, false);
+
+            //add observer list serach
+            listSearchVm.UpdateTotalMatch(showInfo);
+
+            //add first list recent
+            listRecentVm.UpdateTotalMatch(showInfo);
+
+            listSearchVm.TabCountLoading -= 1;
+            //mainVm.NotifyTaskRunning(inputInfo.Search, false);
         }
+
 
         private bool CheckExitsSearchInfo(SearchInfo searchInfo, out SearchInfo outSearchInfo)
         {

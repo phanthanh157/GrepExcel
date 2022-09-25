@@ -25,6 +25,9 @@ namespace GrepExcel.View.Dialog
         {
             InitializeComponent();
             _mDb = ManagerDatabaseVm.Instance;
+
+            Base.Check(_mDb);
+
             this.DataContext = _mDb;
         }
 

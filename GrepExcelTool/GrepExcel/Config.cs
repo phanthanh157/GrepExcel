@@ -27,7 +27,8 @@ namespace GrepExcel
            new ConfigTable("MAX_FOLDER","100"),
            new ConfigTable("MAX_SEARCH","1000"),
            new ConfigTable("TAB_CURRENT_ACTIVE","0"),
-           new ConfigTable("NUMBER_RECENTS","10")
+           new ConfigTable("NUMBER_RECENTS","10"),
+           new ConfigTable("COLUMNS_HIDE","Path:3:1,Sheet:4:1,Cell:5:0")
         };
 
         public List<ConfigTable> ConfigTables { get => _configTables; set => _configTables = value; }
@@ -51,8 +52,6 @@ namespace GrepExcel
 
                 if (appSettings.Count == 0)
                 {
-                    ShowDebug.Msg(F.FLMD(), "AppSettings is empty.");
-                    ShowDebug.Msg(F.FLMD(), "AppSettings set loading...");
                     foreach (ConfigTable configTable in configs)
                     {
                         AddUpdateAppSettings(configTable.Key, configTable.Value);
@@ -63,13 +62,12 @@ namespace GrepExcel
                     foreach (var key in appSettings.AllKeys)
                     {
                         _configTables.Add(new ConfigTable(key, appSettings[key]));
-                        ShowDebug.Msg(F.FLMD(), "Key: {0} Value: {1}", key, appSettings[key]);
                     }
                 }
             }
             catch (ConfigurationErrorsException)
             {
-                ShowDebug.Msg(F.FLMD(), "Error reading app settings");
+
             }
         }
 
@@ -80,11 +78,9 @@ namespace GrepExcel
             {
                 var appSettings = ConfigurationManager.AppSettings;
                 result = appSettings[key];
-                ShowDebug.Msg(F.FLMD(), "Read Setting Config: {0}", result);
             }
             catch (ConfigurationErrorsException)
             {
-                ShowDebug.Msg(F.FLMD(), "Error reading app settings");
             }
             return result;
         }
@@ -108,7 +104,7 @@ namespace GrepExcel
             }
             catch (ConfigurationErrorsException)
             {
-                ShowDebug.Msg(F.FLMD(), "Error writing app settings");
+
             }
         }
     }

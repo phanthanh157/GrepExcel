@@ -25,6 +25,8 @@ namespace GrepExcel.View.Dialog
         {
             InitializeComponent();
             _settingVm = SettingVm.Instance;
+
+            Base.Check(_settingVm);
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -34,10 +36,16 @@ namespace GrepExcel.View.Dialog
 
         private void cobMaxSearch_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var item = (ComboBoxItem)cobMaxSearch.SelectedItem;
+            var item = cobMaxSearch.SelectedItem as ComboBoxItem;
 
             switch (item.Content.ToString())
             {
+                case "100":
+                    Config.AddUpdateAppSettings("MAX_SEARCH", "100");
+                    break;
+                case "300":
+                    Config.AddUpdateAppSettings("MAX_SEARCH", "300");
+                    break;
                 case "500":
                     Config.AddUpdateAppSettings("MAX_SEARCH", "500");
                     break;
@@ -81,6 +89,9 @@ namespace GrepExcel.View.Dialog
 
             switch (item.Content.ToString())
             {
+                case "30":
+                    Config.AddUpdateAppSettings("MAX_FILE", "30");
+                    break;
                 case "50":
                     Config.AddUpdateAppSettings("MAX_FILE", "50");
                     break;
@@ -99,12 +110,15 @@ namespace GrepExcel.View.Dialog
         {
             if(txtNumberRecent.Text.Length > 0)
             {
-                int result = 0;
+                int result;
                 bool tryConvert = int.TryParse(txtNumberRecent.Text, out result);
                 if (tryConvert)
                 {
-                    SettingArgs settingArgs = new SettingArgs();
-                    settingArgs.NumberRecent = result;
+                    SettingArgs settingArgs = new SettingArgs
+                    {
+                        NumberRecent = result
+                    };
+
                     _settingVm.Notify(settingArgs);
                     Config.AddUpdateAppSettings("NUMBER_RECENTS", result.ToString());
                 }

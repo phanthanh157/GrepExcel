@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GrepExcel.View"
-             xmlns:vm="clr-namespace:GrepExcel.ViewModel"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -173,10 +173,11 @@
                                         Name="btnDelSerachResult"
                                         Click="btnDelSerachResult_Click"
                                         >
-                    <Image Source="../Image/delete_bin.png" 
+                    <!--<Image Source="../Image/delete_bin.png" 
                                            Width="20" 
                                            Height="20" 
-                                           ToolTip="Delete key search"/>
+                                           ToolTip="Delete key search"/>-->
+                    <materialDesign:PackIcon Width="20" Height="20" Kind="FileDocumentBoxRemoveOutline"/>
                 </Button>
                 <TextBlock Text="{Binding Path=Info.Search}"
                                            FontWeight="Bold"

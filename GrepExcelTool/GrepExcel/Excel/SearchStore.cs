@@ -148,7 +148,7 @@ namespace GrepExcel.Excel
             }
             catch (SqliteException ex)
             {
-                ShowDebug.Msg(F.FLMD(), ex.Message);
+                log_.Error("sql error", ex);
             }
 
             return res;
