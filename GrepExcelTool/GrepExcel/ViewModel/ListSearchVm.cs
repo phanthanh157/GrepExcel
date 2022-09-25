@@ -52,6 +52,7 @@ namespace GrepExcel.ViewModel
         public ShowInfo Info { get; set; }
         public List<TokenStore> TokenStores { get; private set; }
 
+        public int TabCountLoading { get; set; } = 0;
         #endregion //Properties
 
 

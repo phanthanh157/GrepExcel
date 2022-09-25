@@ -104,13 +104,12 @@ namespace GrepExcel.View
         private void btnOptionLowAndUper_Click(object sender, RoutedEventArgs e)
         {
             isLowerOrUper_ = isLowerOrUper_ == true ? false : true;
-            btnOptionMatchCase.Background = isLowerOrUper_ ? Brushes.Yellow : Brushes.Transparent;
+            btnOptionLowAndUper.Background = isLowerOrUper_ ? Brushes.Yellow : Brushes.Transparent;
         }
 
         private void btnOptionMatchCase_Click(object sender, RoutedEventArgs e)
         {
             isMatchCase_ = isMatchCase_ == true ? false : true;
-
             btnOptionMatchCase.Background = isMatchCase_? Brushes.Yellow : Brushes.Transparent;
         }
 

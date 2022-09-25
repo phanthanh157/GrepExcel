@@ -24,7 +24,7 @@ namespace GrepExcel.View
 
         private void lstSearch_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var searchResult = (ShowInfo) lstSearch.SelectedItem;
+            var searchResult = (ShowInfo) lstSearch?.SelectedItem;
             listSearchVm_.ShowTabExits(searchResult);
         }
 

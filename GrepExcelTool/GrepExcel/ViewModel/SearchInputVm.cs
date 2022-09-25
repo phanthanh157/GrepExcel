@@ -90,6 +90,9 @@ namespace GrepExcel.ViewModel
             var listSearchVm = ListSearchVm.Instance;
             var listRecentVm = RecentSearchVm.Instance;
 
+            
+            listSearchVm.TabCountLoading += 1;
+
          
             //check exits database
             SearchInfo searchInfoFirst;
@@ -101,6 +104,7 @@ namespace GrepExcel.ViewModel
                 listSearchVm.ShowTabExits(showInfoFirst);
 
                 listRecentVm.UpdateTotalMatch(showInfoFirst);
+                listSearchVm.TabCountLoading -= 1;
                 return;
             }
 
@@ -111,20 +115,33 @@ namespace GrepExcel.ViewModel
             SqlResult sqlResult = excelStore.InsertSearchInfo(inputInfo);
             var showInfo = ShowInfo.Create(inputInfo);
 
-            if (SqlResult.InsertSucess == sqlResult)
+            if (SqlResult.InsertSucess != sqlResult)
             {
-                inputInfo.Id = excelStore.LastIndexSearch();// add id 
-              
-                //Display result when finish search
-                await listSearchVm.ShowTab(showInfo, false);
-
-                //add observer list serach
-                listSearchVm.UpdateTotalMatch(showInfo);
-
-                //add first list recent
-                listRecentVm.UpdateTotalMatch(showInfo);
+                listSearchVm.TabCountLoading -= 1;
+                return;
             }
 
+            if(listSearchVm.TabCountLoading > Define.MAX_TAB_OPEN_LOADING)
+            {
+                MessageBox.Show("Tab open is loading greater than " + Define.MAX_TAB_OPEN_LOADING, "Searching",
+                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                listSearchVm.TabCountLoading -= 1;
+                return;
+            }
+
+
+            inputInfo.Id = excelStore.LastIndexSearch();// add id 
+              
+            //Display result when finish search
+            await listSearchVm.ShowTab(showInfo, false);
+
+            //add observer list serach
+            listSearchVm.UpdateTotalMatch(showInfo);
+
+            //add first list recent
+            listRecentVm.UpdateTotalMatch(showInfo);
+
+            listSearchVm.TabCountLoading -= 1;
             //mainVm.NotifyTaskRunning(inputInfo.Search, false);
         }
 
